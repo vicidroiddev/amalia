@@ -1,0 +1,16 @@
+
+-[x] Build proof of concept
+-[x] Make this a real gradle module with 0 caredroid dependencies  |
+-[x] Split module into core (only viewmodel dependency) and ui modules (android view dependency)  |
+-[ ] Add unit tests for super generic functionality in BasePresenter|
+-[x] Allow the base presenter to hook into the dao without a concrete dependency on caredroid   |
+-[ ] Allow the base presenter to push the same view states changes as BaseViewModel?
+-[ ] Add a diff util to prevent unnecessary removal and re-inflation of views.
+-[ ] Create a generic ListPresenter:
+    - [ ] Refresh strategy (use case: shipments)
+    - [ ] Sends loading state prior to loading data
+    - [ ] Sends NoNetwork state according to refresh strategy
+    - [ ] Sends EmptyState for no data (use case: empty state screen which can be handled generically by view delegate)
+    - [ ] Add generic refresh capability to BaseListViewDelegate
+    - [ ] Should leverage refresh strategy from BaseListPresenter (use case: shipments, communities)
+    - [ ] Should be able to wrap the list view with a swipe to refresh listener

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <item name="amalia_stub" type="id" />
+    <item name="amalia_root" type="id" />
+    <item name="amalia_list" type="id" />
+    <item name="amalia_recycled_list" type="id" />
+</resources>
