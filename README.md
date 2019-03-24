@@ -6,7 +6,25 @@ Amalia leverages Android's architecture components to ensure compliance with the
 
 ## To get started
 
-TODO: gradle dep
+In your root level build.gradle file:
+
+```gradle
+allprojects {
+  repositories {
+    google()
+    jcenter()
+    maven { url 'https://github.com/vicidroiddev/amalia/raw/maven_repo/NOT_YET_READY'}
+  }
+}
+```
+
+In your app level build.gradle file:
+
+```gradle
+dependencies {
+  implementation 'implementation 'com.github.vicidroiddev:amalia:X.Y.ZNOT_YET_READY'
+}
+```
 
 ## Components
 
