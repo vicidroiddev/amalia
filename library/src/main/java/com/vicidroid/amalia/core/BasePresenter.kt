@@ -25,8 +25,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
   fun stateLiveData(): LiveData<S> = viewStateLiveData
 
   /**
-   * Propagate states sent by this presenter to a parent presenter.
-   * This may be of use when adding amalia to legacy code.
+   * Propagate states sent by this presenter to another observer.
+   * This may be of use when adding amalia to legacy code or in a parent child presenter heirarchy.
    */
   fun propagateStatesTo(observer: (S) -> Unit) {
     lifecycleOwner ?: error("You must call bind() prior to propagating states.")
