@@ -1,5 +1,7 @@
 package com.vicidroid.amalia
 
+import android.app.Application
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -7,6 +9,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.ViewModelStore
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
@@ -14,6 +17,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
+import com.vicidroid.amalia.ext.presenterProvider
 import com.vicidroid.amalia.ui.BaseViewDelegate
 import junit.framework.TestCase
 import org.junit.Before
@@ -39,7 +43,13 @@ class BasePresenterTest : TestCase() {
   lateinit var view: View
 
   @Mock
-  lateinit var context: FragmentActivity
+  lateinit var activity: FragmentActivity
+
+  @Mock
+  lateinit var application: Application
+
+  @Mock
+  lateinit var viewModelStore: ViewModelStore
 
   @Mock
   lateinit var lifecycleOwner: LifecycleOwner
@@ -63,7 +73,12 @@ class BasePresenterTest : TestCase() {
     lifecycle = spy(LifecycleRegistry(lifecycleOwner))
 
     whenever(lifecycleOwner.lifecycle).thenReturn(lifecycle)
-    whenever(view.context).thenReturn(context)
+
+    whenever(view.context).thenReturn(activity)
+
+    whenever(activity.lifecycle).thenReturn(lifecycle)
+    whenever(activity.application).thenReturn(application)
+    whenever(activity.viewModelStore).thenReturn(viewModelStore)
 
     viewDelegate = spy(FakeViewDelegate(lifecycleOwner, view))
 
@@ -134,6 +149,30 @@ class BasePresenterTest : TestCase() {
     verify(presenter).onViewEvent(viewEvent)
   }
 
+  @Test
+  fun `applies hooks to shared base presenter`() {
+    val currentUri = Uri.Builder()
+        .scheme("appName")
+        .authority("com.vicidroiddev.amalia")
+        .appendPath("person")
+        .appendPath("1")
+        .appendPath("module")
+        .appendPath("profile")
+        .build()
+
+    val hooks: ((BasePresenter<*, *>) -> Unit)? = {
+      (it as SharedBasePresenter).currentUri = currentUri
+    }
+
+    lifecycle.markState(Lifecycle.State.CREATED)
+
+    val presenter by activity.presenterProvider(hooks) {
+      FakePresenter()
+    }
+
+    assertEquals(presenter.currentUri, currentUri)
+  }
+
   private fun bindPresenter() {
     presenter.bind(viewDelegate)
   }
@@ -141,7 +180,16 @@ class BasePresenterTest : TestCase() {
   class FakeViewEvent : ViewEvent
   class FakeViewState : ViewState
 
-  class FakePresenter : BasePresenter<ViewState, ViewEvent>() {
+  interface SharedImportantFields {
+    var currentUri: Uri
+  }
+
+  abstract class SharedBasePresenter
+    : BasePresenter<ViewState, ViewEvent>(), SharedImportantFields {
+    override lateinit var currentUri: Uri
+  }
+
+  class FakePresenter : SharedBasePresenter() {
     override fun onViewEvent(event: ViewEvent) {}
   }
 

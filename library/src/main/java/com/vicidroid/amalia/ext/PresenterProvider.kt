@@ -10,17 +10,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.vicidroid.amalia.core.BasePresenter
 
+/**
+ * Provides a Kotlin friendly method to obtain a presenter while in a fragment.
+ * [hooks] can be leveraged to apply lateinit fields on a presenter.
+ * This can be ideal when having to otherwise repeatedly pass in fields to the constructor.
+ * Example: say your base fragment requires all fragments to have a uri that represents the current page.
+ * Instead of manually passing this uri to each presenter via a constructor, you could apply it automatically via
+ * your own presenterProvider with default [hooks]
+ */
 inline fun <reified P : BasePresenter<*, *>> Fragment.presenterProvider(
+    noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P) =
-    presenterProvider(this, presenterCreator)
+    presenterProvider(this, presenterCreator,  hooks)
 
 inline fun <reified P : BasePresenter<*, *>> FragmentActivity.presenterProvider(
+    noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P) =
-    presenterProvider(this, presenterCreator)
+    presenterProvider(this, presenterCreator, hooks)
 
 inline fun <reified P : BasePresenter<*, *>> AppCompatActivity.presenterProvider(
+    noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P) =
-    presenterProvider(this, presenterCreator)
+    presenterProvider(this, presenterCreator, hooks)
 
 /**
  * Provides a child presenter descending from a parent presenter.
@@ -44,13 +55,17 @@ inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterP
  */
 inline fun <reified P : BasePresenter<*, *>> presenterProvider(
     lifecycleOwner: LifecycleOwner,
-    crossinline presenterCreator: () -> P) = lazy(LazyThreadSafetyMode.NONE) {
+    crossinline presenterCreator: () -> P,
+    noinline externalHooks: ((P) -> Unit)? = null) = lazy(LazyThreadSafetyMode.NONE) {
 
   @Suppress("UNCHECKED_CAST")
   val factory = object : ViewModelProvider.Factory {
     override fun <VM : ViewModel> create(presenterClazz: Class<VM>): VM {
-      return (presenterCreator() as VM).apply {
-        (this as BasePresenter<*, *>).applicationContext = lifecycleOwner.applicationContext
+      return (presenterCreator() as VM).also { presenter ->
+        (presenter as P).let {
+          presenter.applicationContext = lifecycleOwner.applicationContext
+          externalHooks?.invoke(it)
+        }
       }
     }
   }
