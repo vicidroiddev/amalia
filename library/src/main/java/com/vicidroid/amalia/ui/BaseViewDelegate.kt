@@ -18,14 +18,13 @@ import com.vicidroid.amalia.core.ViewState
 abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     val lifecycleOwner: LifecycleOwner,
     val rootView: View,
-    stubbedLayoutId: Int? = null)
+    stubbedResourceId: Int? = null)
   : LifecycleOwner {
 
   val context: Context = rootView.context
 
   init {
-    @Suppress("LeakingThis")
-    stubbedLayoutId?.let { layoutId ->
+    stubbedResourceId?.let { layoutId ->
       findViewById<ViewStub>(R.id.amalia_stub).apply {
         layoutResource = layoutId
         inflate()
