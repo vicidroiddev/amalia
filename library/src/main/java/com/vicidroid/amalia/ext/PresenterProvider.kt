@@ -88,9 +88,11 @@ val LifecycleOwner.applicationContext: Context
  * Workaround for reified types which allows the use of [presenterProvider] in Java.
  * Moreover, this will support constructor arguments in presenters.
  */
-class PresenterProvider<P : BasePresenter<*, *>>(val fragment: Fragment, val presenterCreator: () -> BasePresenter<*, *>) {
+
+object PresenterProvider {
   @Suppress("UNCHECKED_CAST")
-  fun provide(): P {
+  @JvmStatic
+  fun <P : BasePresenter<*,*>> provide(fragment: Fragment, presenterCreator: () -> BasePresenter<*, *>): P {
     return fragment.presenterProvider { presenterCreator() }.value as P
   }
 }
