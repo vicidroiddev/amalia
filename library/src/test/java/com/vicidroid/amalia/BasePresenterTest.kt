@@ -52,6 +52,9 @@ class BasePresenterTest : TestCase() {
   lateinit var viewModelStore: ViewModelStore
 
   @Mock
+  lateinit var context: FragmentActivity
+
+  @Mock
   lateinit var lifecycleOwner: LifecycleOwner
 
   private lateinit var lifecycle: LifecycleRegistry
@@ -79,6 +82,7 @@ class BasePresenterTest : TestCase() {
     whenever(activity.lifecycle).thenReturn(lifecycle)
     whenever(activity.application).thenReturn(application)
     whenever(activity.viewModelStore).thenReturn(viewModelStore)
+    whenever(view.context).thenReturn(context)
 
     viewDelegate = spy(FakeViewDelegate(lifecycleOwner, view))
 
@@ -127,7 +131,7 @@ class BasePresenterTest : TestCase() {
     bindPresenter()
 
     parentPresenter.childPresenter = presenter
-    parentPresenter.propogate()
+    parentPresenter.propagate()
 
     presenter.pushState(viewState)
 
@@ -196,7 +200,7 @@ class BasePresenterTest : TestCase() {
   class FakeParentPresenter : BasePresenter<ViewState, ViewEvent>() {
     lateinit var childPresenter: BasePresenter<ViewState, ViewEvent>
 
-    fun propogate() {
+    fun propagate() {
       childPresenter.propagateStatesTo(::onStatePropagated)
     }
 
