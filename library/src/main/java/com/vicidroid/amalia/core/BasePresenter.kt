@@ -11,38 +11,10 @@ import com.vicidroid.amalia.ui.BaseViewDelegate
  * Backed by Android's ViewModel in order to easily survive configuration changes.
  */
 abstract class BasePresenter<S : ViewState, E : ViewEvent>
-  : ViewModel(),
+  : LifecycleComponent<S>(),
     DefaultLifecycleObserver {
 
-  lateinit var applicationContext: Context
-
-  private val viewStateLiveData = MutableLiveData<S>()
-
   private val viewEventPropagatorLiveData = MutableLiveData<E>()
-
-  var lifecycleOwner: LifecycleOwner? = null
-
-  fun stateLiveData(): LiveData<S> = viewStateLiveData
-
-  /**
-   * Propagate states sent by this presenter to another observer.
-   * This may be of use when adding amalia to legacy code or in a parent child presenter hierarchy.
-   */
-  fun propagateStatesTo(observer: (S) -> Unit) {
-    lifecycleOwner ?: error("You must call bind() prior to propagating states. Alternatively you must provide a lifecycle.")
-    stateLiveData().observe(lifecycleOwner!!, Observer { observer(it) })
-  }
-
-  /**
-   * Can be used for naked presenters that will not be attached to a view delegate.
-   * This may be of use for legacy code where one wishes to separate some data loading logic
-   * from a fragment and reap the benefits of presenters for lifecycle aware behaviour without
-   * manipulating the view logic.
-   */
-  open fun propagateStatesTo(lifecycleOwner: LifecycleOwner, observer: (S) -> Unit) {
-    this.lifecycleOwner = lifecycleOwner
-    propagateStatesTo(observer)
-  }
 
   /**
    * Delegate view events to additional presenters.
@@ -52,21 +24,12 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
   }
 
   /**
-   * Sends a [state] for the view delegate to process in order to reflect UI changes.
-   * This must be called from the main thread.
+   * Propagate states sent by this presenter to another observer.
+   * This may be of use when adding amalia to legacy code or in a parent child presenter hierarchy.
    */
-  @UiThread
-  fun pushState(state: S) {
-    viewStateLiveData.value = state
-  }
-
-  /**
-   * Sends a [state] for the view delegate to process in order to reflect UI changes.
-   * This may be called from a background thread.
-   */
-  @WorkerThread
-  fun pushStateOnMainLooper(state: S) {
-    viewStateLiveData.postValue(state)
+  fun propagateStatesTo(observer: (S) -> Unit) {
+    lifecycleOwner ?: error("You must call bind() prior to propagating states. Alternatively you must provide a lifecycle.")
+    stateLiveData().observe(lifecycleOwner!!, Observer { observer(it) })
   }
 
   private fun processViewEvent(event: E) {
@@ -118,17 +81,5 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
    */
   open fun onBindViewDelegate(viewDelegate: BaseViewDelegate<S, E>) {
 
-  }
-
-  @CallSuper
-  override fun onDestroy(owner: LifecycleOwner) {
-    // When the view delegate's lifecycle owner is destroyed, let's ensure we avoid any leaking.
-    lifecycleOwner = null
-  }
-
-  override fun onCleared() {
-    //https://github.com/googlecodelabs/android-lifecycles/issues/5
-    // We do not have to remove the observer to the LifecycleRegistry according to the above
-    // If this changes we should clear out our observer manually.
   }
 }

@@ -77,13 +77,6 @@ inline fun <reified P : BasePresenter<*, *>> presenterProvider(
   }
 }
 
-val LifecycleOwner.applicationContext: Context
-  get() = when (this) {
-    is FragmentActivity -> this.application
-    is Fragment -> this.activity!!.application
-    else -> error("Unable to obtain context due to unsupported lifecycle owner.")
-  }
-
 /**
  * Workaround for reified types which allows the use of [presenterProvider] in Java.
  * Moreover, this will support constructor arguments in presenters.
