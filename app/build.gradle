@@ -43,7 +43,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.2-alpha01'
 
 //    implementation project(path: ':library')
-    implementation 'com.github.vicidroiddev:amalia:0.0.1'
+    implementation 'com.github.vicidroiddev:amalia:0.0.2'
 
     // Required to use androidx.lifecycle.DefaultLifecycleObserver
     implementation "android.arch.lifecycle:common-java8:$lifecycleVersion"
