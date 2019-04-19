@@ -39,7 +39,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
    * from a fragment and reap the benefits of presenters for lifecycle aware behaviour without
    * manipulating the view logic.
    */
-  fun propagateStatesTo(lifecycleOwner: LifecycleOwner, observer: (S) -> Unit) {
+  open fun propagateStatesTo(lifecycleOwner: LifecycleOwner, observer: (S) -> Unit) {
     this.lifecycleOwner = lifecycleOwner
     propagateStatesTo(observer)
   }
