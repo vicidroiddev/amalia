@@ -42,11 +42,12 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.2-alpha01'
 
-//    implementation project(path: ':library')
-    implementation 'com.github.vicidroiddev:amalia:0.0.2'
     implementation('com.github.bumptech.glide:glide:4.9.0') {
         exclude group: "com.android.support"
     }
+
+    implementation project(path: ':library')
+//    implementation 'com.github.vicidroiddev:amalia:0.0.2'
 
     // Required to use androidx.lifecycle.DefaultLifecycleObserver
     implementation "android.arch.lifecycle:common-java8:$lifecycleVersion"
