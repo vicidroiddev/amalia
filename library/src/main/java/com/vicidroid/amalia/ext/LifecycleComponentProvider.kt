@@ -15,7 +15,7 @@ import com.vicidroid.amalia.core.LifecycleComponent
 inline fun <reified C : LifecycleComponent<*>> Fragment.componentProvider(crossinline componentCreator: () -> C) =
     componentProvider(this, componentCreator)
 
-inline fun <reified P : LifecycleComponent<*>> FragmentActivity.presenterProvider(crossinline presenterCreator: () -> P) =
+inline fun <reified P : LifecycleComponent<*>> FragmentActivity.componentProvider(crossinline presenterCreator: () -> P) =
     componentProvider(this, presenterCreator)
 
 inline fun <reified P : LifecycleComponent<*>> AppCompatActivity.componentProvider(crossinline presenterCreator: () -> P) =
@@ -29,19 +29,15 @@ inline fun <reified C : LifecycleComponent<*>> componentProvider(
 
     @Suppress("UNCHECKED_CAST")
     val factory = object : ViewModelProvider.Factory {
-        override fun <VM : ViewModel> create(componentClazz: Class<VM>): VM {
-            return (componentCreator() as VM).also { component ->
-                (component as C).let {
-                    component.applicationContext = lifecycleOwner.applicationContext
-                    component.lifecycleOwner = lifecycleOwner
-                }
-            }
-        }
+        override fun <VM : ViewModel> create(componentClazz: Class<VM>) = componentCreator() as VM
     }
 
     when (lifecycleOwner) {
         is FragmentActivity -> ViewModelProviders.of(lifecycleOwner, factory)[C::class.java]
         is Fragment -> ViewModelProviders.of(lifecycleOwner, factory)[C::class.java]
         else -> error("Unsupported lifecycle owner detected.")
+    }.also { c ->
+        c.lifecycleOwner = lifecycleOwner
+        c.applicationContext = lifecycleOwner.applicationContext
     }
 }

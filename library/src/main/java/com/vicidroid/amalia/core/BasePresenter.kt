@@ -23,15 +23,6 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     viewEventPropagatorLiveData.observe(lifecycleOwner!!, Observer { presenter.onViewEvent(it) })
   }
 
-  /**
-   * Propagate states sent by this presenter to another observer.
-   * This may be of use when adding amalia to legacy code or in a parent child presenter hierarchy.
-   */
-  fun propagateStatesTo(observer: (S) -> Unit) {
-    lifecycleOwner ?: error("You must call bind() prior to propagating states. Alternatively you must provide a lifecycle.")
-    stateLiveData().observe(lifecycleOwner!!, Observer { observer(it) })
-  }
-
   private fun processViewEvent(event: E) {
     onViewEvent(event)
     viewEventPropagatorLiveData.value = event

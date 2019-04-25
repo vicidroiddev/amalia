@@ -5,7 +5,6 @@ import androidx.annotation.CallSuper
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.*
-import com.vicidroid.amalia.ui.BaseViewDelegate
 
 /**
  * Backed by Android's ViewModel in order to easily survive configuration changes.
@@ -39,10 +38,20 @@ abstract class LifecycleComponent<S : ViewState>
      * from a fragment and reap the benefits of components for lifecycle aware behaviour without
      * manipulating the view logic.
      */
+    @Deprecated(message = "Leverage a provider which injects a lifecycle", replaceWith = ReplaceWith("propagateStatesTo(observer)"))
     open fun propagateStatesTo(lifecycleOwner: LifecycleOwner, observer: (S) -> Unit) {
         this.lifecycleOwner = lifecycleOwner
         lifecycleOwner.lifecycle.addObserver(this)
         stateLiveData().observe(lifecycleOwner, Observer { observer(it) })
+    }
+
+    /**
+     * Propagate pushes states to another via the provided observer.
+     * This may be of use when adding amalia to legacy code or in a parent child presenter hierarchy.
+     */
+    fun propagateStatesTo(observer: (S) -> Unit) {
+        lifecycleOwner ?: error("You must call bind() prior to propagating states. Alternatively you must provide a lifecycle.")
+        stateLiveData().observe(lifecycleOwner!!, Observer { observer(it) })
     }
 
     /**
