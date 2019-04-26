@@ -59,7 +59,7 @@ In your app level build.gradle file:
 
 ```gradle
 dependencies {
-  implementation 'com.github.vicidroiddev:amalia:latest_version`
+  implementation 'com.github.vicidroiddev:amalia:latest_version'
 }
 ```
 
