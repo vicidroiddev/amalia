@@ -204,7 +204,7 @@ class BasePresenterTest : TestCase() {
       childPresenter.propagateStatesTo(::onStatePropagated)
     }
 
-    fun onStatePropagated(state: ViewState) {}
+    fun onStatePropagated(@Suppress("UNUSED_PARAMETER") state: ViewState) {}
   }
 
   class FakeViewDelegate(lifecycleOwner: LifecycleOwner, rootView: View)
