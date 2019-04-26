@@ -63,6 +63,9 @@ dependencies {
 }
 ```
 
+The latest version can be seen on maven: 
+https://search.maven.org/search?q=g:com.github.vicidroiddev%20AND%20a:amalia&core=gav
+
 
 ## Examples
 
