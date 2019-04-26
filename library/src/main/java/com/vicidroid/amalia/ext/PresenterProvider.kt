@@ -74,7 +74,7 @@ inline fun <reified P : BasePresenter<*, *>> presenterProvider(
     is FragmentActivity -> ViewModelProviders.of(lifecycleOwner, factory)[P::class.java]
     is Fragment -> ViewModelProviders.of(lifecycleOwner, factory)[P::class.java]
     else -> error("Unsupported lifecycle owner detected.")
-  }
+  }.also { p -> p.lifecycleOwner = lifecycleOwner }
 }
 
 /**

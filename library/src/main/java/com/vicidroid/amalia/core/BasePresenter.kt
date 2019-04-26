@@ -44,10 +44,6 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
     val viewDelegateLifecycleOwner = viewDelegate.lifecycleOwner
 
-    // Allow this class to listen for lifecycle events from the view delegate.
-    // Just override a lifecycle method, example #onResume()
-    viewDelegateLifecycleOwner.lifecycle.addObserver(this)
-
     // Observe view events sent from the view delegate
     viewDelegate
         .eventLiveData()
