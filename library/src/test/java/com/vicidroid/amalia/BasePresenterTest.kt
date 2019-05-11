@@ -3,17 +3,12 @@ package com.vicidroid.amalia
 import android.app.Application
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.ViewModelStore
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import androidx.lifecycle.*
+import com.nhaarman.mockitokotlin2.*
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
@@ -21,10 +16,7 @@ import com.vicidroid.amalia.ext.childPresenterProvider
 import com.vicidroid.amalia.ext.presenterProvider
 import com.vicidroid.amalia.ui.BaseViewDelegate
 import junit.framework.TestCase
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -94,23 +86,20 @@ class BasePresenterTest : TestCase() {
     }
 
     @Test
-    fun `presenter becomes lifecycle aware`() {
+    fun `presenter is lifecycle aware upon creation`() {
         bindPresenter()
-
-        lifecycle.markState(Lifecycle.State.CREATED)
         assertNotNull(presenter.viewDelegateLifecycleOwner)
-
-        verify(lifecycle).addObserver(presenter)
-        verify(presenter).onCreate(lifecycleOwner)
-        verify(presenter).onBindViewDelegate(viewDelegate)
+        verify(lifecycle).addObserver(presenter.viewDelegateLifecycleObserver)
+        verify(presenter).onViewDelegateCreated(lifecycleOwner)
     }
 
     @Test
-    fun `presenter cleans up resources`() {
+    fun `presenter is lifecycle aware upon destruction`() {
         bindPresenter()
         lifecycle.markState(Lifecycle.State.DESTROYED)
-        verify(presenter).onDestroy(lifecycleOwner)
+        verify(presenter).onViewDelegateDestroyed(lifecycleOwner)
         assertNull(presenter.viewDelegateLifecycleOwner)
+        assertEquals(lifecycle.observerCount, 0)
     }
 
     @Test
@@ -131,12 +120,9 @@ class BasePresenterTest : TestCase() {
     @Test
     fun `view state propogated to parent presenter`() {
         bindPresenter()
-
         parentPresenter.childPresenter = presenter
         parentPresenter.propagate()
-
         presenter.pushState(viewState)
-
         verify(parentPresenter).onStatePropagated(viewState)
     }
 
@@ -227,7 +213,8 @@ class BasePresenterTest : TestCase() {
             childPresenter.propagateStatesTo(::onStatePropagated)
         }
 
-        fun onStatePropagated(state: ViewState) {}
+        fun onStatePropagated(state: ViewState) {
+        }
     }
 
     class FakeViewDelegate(lifecycleOwner: LifecycleOwner, rootView: View) :

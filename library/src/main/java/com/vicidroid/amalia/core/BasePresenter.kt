@@ -1,6 +1,7 @@
 package com.vicidroid.amalia.core
 
 import android.content.Context
+import android.os.Looper
 import androidx.annotation.CallSuper
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
@@ -10,7 +11,7 @@ import com.vicidroid.amalia.ui.BaseViewDelegate
 /**
  * Backed by Android's ViewModel in order to easily survive configuration changes.
  */
-abstract class BasePresenter<S : ViewState, E : ViewEvent>
+abstract class BasePresenter<S : ViewState, E : ViewEvent>()
   : ViewModel(),
     DefaultLifecycleObserver {
 
@@ -26,6 +27,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
    * - especially for fragments where the viewLifecycleOwner should be used.
    */
   var viewDelegateLifecycleOwner: LifecycleOwner? = null
+
+  lateinit var viewDelegateLifecycleObserver: DefaultLifecycleObserver
 
   fun stateLiveData(): LiveData<S> = viewStateLiveData
 
@@ -47,20 +50,14 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
   /**
    * Sends a [state] for the view delegate to process in order to reflect UI changes.
-   * This must be called from the main thread.
+   * This can be called from any thread.
+   * [LiveData.postValue] will be used if called from a background thread.
    */
-  @UiThread
   fun pushState(state: S) {
-    viewStateLiveData.value = state
-  }
-
-  /**
-   * Sends a [state] for the view delegate to process in order to reflect UI changes.
-   * This may be called from a background thread.
-   */
-  @WorkerThread
-  fun pushStateOnMainLooper(state: S) {
-    viewStateLiveData.postValue(state)
+    when (Looper.myLooper() == Looper.getMainLooper()) {
+      true -> viewStateLiveData.value = state
+      false -> viewStateLiveData.postValue(state)
+    }
   }
 
   private fun processViewEvent(event: E) {
@@ -85,7 +82,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     // Allow this class to listen for lifecycle events from the view delegate.
     // Just override a lifecycle method, example #onResume()
     //TODO, wrap the events, don't expose the normal events to confuse who the lifecycle owner is
-    viewDelegate.lifecycleOwner.lifecycle.addObserver(this)
+    viewDelegateLifecycleObserver = createLifecycleObserver()
+    viewDelegate.lifecycleOwner.lifecycle.addObserver(viewDelegateLifecycleObserver)
 
     // Observe events sent from the delegate
     viewDelegate
@@ -108,6 +106,37 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     onBindViewDelegate(viewDelegate)
   }
 
+  private fun createLifecycleObserver() = object: DefaultLifecycleObserver {
+    override fun onCreate(owner: LifecycleOwner) {
+      onViewDelegateCreated(owner)
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+    }
+
+    override fun onPause(owner: LifecycleOwner) {
+    }
+
+    override fun onStart(owner: LifecycleOwner) {
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+      // When the view delegate's lifecycle owner indicates destruction, let's ensure we avoid any leaking.
+      viewDelegateLifecycleOwner = null
+
+      // https://github.com/googlecodelabs/android-lifecycles/issues/
+      // According to the above we do not need to remove the observer manually.
+      // Just to be safe we are doing it here. It will be re-added after bind(...) is called
+      owner.lifecycle.removeObserver(this)
+
+      onViewDelegateDestroyed(owner)
+    }
+  }
+
+  //region VIEW DELEGATE CALLBACKS
   /**
    * Allows for having multiple view delegates in a hierarchy.
    * Override [onBindViewDelegate] in your parent presenter and call [bind] on your child presenters
@@ -117,15 +146,29 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
   }
 
-  @CallSuper
-  override fun onDestroy(owner: LifecycleOwner) {
-    // When the view delegate's lifecycle owner is destroyed, let's ensure we avoid any leaking.
-    viewDelegateLifecycleOwner = null
+  open fun onViewDelegateCreated(owner: LifecycleOwner) {
   }
 
+  open fun onViewDelegateDestroyed(owner: LifecycleOwner) {
+  }
+  //endregion
+
+  /**
+   * An explicit wrapper around viewmodels onCleared indication.
+   * While presenters will survive configuration changes, they will be removed according to
+   * to the lifecycle owner's ON_DESTROY event emitted by the instance of the activity or fragment.
+   * Note this does not follow the viewlifecycleowner used for fragments.
+   * See [com.vicidroid.amalia.ext.presenterProvider]
+   *
+   * This may be useful for removing certain callbacks that should outlive the view lifecycle.
+   * Otherwise rely on [onViewDelegateDestroyed]
+   */
+  open fun onPresenterDestroyed() {
+
+  }
+
+  @CallSuper
   override fun onCleared() {
-    //https://github.com/googlecodelabs/android-lifecycles/issues/5
-    // We do not have to remove the observer to the LifecycleRegistry according to the above
-    // If this changes we should clear out our observer manually.
+    onPresenterDestroyed()
   }
 }
