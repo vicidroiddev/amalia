@@ -20,7 +20,12 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
   private val viewEventPropagatorLiveData = MutableLiveData<E>()
 
-  var lifecycleOwner: LifecycleOwner? = null
+  /**
+   * The lifecycle owner belonging to the view delegate.
+   * Note: This may differ from the lifecycle owner that is used to retain this presenter
+   * - especially for fragments where the viewLifecycleOwner should be used.
+   */
+  var viewDelegateLifecycleOwner: LifecycleOwner? = null
 
   fun stateLiveData(): LiveData<S> = viewStateLiveData
 
@@ -29,26 +34,15 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
    * This may be of use when adding amalia to legacy code or in a parent child presenter hierarchy.
    */
   fun propagateStatesTo(observer: (S) -> Unit) {
-    lifecycleOwner ?: error("You must call bind() prior to propagating states. Alternatively you must provide a lifecycle.")
-    stateLiveData().observe(lifecycleOwner!!, Observer { observer(it) })
-  }
-
-  /**
-   * Can be used for naked presenters that will not be attached to a view delegate.
-   * This may be of use for legacy code where one wishes to separate some data loading logic
-   * from a fragment and reap the benefits of presenters for lifecycle aware behaviour without
-   * manipulating the view logic.
-   */
-  open fun propagateStatesTo(lifecycleOwner: LifecycleOwner, observer: (S) -> Unit) {
-    this.lifecycleOwner = lifecycleOwner
-    propagateStatesTo(observer)
+    viewDelegateLifecycleOwner ?: error("You must call bind() prior to propagating states as the view delegates lifecycle owner is required.")
+    stateLiveData().observe(viewDelegateLifecycleOwner!!, Observer { observer(it) })
   }
 
   /**
    * Delegate view events to additional presenters.
    */
   fun viewEventDelegator(presenter: BasePresenter<*, E>) {
-    viewEventPropagatorLiveData.observe(lifecycleOwner!!, Observer { presenter.onViewEvent(it) })
+    viewEventPropagatorLiveData.observe(viewDelegateLifecycleOwner!!, Observer { presenter.onViewEvent(it) })
   }
 
   /**
@@ -86,27 +80,30 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
    * • state propagation from presenter to delegate
    */
   fun bind(viewDelegate: BaseViewDelegate<S, E>) {
-    lifecycleOwner?.let { error("Second call to bind() is suspicious.") }
-
-    val viewDelegateLifecycleOwner = viewDelegate.lifecycleOwner
+    this.viewDelegateLifecycleOwner?.let { error("Second call to bind() is suspicious.") }
 
     // Allow this class to listen for lifecycle events from the view delegate.
     // Just override a lifecycle method, example #onResume()
-    viewDelegateLifecycleOwner.lifecycle.addObserver(this)
+    //TODO, wrap the events, don't expose the normal events to confuse who the lifecycle owner is
+    viewDelegate.lifecycleOwner.lifecycle.addObserver(this)
 
-    // Observe view events sent from the view delegate
+    // Observe events sent from the delegate
     viewDelegate
         .eventLiveData()
-        .observe(viewDelegateLifecycleOwner, Observer { event -> processViewEvent(event) })
+        .observe(viewDelegate.lifecycleOwner, Observer { event -> processViewEvent(event) })
 
-    // Propagate view states sent from this presenter
+    // Observe states sent from this presenter and propagate them to the delegate.
+    // Propagation will only occur if the delegate's lifecycle owner indicates a good state.
+    // Furthermore, the observer which holds on to a delegate will be removed according to the delegate's lifecycleowner
+    // This will prevent leaks
     stateLiveData()
-        .observe(viewDelegateLifecycleOwner, Observer { state -> viewDelegate.renderViewState(state) })
+        .observe(viewDelegate.lifecycleOwner, Observer { state -> viewDelegate.renderViewState(state) })
 
-    // Keep track of the lifecycle owner belonging to the view delegate.
-    // This allows event delegation to other presenters.
-    // This must be removed should the lifecycle owner go through onDestroy
-    lifecycleOwner = viewDelegateLifecycleOwner
+    // Keep track of the lifecycle owner belonging to the delegate.
+    // This allows event delegation to other presenters in a heirachy.
+    // This must be nulled out should the lifecycle owner of the delegate go through onDestroy
+    // Remember, presenters outlive the view lifecycle.
+    viewDelegateLifecycleOwner = viewDelegate.lifecycleOwner
 
     onBindViewDelegate(viewDelegate)
   }
@@ -123,7 +120,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
   @CallSuper
   override fun onDestroy(owner: LifecycleOwner) {
     // When the view delegate's lifecycle owner is destroyed, let's ensure we avoid any leaking.
-    lifecycleOwner = null
+    viewDelegateLifecycleOwner = null
   }
 
   override fun onCleared() {

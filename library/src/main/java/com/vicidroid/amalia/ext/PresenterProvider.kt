@@ -40,10 +40,10 @@ inline fun <reified P : BasePresenter<*, *>> AppCompatActivity.presenterProvider
  */
 inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterProvider(
     crossinline presenterCreator: () -> P): P {
-  lifecycleOwner ?: error("The parent presenter must be bound to a view delegate.")
+  viewDelegateLifecycleOwner ?: error("The parent presenter must be bound to a view delegate.")
   return presenterCreator().also { childPresenter ->
       childPresenter.applicationContext = applicationContext
-      childPresenter.lifecycleOwner = lifecycleOwner
+      childPresenter.viewDelegateLifecycleOwner = viewDelegateLifecycleOwner
   }
 }
 
