@@ -93,6 +93,8 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
    * Ensure [onSaveInstanceState] is called by the hosting fragment or activity
    * TODO: build hook to automatically call [onSaveInstanceState]
    */
-  abstract fun onSaveInstanceState(outState: Bundle)
+  open fun onSaveInstanceState(outState: Bundle) {
+
+  }
 
 }
