@@ -6,6 +6,9 @@ import com.vicidroid.amalia.ui.BaseViewDelegate
 
 class NotificationPresenter : BasePresenter<NavigationState, NavigationEvent>(),
     Refreshable {
+
+    val imageUrl = "https://i.redd.it/owhsn5k98hx21.jpg"
+    
     override fun onBindViewDelegate(viewDelegate: BaseViewDelegate<NavigationState, NavigationEvent>) {
         calculateTimestamp()
     }
@@ -16,7 +19,7 @@ class NotificationPresenter : BasePresenter<NavigationState, NavigationEvent>(),
 
     fun calculateTimestamp(force: Boolean = false) {
         pushState(
-            NavigationState.Loaded("Notification: " + System.currentTimeMillis().toString()),
+            NavigationState.Loaded("Notification: " + System.currentTimeMillis().toString(), imageUrl),
             preferCachedState = true)
     }
 }
