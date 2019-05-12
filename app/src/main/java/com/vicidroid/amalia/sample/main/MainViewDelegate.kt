@@ -1,8 +1,8 @@
 package com.vicidroid.amalia.sample.main
 
 import android.content.Context
-import android.transition.Transition
 import android.transition.TransitionManager
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +13,7 @@ import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.main.dashboard.DashboardViewDelegate
 import com.vicidroid.amalia.sample.main.home.HomeViewDelegate
 import com.vicidroid.amalia.sample.main.notification.NavigationViewDelegate
+import com.vicidroid.amalia.sample.main.utils.inflate
 import com.vicidroid.amalia.ui.BaseViewDelegate
 
 class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
@@ -44,10 +45,6 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         false
     }
 
-    init {
-        bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-    }
-
     val homeViewDelegate = HomeViewDelegate(
         viewLifeCycleOwner,
         context.inflate(
@@ -72,15 +69,25 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         )
     )
 
+    val navigationIdMap = SparseArray<BaseViewDelegate<*,*>>(3).apply {
+        append(R.id.navigation_home, homeViewDelegate)
+        append(R.id.navigation_dashboard, dashboardViewDelegate)
+        append(R.id.navigation_notifications, notificationsViewDelegate)
+    }
+
+    init {
+        bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+    }
+
 
     override fun renderViewState(state: MainState) {
         when (state) {
-            MainState.FirstLoad -> renderFirstLoad()
+            is MainState.BottomNavigationItemSelected -> renderDelegate(state.navigationId)
         }
     }
 
-    private fun renderFirstLoad() {
-        homeViewDelegate.showDelegate()
+    private fun renderDelegate(navigationId: Int) {
+        navigationIdMap[navigationId].showDelegate()
     }
 
     private fun BaseViewDelegate<*, *>.showDelegate() {

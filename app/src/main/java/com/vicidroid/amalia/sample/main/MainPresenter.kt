@@ -25,7 +25,7 @@ class MainPresenter : BasePresenter<MainState, MainEvent>() {
                 notificationPresenter.bind(viewDelegate.notificationsViewDelegate)
             }
         }
-        pushState(MainState.FirstLoad)
+        pushState(MainState.BottomNavigationItemSelected(selectedBottomId))
     }
 
     override fun onViewEvent(event: MainEvent) {

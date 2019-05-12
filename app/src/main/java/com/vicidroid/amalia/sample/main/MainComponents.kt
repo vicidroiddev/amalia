@@ -5,8 +5,7 @@ import com.vicidroid.amalia.core.ViewState
 
 
 sealed class MainState : ViewState {
-    object FirstLoad : MainState()
-
+    class BottomNavigationItemSelected(val navigationId: Int) : MainState()
 }
 
 sealed class MainEvent : ViewEvent {
