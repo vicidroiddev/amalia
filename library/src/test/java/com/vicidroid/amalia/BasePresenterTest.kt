@@ -3,7 +3,6 @@ package com.vicidroid.amalia
 import android.app.Application
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentActivity
@@ -23,6 +22,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.lang.Exception
 
 
 @RunWith(RobolectricTestRunner::class)
@@ -88,18 +88,63 @@ class BasePresenterTest : TestCase() {
     @Test
     fun `presenter is viewdelegate lifecycle aware upon creation`() {
         bindPresenter()
-        assertNotNull(presenter.viewDelegateLifecycleOwner)
-        verify(lifecycle).addObserver(presenter.viewDelegateLifecycleObserver)
-        verify(presenter).onViewDelegateCreated(lifecycleOwner)
+        assertNotNull(presenter.viewLifecycleOwner)
+        verify(lifecycle).addObserver(presenter.viewLifecycleObserver)
+        verify(presenter).onViewCreated(lifecycleOwner)
     }
 
     @Test
     fun `presenter is viewdelegate lifecycle aware upon destruction`() {
         bindPresenter()
         lifecycle.markState(Lifecycle.State.DESTROYED)
-        verify(presenter).onViewDelegateDestroyed(lifecycleOwner)
-        assertNull(presenter.viewDelegateLifecycleOwner)
+        verify(presenter).onViewDestroyed(lifecycleOwner)
+        assertNull(presenter.viewLifecycleOwner)
         assertEquals(lifecycle.observerCount, 0)
+    }
+
+    @Test
+    fun `presenter is lifecycle aware when using bind without view delegate`() {
+        val presenter = spy(FakePresenter())
+        lifecycle.markState(Lifecycle.State.CREATED)
+        presenter.bind(lifecycleOwner)
+
+        verify(presenter).onViewCreated(lifecycleOwner)
+        verify(lifecycle).addObserver(presenter.viewLifecycleObserver)
+        assertNotNull(presenter.viewLifecycleOwner)
+
+        lifecycle.markState(Lifecycle.State.DESTROYED)
+        verify(presenter).onViewDestroyed(lifecycleOwner)
+        assertNull(presenter.viewLifecycleOwner)
+    }
+
+    @Test fun `throws exception when bind is performed with view delegate`() {
+        val presenter = spy(FakePresenter())
+        presenter.bind(viewDelegate)
+
+        var thrownException: Exception? = null
+
+        try {
+            presenter.bind(viewDelegate)
+        } catch (e: Exception) {
+            thrownException = e
+        } finally {
+            assertEquals(thrownException!!.message, "Second call to bind() is suspicious.")
+        }
+    }
+
+    @Test fun `throws exception when bind is performed twice with lifecycle owner`() {
+        val presenter = spy(FakePresenter())
+        presenter.bind(lifecycleOwner)
+
+        var thrownException: Exception? = null
+
+        try {
+            presenter.bind(lifecycleOwner)
+        } catch (e: Exception) {
+            thrownException = e
+        } finally {
+            assertEquals(thrownException!!.message, "Second call to bind() is suspicious.")
+        }
     }
 
     @Test
@@ -196,9 +241,11 @@ class BasePresenterTest : TestCase() {
         val childPresenter = parentPresenter.childPresenterProvider { FakePresenter() }.value
         childPresenter.bind(viewDelegate)
 
-        Assert.assertEquals(childPresenter.viewDelegateLifecycleOwner, viewDelegate.lifecycleOwner)
+        Assert.assertEquals(childPresenter.viewLifecycleOwner, viewDelegate.lifecycleOwner)
         Assert.assertEquals(childPresenter.applicationContext, activity.application)
     }
+
+
 
     private fun bindPresenter() {
         presenter.bind(viewDelegate)

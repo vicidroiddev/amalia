@@ -45,7 +45,7 @@ inline fun <reified P : BasePresenter<*, *>> LifecycleOwner.presenterProvider(
  */
 inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterProvider(
     crossinline presenterCreator: () -> P) = lazy {
-      viewDelegateLifecycleOwner ?: error("The parent presenter must be bound to a view delegate.")
+      viewLifecycleOwner ?: error("The parent presenter must be bound to a view delegate.")
       presenterLifecycleOwner ?: error("The parent presenter must have been initialized.")
       presenterCreator().also { childPresenter ->
           childPresenter.applicationContext = applicationContext
