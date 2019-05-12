@@ -25,6 +25,10 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>()
    * - especially for fragments where the viewLifecycleOwner should be used.
    */
   var viewLifecycleOwner: LifecycleOwner? = null
+  private set(value) {
+    field = value
+    value?.let { onBindViewLifecycleOwner(it) }
+  }
 
   var presenterLifecycleOwner: LifecycleOwner? = null
 
@@ -144,13 +148,17 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>()
     }
   }
 
-  //region VIEW DELEGATE CALLBACKS
+  //region VIEW RELATED CALLBACKS
   /**
    * Allows for having multiple view delegates in a hierarchy.
    * Override [onBindViewDelegate] in your parent presenter and call [bind] on your child presenters
    * [viewDelegate] represents the view delegate that is bound to this presenter.
    */
   open fun onBindViewDelegate(viewDelegate: BaseViewDelegate<S, E>) {
+
+  }
+
+  open fun onBindViewLifecycleOwner(owner: LifecycleOwner) {
 
   }
 

@@ -108,6 +108,7 @@ class BasePresenterTest : TestCase() {
         lifecycle.markState(Lifecycle.State.CREATED)
         presenter.bind(lifecycleOwner)
 
+        verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
         verify(presenter).onViewCreated(lifecycleOwner)
         verify(lifecycle).addObserver(presenter.viewLifecycleObserver)
         assertNotNull(presenter.viewLifecycleOwner)
@@ -215,6 +216,7 @@ class BasePresenterTest : TestCase() {
         val presenter = spy(activity.presenterProvider { (FakePresenter()) }.value)
         presenter.bind(viewDelegate)
         verify(presenter).onBindViewDelegate(viewDelegate)
+        verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
         assertNotNull(presenter.presenterLifecycleOwner)
     }
 
@@ -274,9 +276,8 @@ class BasePresenterTest : TestCase() {
             childPresenter.propagateStatesTo(::onStatePropagated)
         }
 
-        fun onStatePropagated(state: ViewState) {
+        fun onStatePropagated(@Suppress("UNUSED_PARAMETER") state: ViewState) {}
         }
-    }
 
     class FakeViewDelegate(lifecycleOwner: LifecycleOwner, rootView: View) :
         BaseViewDelegate<ViewState, ViewEvent>(lifecycleOwner, rootView) {
