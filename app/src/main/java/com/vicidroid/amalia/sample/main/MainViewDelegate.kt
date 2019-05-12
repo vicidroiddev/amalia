@@ -88,8 +88,4 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         anchor.removeAllViews()
         anchor.addView(this.rootView)
     }
-
-    private fun Context.inflate(layout: Int, root: View? = null, attach: Boolean = false) =
-        LayoutInflater.from(this).inflate(layout, root as ViewGroup?, attach)
-
 }
