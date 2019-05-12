@@ -181,6 +181,7 @@ class BasePresenterTest : TestCase() {
         parentPresenter.bind(viewDelegate)
 
         val childPresenter = parentPresenter.childPresenterProvider { FakePresenter() }
+        childPresenter.bind(viewDelegate)
 
         Assert.assertEquals(childPresenter.viewDelegateLifecycleOwner, viewDelegate.lifecycleOwner)
         Assert.assertEquals(childPresenter.applicationContext, activity.application)

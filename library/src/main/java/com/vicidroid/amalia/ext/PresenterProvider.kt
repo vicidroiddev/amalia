@@ -43,7 +43,6 @@ inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterP
   viewDelegateLifecycleOwner ?: error("The parent presenter must be bound to a view delegate.")
   return presenterCreator().also { childPresenter ->
       childPresenter.applicationContext = applicationContext
-      childPresenter.viewDelegateLifecycleOwner = viewDelegateLifecycleOwner
   }
 }
 
