@@ -1,11 +1,8 @@
 package com.vicidroid.amalia.sample.main
 
-import android.content.Context
 import android.transition.TransitionManager
 import android.util.SparseArray
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -82,11 +79,11 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
 
     override fun renderViewState(state: MainState) {
         when (state) {
-            is MainState.BottomNavigationItemSelected -> renderDelegate(state.navigationId)
+            is MainState.BottomNavigationItemSelected -> renderBottomNavigationItem(state.navigationId)
         }
     }
 
-    private fun renderDelegate(navigationId: Int) {
+    private fun renderBottomNavigationItem(navigationId: Int) {
         navigationIdMap[navigationId].showDelegate()
     }
 
