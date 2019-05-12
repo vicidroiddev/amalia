@@ -1,6 +1,8 @@
 package com.vicidroid.amalia.sample.main
 
 import android.content.Context
+import android.transition.Transition
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,6 +84,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
     }
 
     private fun BaseViewDelegate<*, *>.showDelegate() {
+        TransitionManager.beginDelayedTransition(anchor)
         anchor.removeAllViews()
         anchor.addView(this.rootView)
     }
