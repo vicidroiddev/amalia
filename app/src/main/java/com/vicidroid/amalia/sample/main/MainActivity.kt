@@ -8,7 +8,7 @@ import com.vicidroid.amalia.sample.R
 
 class MainActivity : AppCompatActivity() {
 
-    private val testPresenter by presenterProvider {
+    private val mainPresenter by presenterProvider {
         MainPresenter()
     }
 
@@ -19,6 +19,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        testPresenter.bind(viewDelegate)
+        mainPresenter.bind(viewDelegate)
     }
 }
