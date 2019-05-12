@@ -13,16 +13,16 @@ class MainPresenter : BasePresenter<MainState, MainEvent>() {
 
     var selectedBottomId: Int = R.id.navigation_home
 
-    lateinit var homePresenter: HomePresenter
-    lateinit var dashboardPresenter: DashboardPresenter
-    lateinit var notificationPresenter: NotificationPresenter
+    val homePresenter by childPresenterProvider { HomePresenter() }
+    val dashboardPresenter by childPresenterProvider { DashboardPresenter() }
+    val notificationPresenter by childPresenterProvider { NotificationPresenter() }
 
     override fun onBindViewDelegate(viewDelegate: BaseViewDelegate<MainState, MainEvent>) {
         when (viewDelegate) {
             is MainViewDelegate -> {
-                homePresenter = childPresenterProvider { HomePresenter() }.also { p->  p.bind(viewDelegate.homeViewDelegate) }
-                dashboardPresenter = childPresenterProvider { DashboardPresenter() }.also { p->  p.bind(viewDelegate.dashboardViewDelegate) }
-                notificationPresenter = childPresenterProvider { NotificationPresenter() }.also { p->  p.bind(viewDelegate.notificationsViewDelegate) }
+                homePresenter.bind(viewDelegate.homeViewDelegate)
+                dashboardPresenter.bind(viewDelegate.dashboardViewDelegate)
+                notificationPresenter.bind(viewDelegate.notificationsViewDelegate)
             }
         }
         pushState(MainState.FirstLoad)

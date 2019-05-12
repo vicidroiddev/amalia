@@ -28,6 +28,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>()
    */
   var viewDelegateLifecycleOwner: LifecycleOwner? = null
 
+  var presenterLifecycleOwner: LifecycleOwner? = null
+
   lateinit var viewDelegateLifecycleObserver: DefaultLifecycleObserver
 
   fun stateLiveData(): LiveData<S> = viewStateLiveData
@@ -169,6 +171,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>()
 
   @CallSuper
   override fun onCleared() {
+    presenterLifecycleOwner = null
     onPresenterDestroyed()
   }
 }

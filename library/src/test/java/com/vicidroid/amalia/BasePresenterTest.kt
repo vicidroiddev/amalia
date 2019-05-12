@@ -86,7 +86,7 @@ class BasePresenterTest : TestCase() {
     }
 
     @Test
-    fun `presenter is lifecycle aware upon creation`() {
+    fun `presenter is viewdelegate lifecycle aware upon creation`() {
         bindPresenter()
         assertNotNull(presenter.viewDelegateLifecycleOwner)
         verify(lifecycle).addObserver(presenter.viewDelegateLifecycleObserver)
@@ -94,7 +94,7 @@ class BasePresenterTest : TestCase() {
     }
 
     @Test
-    fun `presenter is lifecycle aware upon destruction`() {
+    fun `presenter is viewdelegate lifecycle aware upon destruction`() {
         bindPresenter()
         lifecycle.markState(Lifecycle.State.DESTROYED)
         verify(presenter).onViewDelegateDestroyed(lifecycleOwner)
@@ -170,7 +170,20 @@ class BasePresenterTest : TestCase() {
         val presenter = spy(activity.presenterProvider { (FakePresenter()) }.value)
         presenter.bind(viewDelegate)
         verify(presenter).onBindViewDelegate(viewDelegate)
+        assertNotNull(presenter.presenterLifecycleOwner)
     }
+
+//    // This fails because the activity is mocked and won't actually go through the regular handle lifecycle events.
+//    // IN the end onCleared is not called on the viewmodel
+//    @Test
+//    fun `destroys presenter lifecycleowner after using presenter provider`() {
+//        val controller = Robolectric.buildActivity(FragmentActivity::class.java).setup() ?
+//        val presenter = spy(activity.presenterProvider { (FakePresenter()) }.value)
+//        presenter.bind(viewDelegate)
+//        lifecycle.markState(Lifecycle.State.DESTROYED)
+//        verify(presenter).onPresenterDestroyed()
+//        assertNull(presenter.presenterLifecycleOwner)
+//    }
 
     @Test
     fun `child presenter provider leverages parent fields`() {
@@ -180,7 +193,7 @@ class BasePresenterTest : TestCase() {
 
         parentPresenter.bind(viewDelegate)
 
-        val childPresenter = parentPresenter.childPresenterProvider { FakePresenter() }
+        val childPresenter = parentPresenter.childPresenterProvider { FakePresenter() }.value
         childPresenter.bind(viewDelegate)
 
         Assert.assertEquals(childPresenter.viewDelegateLifecycleOwner, viewDelegate.lifecycleOwner)
