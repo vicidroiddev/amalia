@@ -33,7 +33,6 @@ class MainPresenter : BasePresenter<MainState, MainEvent>() {
             is MainEvent.BottomNavigationChanged -> {
                 selectedBottomId = event.toId
 
-
                 when (event.toId) {
                     R.id.navigation_home -> (homePresenter as Refreshable).onRefreshRequest()
                     R.id.navigation_dashboard -> (dashboardPresenter as Refreshable).onRefreshRequest()

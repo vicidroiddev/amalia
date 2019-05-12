@@ -9,7 +9,7 @@ import com.vicidroid.amalia.ui.BaseViewDelegate
 /**
  * Backed by Android's ViewModel in order to easily survive configuration changes.
  */
-abstract class BasePresenter<S : ViewState, E : ViewEvent>()
+abstract class BasePresenter<S : ViewState, E : ViewEvent>
   : ViewModel(),
     DefaultLifecycleObserver {
 
