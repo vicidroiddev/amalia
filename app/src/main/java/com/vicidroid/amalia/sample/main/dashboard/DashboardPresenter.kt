@@ -6,14 +6,17 @@ import com.vicidroid.amalia.ui.BaseViewDelegate
 class DashboardPresenter : BasePresenter<DashboardState, DashboardEvent>(),
     Refreshable {
     override fun onBindViewDelegate(viewDelegate: BaseViewDelegate<DashboardState, DashboardEvent>) {
-        calculateTime()
+        calculateTimestamp()
     }
 
     override fun onRefreshRequest() {
-        calculateTime()
+        calculateTimestamp(true)
     }
 
-    fun calculateTime() {
-        pushState(DashboardState.Loaded("Dashboard " + System.currentTimeMillis().toString()))
+    fun calculateTimestamp(force: Boolean = false) {
+        pushState(
+            DashboardState.Loaded("Dashboard " + System.currentTimeMillis().toString()),
+            preferCachedState = !force
+        )
     }
 }

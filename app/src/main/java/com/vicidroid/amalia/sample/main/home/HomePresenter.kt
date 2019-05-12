@@ -4,17 +4,20 @@ import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
 import com.vicidroid.amalia.ui.BaseViewDelegate
 
-class HomePresenter : BasePresenter<HomeState, HomeEvent>(),
+class HomePresenter
+    : BasePresenter<HomeState, HomeEvent>(),
     Refreshable {
+
     override fun onBindViewDelegate(viewDelegate: BaseViewDelegate<HomeState, HomeEvent>) {
-        calculateTime()
+        calculateTimestamp()
     }
 
     override fun onRefreshRequest() {
-        calculateTime()
+        calculateTimestamp(true)
     }
 
-    fun calculateTime() {
-        pushState(HomeState.Loaded("Home " + System.currentTimeMillis().toString()))
+    fun calculateTimestamp(force: Boolean = false) {
+        val newState = HomeState.Loaded("Home " + System.currentTimeMillis().toString())
+        pushState(newState, preferCachedState = !force)
     }
 }

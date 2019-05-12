@@ -7,14 +7,16 @@ import com.vicidroid.amalia.ui.BaseViewDelegate
 class NotificationPresenter : BasePresenter<NavigationState, NavigationEvent>(),
     Refreshable {
     override fun onBindViewDelegate(viewDelegate: BaseViewDelegate<NavigationState, NavigationEvent>) {
-        calculateTime()
+        calculateTimestamp()
     }
 
     override fun onRefreshRequest() {
-        calculateTime()
+        calculateTimestamp(true)
     }
 
-    fun calculateTime() {
-        pushState(NavigationState.Loaded("Notification: " + System.currentTimeMillis().toString()))
+    fun calculateTimestamp(force: Boolean = false) {
+        pushState(
+            NavigationState.Loaded("Notification: " + System.currentTimeMillis().toString()),
+            preferCachedState = true)
     }
 }
