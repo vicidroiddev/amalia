@@ -1,28 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_marginTop="@dimen/activity_vertical_margin"
-              android:layout_marginStart="@dimen/activity_horizontal_margin"
-              android:layout_marginEnd="@dimen/activity_horizontal_margin"
               android:layout_marginBottom="@dimen/activity_vertical_margin"
+              android:paddingBottom="8dp"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
     <TextView
             android:id="@+id/message"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
-    <ImageView
-            android:id="@+id/image"
+    <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="200dp"/>
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.button.MaterialButton
-            android:id="@+id/showToastBtn"
+            android:id="@+id/saveBtn"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Show toast"/>
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:text="Save timestamp"/>
+
 
 </LinearLayout>
