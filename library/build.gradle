@@ -44,6 +44,8 @@ dependencies {
 
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "android.arch.lifecycle:common-java8:1.1.1"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-alpha01'
+
 
     implementation "androidx.appcompat:appcompat:1.0.2"
     implementation "androidx.annotation:annotation:1.0.2"
