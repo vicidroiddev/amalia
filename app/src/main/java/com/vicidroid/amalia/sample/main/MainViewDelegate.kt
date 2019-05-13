@@ -66,7 +66,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         )
     )
 
-    val navigationIdMap = SparseArray<BaseViewDelegate<*,*>>(3).apply {
+    val navigationIdMap = SparseArray<BaseViewDelegate<*, *>>(3).apply {
         append(R.id.navigation_home, homeViewDelegate)
         append(R.id.navigation_dashboard, dashboardViewDelegate)
         append(R.id.navigation_notifications, notificationsViewDelegate)
