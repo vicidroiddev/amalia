@@ -19,6 +19,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
   private val viewEventPropagatorLiveData = MutableLiveData<E>()
 
+  lateinit var savedStateHandle: SavedStateHandle
+
   /**
    * The lifecycle owner belonging to the view delegate.
    * Note: This may differ from the lifecycle owner that is used to retain this presenter
@@ -169,6 +171,17 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
   }
   //endregion
 
+  //region PRESENTER RELATED CALLBACKS
+/**
+ * Provides the save state handle upon presenter creation.
+ * [onSaveStateHandleProvided] is called by the [com.vicidroid.amalia.ext.presenterProvider]
+ * [onSaveStateHandleProvided] is guaranteed to be called before [onBindViewDelegate]
+ * The handle may be used to retrieve data stored in the handle.
+ * To store data, access [savedStateHandle] and save anything parceable as soon as possible.
+ * There is no onSaveInstanceState callback.
+ */
+  open fun onSaveStateHandleProvided(handle: SavedStateHandle) {
+  }
   /**
    * An explicit wrapper around viewmodels onCleared indication.
    * While presenters will survive configuration changes, they will be removed according to
@@ -188,4 +201,6 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     presenterLifecycleOwner = null
     onPresenterDestroyed()
   }
+
+  //endregion
 }
