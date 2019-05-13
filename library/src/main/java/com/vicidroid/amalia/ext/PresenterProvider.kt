@@ -1,13 +1,13 @@
 package com.vicidroid.amalia.ext
 
 import android.content.Context
+import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.*
+import androidx.savedstate.SavedStateRegistryOwner
 import com.vicidroid.amalia.core.BasePresenter
 
 /**
@@ -55,6 +55,8 @@ inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterP
     presenterCreator().also { childPresenter ->
         childPresenter.applicationContext = applicationContext
         childPresenter.presenterLifecycleOwner = presenterLifecycleOwner
+        childPresenter.savedStateHandle = savedStateHandle
+        childPresenter.onSaveStateHandleProvided(savedStateHandle)
     }
 }
 
@@ -70,16 +72,21 @@ inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterP
 inline fun <reified P : BasePresenter<*, *>> presenterProvider(
     lifecycleOwner: LifecycleOwner,
     crossinline presenterCreator: () -> P,
-    noinline externalHooks: ((P) -> Unit)? = null
+    noinline externalHooks: ((P) -> Unit)? = null,
+    defaultArgs: Bundle? = null
 ) = lazy(LazyThreadSafetyMode.NONE) {
 
-  @Suppress("UNCHECKED_CAST")
-  val factory = object : ViewModelProvider.Factory {
-    override fun <VM : ViewModel> create(presenterClazz: Class<VM>): VM {
-      return (presenterCreator() as VM).also { presenter ->
-        (presenter as P).let {
-          presenter.applicationContext = lifecycleOwner.applicationContext
-          externalHooks?.invoke(it)
+    val savedStateFactory = object : AbstractSavedStateVMFactory(lifecycleOwner.savedStateRegistryOwner, defaultArgs) {
+        @Suppress("UNCHECKED_CAST")
+        override fun <VM : ViewModel?> create(key: String, modelClass: Class<VM>, handle: SavedStateHandle): VM {
+            return (presenterCreator() as VM).also { presenter ->
+                (presenter as P).let {
+                    presenter.applicationContext = lifecycleOwner.applicationContext
+                    presenter.savedStateHandle = handle
+                    presenter.onSaveStateHandleProvided(handle)
+                    externalHooks?.invoke(it)
+                }
+            }
         }
     }
 
@@ -97,6 +104,13 @@ val LifecycleOwner.applicationContext: Context
         is FragmentActivity -> this.application
         is Fragment -> this.activity!!.application
         else -> error("Unable to obtain context due to unsupported lifecycle owner.")
+    }
+
+val LifecycleOwner.savedStateRegistryOwner: SavedStateRegistryOwner
+    get() = when (this) {
+        is FragmentActivity -> this
+        is Fragment -> this
+        else -> error("Unable to obtain SavedStateRegistryOwner under Lifecycle owner. Ensure activities inherit from ComponentActivity.")
     }
 
 /**
