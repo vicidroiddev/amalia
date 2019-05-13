@@ -96,7 +96,7 @@ class BasePresenterTest : TestCase() {
     @Test
     fun `presenter is viewdelegate lifecycle aware upon destruction`() {
         bindPresenter()
-        lifecycle.markState(Lifecycle.State.DESTROYED)
+        lifecycle.currentState = Lifecycle.State.DESTROYED
         verify(presenter).onViewDestroyed(lifecycleOwner)
         assertNull(presenter.viewLifecycleOwner)
         assertEquals(lifecycle.observerCount, 0)
@@ -105,7 +105,7 @@ class BasePresenterTest : TestCase() {
     @Test
     fun `presenter is lifecycle aware when using bind without view delegate`() {
         val presenter = spy(FakePresenter())
-        lifecycle.markState(Lifecycle.State.CREATED)
+        lifecycle.currentState = Lifecycle.State.CREATED
         presenter.bind(lifecycleOwner)
 
         verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
@@ -113,7 +113,7 @@ class BasePresenterTest : TestCase() {
         verify(lifecycle).addObserver(presenter.viewLifecycleObserver)
         assertNotNull(presenter.viewLifecycleOwner)
 
-        lifecycle.markState(Lifecycle.State.DESTROYED)
+        lifecycle.currentState = Lifecycle.State.DESTROYED
         verify(presenter).onViewDestroyed(lifecycleOwner)
         assertNull(presenter.viewLifecycleOwner)
     }
@@ -202,7 +202,7 @@ class BasePresenterTest : TestCase() {
             (it as SharedBasePresenter).currentUri = currentUri
         }
 
-        lifecycle.markState(Lifecycle.State.CREATED)
+        lifecycle.currentState = Lifecycle.State.CREATED
 
         val presenter by activity.presenterProvider(hooks) {
             FakePresenter()
@@ -227,7 +227,7 @@ class BasePresenterTest : TestCase() {
 //        val controller = Robolectric.buildActivity(FragmentActivity::class.java).setup() ?
 //        val presenter = spy(activity.presenterProvider { (FakePresenter()) }.value)
 //        presenter.bind(viewDelegate)
-//        lifecycle.markState(Lifecycle.State.DESTROYED)
+//        lifecycle.currentState = Lifecycle.State.DESTROYED
 //        verify(presenter).onPresenterDestroyed()
 //        assertNull(presenter.presenterLifecycleOwner)
 //    }
