@@ -1,7 +1,9 @@
 package com.vicidroid.amalia.sample.main.home
 
+import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import com.vicidroid.amalia.core.BasePresenter
+import com.vicidroid.amalia.sample.main.MainActivity
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
 import com.vicidroid.amalia.sample.main.utils.toastLong
 import com.vicidroid.amalia.ui.BaseViewDelegate
@@ -30,6 +32,11 @@ class HomePresenter
             is HomeEvent.RequestSave -> {
                 applicationContext.toastLong("Saving: $timestamp")
                 savedStateHandle["timestamp"] = timestamp
+            }
+
+            is HomeEvent.RequestNavigate -> {
+                //Yep, just open the same activity, eventually we can try to get an OOM exception with very large bitmaps rendered
+                event.activity.run { startActivity(Intent(this, MainActivity::class.java)) }
             }
         }
     }

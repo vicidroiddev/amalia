@@ -15,10 +15,13 @@ class HomeViewDelegate(lifecycleOwner: LifecycleOwner, view: View) :
     val message: TextView = findViewById(R.id.message)
     val image: ImageView = findViewById(R.id.image)
     val showToastBtn: MaterialButton = findViewById(R.id.saveBtn)
+    val openBtn: MaterialButton = findViewById(R.id.openBtn)
 
     init {
         showToastBtn.setOnClickListener { pushEvent(HomeEvent.RequestSave) }
+        openBtn.setOnClickListener { pushEvent(HomeEvent.RequestNavigate(hostActivity())) }
         showToastBtn.visibility = View.VISIBLE
+        openBtn.visibility = View.VISIBLE
     }
 
     override fun renderViewState(state: HomeState) {
