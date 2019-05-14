@@ -88,13 +88,4 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     Toast.makeText(context, id, Toast.LENGTH_LONG).show()
   }
 
-  /**
-   * View delegates should handle [onSaveInstanceState] to ensure compliance with process death.
-   * Ensure [onSaveInstanceState] is called by the hosting fragment or activity
-   * TODO: build hook to automatically call [onSaveInstanceState]
-   */
-  open fun onSaveInstanceState(outState: Bundle) {
-
-  }
-
 }
