@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.vicidroid.amalia.ext.viewDelegateProvider
 import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.main.dashboard.DashboardViewDelegate
 import com.vicidroid.amalia.sample.main.home.HomeViewDelegate
@@ -42,29 +43,35 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         false
     }
 
-    val homeViewDelegate = HomeViewDelegate(
-        viewLifeCycleOwner,
-        context.inflate(
-            R.layout.main_home_page,
-            anchor
+    val homeViewDelegate by viewDelegateProvider {
+        HomeViewDelegate(
+            viewLifeCycleOwner,
+            context.inflate(
+                R.layout.main_home_page,
+                anchor
+            )
         )
-    )
+    }
 
-    val dashboardViewDelegate = DashboardViewDelegate(
-        viewLifeCycleOwner,
-        context.inflate(
-            R.layout.main_dashboard_page,
-            anchor
+    val dashboardViewDelegate by lazy {
+        DashboardViewDelegate(
+            viewLifeCycleOwner,
+            context.inflate(
+                R.layout.main_dashboard_page,
+                anchor
+            )
         )
-    )
+    }
 
-    val notificationsViewDelegate = NavigationViewDelegate(
-        viewLifeCycleOwner,
-        context.inflate(
-            R.layout.main_notifications_page,
-            anchor
+    val notificationsViewDelegate by lazy {
+        NavigationViewDelegate(
+            viewLifeCycleOwner,
+            context.inflate(
+                R.layout.main_notifications_page,
+                anchor
+            )
         )
-    )
+    }
 
     val navigationIdMap = SparseArray<BaseViewDelegate<*, *>>(3).apply {
         append(R.id.navigation_home, homeViewDelegate)

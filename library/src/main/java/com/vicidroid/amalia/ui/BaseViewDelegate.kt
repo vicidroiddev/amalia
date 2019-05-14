@@ -1,12 +1,12 @@
 package com.vicidroid.amalia.ui
 
 import android.content.Context
-import android.os.Bundle
 import android.view.View
 import android.view.ViewStub
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,7 +22,14 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     rootViewAnchorId: Int = R.id.amalia_stub)
   : LifecycleOwner {
 
+  private var hostActivity: AppCompatActivity? = null
+
   val context: Context = rootView.context
+
+  /**
+   * The parent view delegate is accessible from a child when using [com.vicidroid.amalia.ext.viewDelegateProvider]
+   */
+  var parent: BaseViewDelegate<*, *>? = null
 
   init {
     injectLayoutId?.let { layoutId ->
@@ -88,4 +95,17 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     Toast.makeText(context, id, Toast.LENGTH_LONG).show()
   }
 
+  fun setHostActivity(activity: AppCompatActivity) {
+    hostActivity?.let { "Duplicate setting of host activity is suspicious." }
+    hostActivity = activity
+  }
+
+  /**
+   * Recursively go up to the parent view delegate to determine the host activity
+   * which is injected using [com.vicidroid.amalia.ext.viewDelegateProvider]]
+   */
+  fun hostActivity() : AppCompatActivity = when (parent) {
+    null -> hostActivity!!
+    else -> parent!!.hostActivity()
+  }
 }
