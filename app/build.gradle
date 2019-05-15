@@ -30,27 +30,43 @@ android {
 
 }
 
+androidExtensions {
+    experimental = true
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // JETBRAINS
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // ANDROID X
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
     implementation 'androidx.core:core-ktx:1.2.0-alpha01'
-    implementation 'com.google.android.material:material:1.1.0-alpha06'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-alpha01'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
+    // ANDROID ARCHITECTURE COMPONENTS
+    // Required to use androidx.lifecycle.DefaultLifecycleObserver
+    implementation "android.arch.lifecycle:common-java8:1.1.1"
+
+    // MATERIAL
+    implementation 'com.google.android.material:material:1.1.0-alpha06'
+
+    // TESTS
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0-beta01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'
+
 
     implementation('com.github.bumptech.glide:glide:4.9.0') {
         exclude group: "com.android.support"
     }
 
+    // AMALIA LIB
     implementation project(path: ':library')
-//    implementation 'com.github.vicidroiddev:amalia:0.0.2'
-
-    // Required to use androidx.lifecycle.DefaultLifecycleObserver
-    implementation "android.arch.lifecycle:common-java8:1.1.1"
 
 }
+
+apply plugin: 'kotlin-android-extensions'

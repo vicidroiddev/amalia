@@ -4,9 +4,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.vicidroid.amalia.ext.presenterProvider
 import com.vicidroid.amalia.ext.viewDelegateProvider
+import com.vicidroid.amalia.sample.BaseActivity
 import com.vicidroid.amalia.sample.R
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private val mainPresenter by presenterProvider {
         MainPresenter()
