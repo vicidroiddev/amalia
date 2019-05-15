@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.circularreveal.CircularRevealLinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:id="@+id/fullscreenContent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary"
+        tools:context=".launch.LaunchActivity">
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:visibility="visible"
+                android:layout_gravity="center_horizontal|center_vertical"/>
+
+    </FrameLayout>
+
+</com.google.android.material.circularreveal.CircularRevealLinearLayout>
