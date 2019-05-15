@@ -1,4 +1,4 @@
-package com.vicidroid.amalia.sample.main.utils
+package com.vicidroid.amalia.sample.utils
 
 import android.content.Context
 import android.view.LayoutInflater

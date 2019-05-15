@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.sample.main.MainActivity
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
-import com.vicidroid.amalia.sample.main.utils.toastLong
+import com.vicidroid.amalia.sample.utils.toastLong
 import com.vicidroid.amalia.ui.BaseViewDelegate
 
 class HomePresenter

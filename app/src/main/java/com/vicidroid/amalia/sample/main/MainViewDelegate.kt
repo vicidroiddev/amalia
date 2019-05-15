@@ -11,7 +11,7 @@ import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.main.dashboard.DashboardViewDelegate
 import com.vicidroid.amalia.sample.main.home.HomeViewDelegate
 import com.vicidroid.amalia.sample.main.notification.NavigationViewDelegate
-import com.vicidroid.amalia.sample.main.utils.inflate
+import com.vicidroid.amalia.sample.utils.inflate
 import com.vicidroid.amalia.ui.BaseViewDelegate
 
 class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
