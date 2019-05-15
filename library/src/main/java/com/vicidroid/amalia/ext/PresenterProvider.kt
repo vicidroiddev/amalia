@@ -22,25 +22,25 @@ inline fun <reified P : BasePresenter<*, *>> Fragment.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) =
-    presenterProvider(this, presenterCreator, hooks)
+    presenterProvider(this, this, presenterCreator, hooks)
 
 inline fun <reified P : BasePresenter<*, *>> FragmentActivity.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) =
-    presenterProvider(this, presenterCreator, hooks)
+    presenterProvider(this, this, presenterCreator, hooks)
 
 inline fun <reified P : BasePresenter<*, *>> AppCompatActivity.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) =
-    presenterProvider(this, presenterCreator, hooks)
+    presenterProvider(this, this, presenterCreator, hooks)
 
 inline fun <reified P : BasePresenter<*, *>> LifecycleOwner.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) =
-    presenterProvider(this, presenterCreator, hooks)
+    presenterProvider(this, this.savedStateRegistryOwner, presenterCreator, hooks)
 
 /**
  * Provides a child presenter descending from a parent presenter.
@@ -71,12 +71,13 @@ inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterP
  */
 inline fun <reified P : BasePresenter<*, *>> presenterProvider(
     lifecycleOwner: LifecycleOwner,
+    savedStateRegistryOwner: SavedStateRegistryOwner,
     crossinline presenterCreator: () -> P,
     noinline externalHooks: ((P) -> Unit)? = null,
     defaultArgs: Bundle? = null
 ) = lazy(LazyThreadSafetyMode.NONE) {
 
-    val savedStateFactory = object : AbstractSavedStateVMFactory(lifecycleOwner.savedStateRegistryOwner, defaultArgs) {
+    val savedStateFactory = object : AbstractSavedStateVMFactory(savedStateRegistryOwner, defaultArgs) {
         @Suppress("UNCHECKED_CAST")
         override fun <VM : ViewModel?> create(key: String, modelClass: Class<VM>, handle: SavedStateHandle): VM {
             return (presenterCreator() as VM).also { presenter ->

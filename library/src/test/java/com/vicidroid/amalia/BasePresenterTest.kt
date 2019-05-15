@@ -2,12 +2,18 @@ package com.vicidroid.amalia
 
 import android.app.Application
 import android.net.Uri
-import android.os.Bundle
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.*
-import com.nhaarman.mockitokotlin2.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.ViewModelStore
+import androidx.savedstate.SavedStateRegistry
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
@@ -15,14 +21,16 @@ import com.vicidroid.amalia.ext.childPresenterProvider
 import com.vicidroid.amalia.ext.presenterProvider
 import com.vicidroid.amalia.ui.BaseViewDelegate
 import junit.framework.TestCase
-import org.junit.*
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.lang.Exception
 
 
 @RunWith(RobolectricTestRunner::class)
@@ -51,6 +59,9 @@ class BasePresenterTest : TestCase() {
     @Mock
     lateinit var lifecycleOwner: LifecycleOwner
 
+    @Mock
+    lateinit var savedStateRegistry: SavedStateRegistry
+
     private lateinit var lifecycle: LifecycleRegistry
 
     private val viewEvent = FakeViewEvent()
@@ -74,6 +85,7 @@ class BasePresenterTest : TestCase() {
         whenever(view.context).thenReturn(activity)
 
         whenever(activity.lifecycle).thenReturn(lifecycle)
+        whenever(activity.savedStateRegistry).thenReturn(savedStateRegistry)
         whenever(activity.application).thenReturn(application)
         whenever(activity.viewModelStore).thenReturn(viewModelStore)
         whenever(view.context).thenReturn(context)
@@ -118,7 +130,8 @@ class BasePresenterTest : TestCase() {
         assertNull(presenter.viewLifecycleOwner)
     }
 
-    @Test fun `throws exception when bind is performed with view delegate`() {
+    @Test
+    fun `throws exception when bind is performed with view delegate`() {
         val presenter = spy(FakePresenter())
         presenter.bind(viewDelegate)
 
@@ -133,7 +146,8 @@ class BasePresenterTest : TestCase() {
         }
     }
 
-    @Test fun `throws exception when bind is performed twice with lifecycle owner`() {
+    @Test
+    fun `throws exception when bind is performed twice with lifecycle owner`() {
         val presenter = spy(FakePresenter())
         presenter.bind(lifecycleOwner)
 
@@ -247,7 +261,11 @@ class BasePresenterTest : TestCase() {
         Assert.assertEquals(childPresenter.applicationContext, activity.application)
     }
 
-
+    @Test
+    fun `presenter injects save state handle`() {
+        val presenter by activity.presenterProvider { FakePresenter() }
+        assertNotNull(presenter.savedStateHandle)
+    }
 
     private fun bindPresenter() {
         presenter.bind(viewDelegate)
@@ -277,11 +295,10 @@ class BasePresenterTest : TestCase() {
         }
 
         fun onStatePropagated(@Suppress("UNUSED_PARAMETER") state: ViewState) {}
-        }
+    }
 
     class FakeViewDelegate(lifecycleOwner: LifecycleOwner, rootView: View) :
         BaseViewDelegate<ViewState, ViewEvent>(lifecycleOwner, rootView) {
-        override fun onSaveInstanceState(outState: Bundle) {}
         override fun renderViewState(state: ViewState) {}
     }
 }
