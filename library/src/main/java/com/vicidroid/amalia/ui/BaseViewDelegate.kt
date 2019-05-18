@@ -22,6 +22,11 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     rootViewAnchorId: Int = R.id.amalia_stub
 ) : LifecycleOwner, ViewDelegateLifecycleCallbacks {
 
+    constructor(components: DelegateComponents) : this(
+        components.viewLifecycleOwner,
+        components.rootView
+    )
+
     private lateinit var viewAttachStateChangeListener: View.OnAttachStateChangeListener
 
     private val lifecycleObserver = object : DefaultLifecycleObserver {
