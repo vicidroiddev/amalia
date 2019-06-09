@@ -41,7 +41,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // ANDROID X
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
+    implementation 'androidx.appcompat:appcompat:1.1.0-beta01'
     implementation 'androidx.core:core-ktx:1.2.0-alpha01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-alpha01'
@@ -52,7 +52,7 @@ dependencies {
     implementation "android.arch.lifecycle:common-java8:1.1.1"
 
     // MATERIAL
-    implementation 'com.google.android.material:material:1.1.0-alpha06'
+    implementation 'com.google.android.material:material:1.1.0-alpha07'
 
     // TESTS
     testImplementation 'junit:junit:4.12'
