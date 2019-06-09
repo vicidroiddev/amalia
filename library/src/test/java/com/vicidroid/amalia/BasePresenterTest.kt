@@ -108,7 +108,9 @@ class BasePresenterTest : TestCase() {
     @Test
     fun `presenter is viewdelegate lifecycle aware upon destruction`() {
         bindPresenter()
-        lifecycle.currentState = Lifecycle.State.DESTROYED
+        lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+
+        assertTrue(viewDelegate.lifecycleOwner == lifecycleOwner)
         verify(presenter).onViewDestroyed(lifecycleOwner)
         assertNull(presenter.viewLifecycleOwner)
         assertEquals(lifecycle.observerCount, 0)
