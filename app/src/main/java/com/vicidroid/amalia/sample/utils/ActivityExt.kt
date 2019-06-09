@@ -6,6 +6,6 @@ import com.vicidroid.amalia.sample.main.MainActivity
 
 fun <T : AppCompatActivity> AppCompatActivity.startActivityClazz(clz: Class<T>) {
     startActivity(
-        Intent(this, MainActivity::class.java)
+        Intent(this, clz)
     )
 }
