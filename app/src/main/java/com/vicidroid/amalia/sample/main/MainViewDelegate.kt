@@ -47,8 +47,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         HomeViewDelegate(
             viewLifeCycleOwner,
             context.inflate(
-                R.layout.main_home_page,
-                anchor
+                R.layout.main_home_page
             )
         )
     }
@@ -57,8 +56,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         DashboardViewDelegate(
             viewLifeCycleOwner,
             context.inflate(
-                R.layout.main_dashboard_page,
-                anchor
+                R.layout.main_dashboard_page
             )
         )
     }
@@ -67,8 +65,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         NavigationViewDelegate(
             viewLifeCycleOwner,
             context.inflate(
-                R.layout.main_notifications_page,
-                anchor
+                R.layout.main_notifications_page
             )
         )
     }
