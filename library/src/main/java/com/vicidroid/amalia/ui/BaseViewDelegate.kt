@@ -1,26 +1,34 @@
 package com.vicidroid.amalia.ui
 
 import android.content.Context
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewStub
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import com.vicidroid.amalia.R
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
+import com.vicidroid.amalia.ext.DEBUG_LOGGING
 
 abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     val lifecycleOwner: LifecycleOwner,
     val rootView: View,
     injectLayoutId: Int? = null,
     rootViewAnchorId: Int = R.id.amalia_stub
-) : LifecycleOwner {
+) : LifecycleOwner, ViewDelegateLifecycleCallbacks {
+
+    private lateinit var viewAttachStateChangeListener: View.OnAttachStateChangeListener
+
+    private val lifecycleObserver = object : DefaultLifecycleObserver {
+        override fun onDestroy(owner: LifecycleOwner) {
+            onDestroyInternal()
+        }
+    }
 
     private var hostActivity: AppCompatActivity? = null
 
@@ -37,6 +45,13 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
                 layoutResource = layoutId
                 inflate()
             }
+        }
+
+        if (rootView is ViewGroup) {
+            viewAttachStateChangeListener = createAttachStateChangeListener()
+            rootView.addOnAttachStateChangeListener(viewAttachStateChangeListener)
+            // Invoke the callbacks on this view delegate if there is an attached root.
+            rootView.parent?.let { viewAttachStateChangeListener.onViewAttachedToWindow(rootView) }
         }
     }
 
@@ -108,4 +123,44 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
         null -> hostActivity!!
         else -> parent!!.hostActivity()
     }
+
+    private fun onDestroyInternal() {
+        onViewDetached()
+        lifecycle.removeObserver(lifecycleObserver)
+        rootView.removeOnAttachStateChangeListener(viewAttachStateChangeListener)
+    }
+
+    /**
+     * Called when the view is attached to a parent view.
+     * We start listening for lifecycle events when the view is attached.
+     */
+    override fun onViewAttached() {
+        if (DEBUG_LOGGING) Log.v(this.javaClass.simpleName, "onViewAttached")
+    }
+
+    /**
+     * Called when the view is removed from a parent view.
+     * We stop listening for lifecycle events when the view is detached.
+
+     * This may be useful if you are using activities and removing views from an anchor layout.
+     * Recall that activities may not go through destruction when backgrounded.
+     */
+    override fun onViewDetached() {
+        if (DEBUG_LOGGING) Log.v(this.javaClass.simpleName, "onViewDetached")
+    }
+
+    private fun createAttachStateChangeListener(): View.OnAttachStateChangeListener =
+        object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+                lifecycle.addObserver(lifecycleObserver)
+                onViewAttached()
+            }
+
+            override fun onViewDetachedFromWindow(v: View) {
+                lifecycle.removeObserver(lifecycleObserver)
+                onViewDetached()
+            }
+        }
 }
+
+
