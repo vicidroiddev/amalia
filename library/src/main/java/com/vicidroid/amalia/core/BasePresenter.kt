@@ -102,8 +102,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * This can be called from any thread.
      * [LiveData.postValue] will be used if called from a background thread.
      */
-    fun pushState(state: S, preferCachedState: Boolean = false) {
-        if (preferCachedState && stateLiveData().value?.javaClass == state.javaClass) return
+    fun pushState(state: S, ignoreDuplicateState: Boolean = false) {
+        if (ignoreDuplicateState && stateLiveData().value?.javaClass == state.javaClass) return
 
         when (Looper.myLooper() == Looper.getMainLooper()) {
             true -> viewStateLiveData.value = state

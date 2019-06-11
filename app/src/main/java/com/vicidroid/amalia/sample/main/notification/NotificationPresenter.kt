@@ -20,7 +20,7 @@ class NotificationPresenter : BasePresenter<NavigationState, NavigationEvent>(),
     fun calculateTimestamp(force: Boolean = false) {
         pushState(
             NavigationState.Loaded("Notification: " + System.currentTimeMillis().toString(), imageUrl),
-            preferCachedState = !force
+            ignoreDuplicateState = !force
         )
     }
 }

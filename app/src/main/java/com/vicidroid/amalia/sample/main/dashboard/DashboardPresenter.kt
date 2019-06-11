@@ -30,7 +30,7 @@ class DashboardPresenter : BasePresenter<DashboardState, DashboardEvent>(),
     fun calculateTimestamp(force: Boolean = false) {
         pushState(
             DashboardState.Loaded("Dashboard " + System.currentTimeMillis().toString(), imageUrl),
-            preferCachedState = !force
+            ignoreDuplicateState = !force
         )
     }
 }
