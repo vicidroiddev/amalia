@@ -52,9 +52,8 @@ inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterP
     viewLifecycleOwner ?: error("The parent presenter must be bound to a view delegate.")
     presenterLifecycleOwner ?: error("The parent presenter must have been initialized.")
     presenterCreator().also { childPresenter ->
-        childPresenter.applicationContext = applicationContext
         childPresenter.presenterLifecycleOwner = presenterLifecycleOwner
-        childPresenter.provideSaveStateHandle(savedStateHandle)
+        childPresenter.initializePresenter(applicationContext, savedStateHandle)
     }
 }
 
@@ -80,8 +79,7 @@ inline fun <reified P : BasePresenter<*, *>> presenterProvider(
         override fun <VM : ViewModel?> create(key: String, modelClass: Class<VM>, handle: SavedStateHandle): VM {
             return (presenterCreator() as VM).also { presenter ->
                 (presenter as P).let {
-                    presenter.applicationContext = lifecycleOwner.applicationContext
-                    presenter.provideSaveStateHandle(handle)
+                    presenter.initializePresenter(lifecycleOwner.applicationContext, handle)
                     externalHooks?.invoke(it)
                 }
             }
