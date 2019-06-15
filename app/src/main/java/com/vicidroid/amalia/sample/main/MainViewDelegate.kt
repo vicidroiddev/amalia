@@ -25,22 +25,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         pushEvent(MainEvent.BottomNavigationChanged(bottomNavigationView.selectedItemId, item.itemId))
-
-        when (item.itemId) {
-            R.id.navigation_home -> {
-                homeViewDelegate.showDelegate()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_dashboard -> {
-                dashboardViewDelegate.showDelegate()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_notifications -> {
-                notificationsViewDelegate.showDelegate()
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
+        true
     }
 
     val homeViewDelegate by viewDelegateProvider {
