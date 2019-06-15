@@ -26,5 +26,9 @@ interface PersistableState {
         savedStateHandle[viewStateKey(owner)] = state
     }
 
+    fun removeViewState(owner: String) {
+        savedStateHandle.remove<Any?>(viewStateKey(owner))
+    }
+
     fun viewStateKey(owner: String) = "${owner}_view_state"
 }
