@@ -10,10 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ViewModelStore
 import androidx.savedstate.SavedStateRegistry
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
@@ -231,7 +228,7 @@ class BasePresenterTest : TestCase() {
     fun `binds presenter after using presenter provider`() {
         val presenter = spy(activity.presenterProvider { (FakePresenter()) }.value)
         presenter.bind(viewDelegate)
-        verify(presenter).onBindViewDelegate(viewDelegate)
+        verify(presenter).onBindViewDelegate(viewDelegate, false)
         verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
         assertNotNull(presenter.presenterLifecycleOwner)
     }

@@ -2,8 +2,12 @@ package com.vicidroid.amalia.core
 
 import android.content.Context
 import android.os.Looper
+import android.os.Parcelable
+import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.lifecycle.*
+import com.vicidroid.amalia.core.persistance.PersistableState
+import com.vicidroid.amalia.ext.DEBUG_LOGGING
 import com.vicidroid.amalia.ui.ViewDelegate
 
 /**
@@ -11,7 +15,10 @@ import com.vicidroid.amalia.ui.ViewDelegate
  */
 abstract class BasePresenter<S : ViewState, E : ViewEvent>
     : ViewModel(),
-    DefaultLifecycleObserver {
+    DefaultLifecycleObserver,
+    PersistableState {
+
+    val TAG_INSTANCE: String = this::class.java.simpleName
 
     lateinit var applicationContext: Context
 
@@ -19,7 +26,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
     private val viewEventPropagatorLiveData = MutableLiveData<E>()
 
-    lateinit var savedStateHandle: SavedStateHandle
+    override lateinit var savedStateHandle: SavedStateHandle
 
     /**
      * The lifecycle owner belonging to the view delegate.
@@ -37,6 +44,9 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     lateinit var viewLifecycleObserver: DefaultLifecycleObserver
 
     fun stateLiveData(): LiveData<S> = viewStateLiveData
+
+    val isStatePresent: Boolean
+        get() = viewStateLiveData.value != null
 
     /**
      * Propagate states sent by this presenter to another observer.
@@ -101,9 +111,17 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * Sends a [state] for the view delegate to process in order to reflect UI changes.
      * This can be called from any thread.
      * [LiveData.postValue] will be used if called from a background thread.
+     *
+     * If you wish to persist a view state through process death ensure it is parceable.
+     * Leverage [onRestoreFromProcessDeath] to access the same view state.
      */
     fun pushState(state: S, ignoreDuplicateState: Boolean = false) {
         if (ignoreDuplicateState && stateLiveData().value?.javaClass == state.javaClass) return
+
+        if (state is Parcelable) {
+            if (DEBUG_LOGGING) Log.v(TAG_INSTANCE, "Persisting: $state")
+            persistViewState(TAG_INSTANCE, state)
+        }
 
         when (Looper.myLooper() == Looper.getMainLooper()) {
             true -> viewStateLiveData.value = state
@@ -157,8 +175,32 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * Allows for having multiple view delegates in a hierarchy.
      * Override [onBindViewDelegate] in your parent presenter and call [bind] on your child presenters
      * [viewDelegate] represents the view delegate that is bound to this presenter.
+     *
+     * [restoredViewState] can be used to decide whether or not another view state should be built:
+     *
+     * Configuration change:
+     *  - [restoredViewState] will be true as state and all member fields of presenter are preserved
+     *  - new view delegate will observe on this preserved state through [bind] call
+     *  - no need to rebuild another view state, avoid unnecessary database or network calls
+     *
+     * Process death:
+     * - [restoredViewState] is true IFF the view state is parcelable
+     * - the restored view state will be automatically pushed
+     * - no need to build another view state, avoid unnecessary database or network calls
+     *
+     * First time:
+     * [restoredViewState] is false when there is no view state available
      */
+    open fun onBindViewDelegate(viewDelegate: ViewDelegate<S, E>, restoredViewState: Boolean) {
+        onBindViewDelegate(viewDelegate)
+    }
+
+    @Deprecated(
+        message = "Use onBindViewDelegate override which indicates restoration state",
+        replaceWith = ReplaceWith("onBindViewDelegate(viewDelegate, restoredViewState)")
+    )
     open fun onBindViewDelegate(viewDelegate: ViewDelegate<S, E>) {
+
     }
 
     //TODO remove this in favour of [ViewDelegate]
@@ -173,17 +215,6 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     //endregion
 
     //region PRESENTER RELATED CALLBACKS
-    /**
-     * Provides the save state handle upon presenter creation.
-     * [onSaveStateHandleProvided] is called by the [com.vicidroid.amalia.ext.presenterProvider]
-     * [onSaveStateHandleProvided] is guaranteed to be called before [onBindViewDelegate]
-     * The handle may be used to retrieve data stored in the handle.
-     * To store data, access [savedStateHandle] and save anything parceable as soon as possible.
-     * There is no onSaveInstanceState callback.
-     */
-    open fun onSaveStateHandleProvided(handle: SavedStateHandle) {
-    }
-
     /**
      * An explicit wrapper around viewmodels onCleared indication.
      * While presenters will survive configuration changes, they will be removed according to
@@ -204,4 +235,44 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
         onPresenterDestroyed()
     }
     //endregion
+
+    //region PERSISTABLE STATE
+    /**
+     * Provides the saved state [handle] & an indication of whether or not the view state has been restored
+     * Generally, if the last view state was parceable, it is restored upon presenter creation.
+     * [provideSaveStateHandle] is called by the [com.vicidroid.amalia.ext.presenterProvider]
+     * [onRestoreFromProcessDeath] is guaranteed to be called before [onBindViewDelegate]
+     * The handle may be used to retrieve data persisted prior to process death.
+     * To store parceable data, leverage [persist] as soon as your data changes.
+     * There is no onSaveInstanceState callback.
+     * Note:
+     * This method prevents the need to have a savedState handle in every presenter constructor.
+     * As such remember that you cannot access the handle in the constructor.
+     */
+    open fun onRestoreFromProcessDeath(handle: SavedStateHandle, restoredViewState: Boolean) {
+    }
+
+    fun provideSaveStateHandle(handle: SavedStateHandle) {
+        this.savedStateHandle = handle
+
+        consumePersistedOrNull<S?>(viewStateKey(TAG_INSTANCE))?.let { state ->
+            if (DEBUG_LOGGING) Log.v(TAG_INSTANCE, "Pushing restored state: $state")
+            pushState(state)
+            onRestoreFromProcessDeath(handle, isStatePresent)
+        }
+    }
+
+    /**
+     * Saves parceable value to [savedStateHandle].
+     * The handle will be injected after process death.
+     * Leverage [onRestoreFromProcessDeath] to get a callback when the handle has been injected after this instance is created.
+     */
+    override fun <V> persist(key: String, value: V) {
+        savedStateHandle[key] = value
+    }
+    //endregion
+
+    companion object {
+        val TAG: String = BasePresenter::class.java.simpleName
+    }
 }

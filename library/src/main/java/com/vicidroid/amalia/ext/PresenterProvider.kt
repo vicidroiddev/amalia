@@ -2,7 +2,6 @@ package com.vicidroid.amalia.ext
 
 import android.content.Context
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -55,8 +54,7 @@ inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterP
     presenterCreator().also { childPresenter ->
         childPresenter.applicationContext = applicationContext
         childPresenter.presenterLifecycleOwner = presenterLifecycleOwner
-        childPresenter.savedStateHandle = savedStateHandle
-        childPresenter.onSaveStateHandleProvided(savedStateHandle)
+        childPresenter.provideSaveStateHandle(savedStateHandle)
     }
 }
 
@@ -83,8 +81,7 @@ inline fun <reified P : BasePresenter<*, *>> presenterProvider(
             return (presenterCreator() as VM).also { presenter ->
                 (presenter as P).let {
                     presenter.applicationContext = lifecycleOwner.applicationContext
-                    presenter.savedStateHandle = handle
-                    presenter.onSaveStateHandleProvided(handle)
+                    presenter.provideSaveStateHandle(handle)
                     externalHooks?.invoke(it)
                 }
             }
