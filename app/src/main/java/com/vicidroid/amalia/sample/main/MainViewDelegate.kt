@@ -52,7 +52,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         )
     }
 
-    val dashboardViewDelegate by lazy {
+    val dashboardViewDelegate by viewDelegateProvider {
         DashboardViewDelegate(
             viewLifeCycleOwner,
             context.inflate(
@@ -61,7 +61,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         )
     }
 
-    val notificationsViewDelegate by lazy {
+    val notificationsViewDelegate by viewDelegateProvider {
         NavigationViewDelegate(
             viewLifeCycleOwner,
             context.inflate(
