@@ -29,10 +29,11 @@ class LaunchActivity : BaseActivity() {
         super.onPostCreate(savedInstanceState)
 
         launch {
-            for (count in 1..10) {
-                toastLong(count.toString())
-                delay(200)
-            }
+            // This doesn't work well for Samsung
+//            for (count in 1..10) {
+//                toastLong(count.toString())
+//                delay(200)
+//            }
 
             startActivityClazz(MainActivity::class.java)
             finishAfterTransition()
