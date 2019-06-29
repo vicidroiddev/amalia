@@ -1,13 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".main.MainActivity">
 
-    <include layout="@layout/main_shared_content"/>
+        <include layout="@layout/main_shared_content" />
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/homePageRootList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/firstNameEditRoot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="First name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/firstNameEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lastNameEditRoot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Last name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/lastNameEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/middleNameEditRoot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Middle name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/middleNameEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/hasNickNameCheckbox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Do you have a nick name?" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

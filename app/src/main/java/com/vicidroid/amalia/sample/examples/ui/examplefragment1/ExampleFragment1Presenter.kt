@@ -3,8 +3,6 @@ package com.vicidroid.amalia.sample.examples.ui.examplefragment1
 import android.util.Log
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
-import com.vicidroid.amalia.sample.main.home.HomeState
-import com.vicidroid.amalia.sample.main.home.HomeViewDiff
 
 class ExampleFragment1Presenter : BasePresenter<ExampleFragment1ViewState, ExampleFragment1ViewEvent>() {
 
@@ -14,7 +12,7 @@ class ExampleFragment1Presenter : BasePresenter<ExampleFragment1ViewState, Examp
     }
 
     override fun onViewDiffReceived(viewDiff: ViewDiff) {
-        modifyState { old ->
+        updateViewStateSilently { old ->
             ExampleFragment1ViewState.Loaded(viewDiff as ExampleFragment1ViewDiff)
         }
     }
