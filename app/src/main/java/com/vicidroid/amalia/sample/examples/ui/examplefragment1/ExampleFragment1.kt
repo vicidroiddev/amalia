@@ -1,6 +1,7 @@
 package com.vicidroid.amalia.sample.examples.ui.examplefragment1
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,14 +9,20 @@ import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.vicidroid.amalia.ext.presenterProvider
 import com.vicidroid.amalia.sample.R
 import kotlinx.android.synthetic.main.example_fragment1.*
 
 class ExampleFragment1 : Fragment() {
 
+    private val presenter by presenterProvider { ExampleFragment1Presenter() }
+    private lateinit var delegate: ExampleFragment1Delegate
+
     companion object {
         fun newInstance() = ExampleFragment1()
     }
+
+    private lateinit var mothersName: TextInputEditText
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,17 +43,52 @@ class ExampleFragment1 : Fragment() {
         textEntry.id = R.id.textEntry1 // It needs the a consistent id to ensure restoration
 
         frameLayout.addView(dynamicTextEntry)
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addDynamicViewThatWontRestore()
+        addDynamicViewWithIdThatWillRestore(savedInstanceState)
 
-        exampleFragmentAddEditTextBtn.setOnClickListener {
-            // These entries will not be retained by the fragment restoration automatically.
-            val newView = LayoutInflater.from(view.context).inflate(R.layout.list_item_text_entry, null, false)
-            exampleFragment1Root.addView(newView)
-        }
+        delegate = ExampleFragment1Delegate(viewLifecycleOwner, view)
+        presenter.bind(delegate)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(mothersName.id.toString(), mothersName.onSaveInstanceState())
+    }
+
+    /**
+     * The fragment will inflate a fresh view using the layout inflater.
+     * Of course it will not restore those views we add after onCreateView.
+     * This view will go through the onSaveInstance state procedure.
+     * However if we don't inject that saveInstanceState nothing will be restored.
+     */
+    private fun addDynamicViewThatWontRestore() {
+        val newView =
+            LayoutInflater.from(context).inflate(R.layout.list_item_text_entry, null, false) as TextInputLayout
+        newView.hint = "Nick mame - should not restore"
+        newView.id = View.generateViewId() // This doesn't matter it can also be View.NO_ID
+        newView.findViewById<View>(R.id.listItemTextEntry).id = View.generateViewId()
+        exampleFragment1Root.addView(newView)
+    }
+
+    /**
+     * The fragment will inflate a fresh view using the layout inflater.
+     * Of course it will not restore those views we add after onCreateView.
+     * Now when we add the view we should ensure it is restored.
+     * One could try to access the view state that is saved under "android:view state", however things get slightly tricky there.
+     */
+    private fun addDynamicViewWithIdThatWillRestore(savedInstanceState: Bundle?) {
+        val newView =
+            LayoutInflater.from(context).inflate(R.layout.list_item_text_entry, null, false) as TextInputLayout
+        newView.hint = "Mothers name - should restore"
+        newView.id = R.id.motherRoot
+        mothersName = newView.findViewById(R.id.listItemTextEntry)
+        mothersName.id = R.id.mother
+        mothersName.onRestoreInstanceState(savedInstanceState?.getParcelable<Parcelable>(R.id.mother.toString()))
+
+        exampleFragment1Root.addView(newView)
     }
 }
