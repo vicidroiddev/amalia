@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.lifecycle.*
 import com.vicidroid.amalia.core.persistance.PersistableState
+import com.vicidroid.amalia.core.viewdiff.ViewDiff
 import com.vicidroid.amalia.ext.DEBUG_LOGGING
 import com.vicidroid.amalia.ui.ViewDelegate
 
@@ -139,6 +140,13 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * For view changes, propagate a new state via [pushState].
      */
     open fun onViewEvent(event: E) {}
+
+    /**
+     * Capture view diffs from the view delegate in case the system is about to destroy the application.
+     */
+    open fun onViewDiffReceived(viewDiff: ViewDiff) {
+
+    }
 
     private fun createViewLifecycleObserver() = object : DefaultLifecycleObserver {
         override fun onCreate(owner: LifecycleOwner) {
