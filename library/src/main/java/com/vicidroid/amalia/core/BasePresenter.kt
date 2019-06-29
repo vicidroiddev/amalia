@@ -3,12 +3,12 @@ package com.vicidroid.amalia.core
 import android.content.Context
 import android.os.Looper
 import android.os.Parcelable
-import android.util.Log
 import androidx.annotation.CallSuper
+import androidx.annotation.MainThread
 import androidx.lifecycle.*
 import com.vicidroid.amalia.core.persistance.PersistableState
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
-import com.vicidroid.amalia.ext.DEBUG_LOGGING
+import com.vicidroid.amalia.ext.debugLog
 import com.vicidroid.amalia.ui.ViewDelegate
 
 /**
@@ -28,6 +28,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     private val viewEventPropagatorLiveData = MutableLiveData<E>()
 
     override lateinit var savedStateHandle: SavedStateHandle
+
+    private var viewStatePropagationPaused: Boolean = false
 
     /**
      * The lifecycle owner belonging to the view delegate.
@@ -119,14 +121,29 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     fun pushState(state: S, ignoreDuplicateState: Boolean = false) {
         if (ignoreDuplicateState && stateLiveData().value?.javaClass == state.javaClass) return
 
-        if (state is Parcelable) {
-            if (DEBUG_LOGGING) Log.v(TAG_INSTANCE, "Persisting: $state")
-            persistViewState(TAG_INSTANCE, state)
-        }
+        persistViewStateIfPossible(state)
 
         when (Looper.myLooper() == Looper.getMainLooper()) {
             true -> viewStateLiveData.value = state
             false -> viewStateLiveData.postValue(state)
+        }
+    }
+
+    @MainThread
+    fun updateViewStateSilently(stateUpdater: (oldState: S) -> S) {
+        val newState: S = stateLiveData().value?.let { stateUpdater(it) } ?: return
+
+        persistViewStateIfPossible(newState)
+
+        viewStatePropagationPaused = true
+        viewStateLiveData.value = newState
+        viewStatePropagationPaused = false
+    }
+
+    private fun persistViewStateIfPossible(state: S) {
+        if (state is Parcelable) {
+            debugLog(TAG_INSTANCE, "Persisting: $state")
+            persistViewState(TAG_INSTANCE, state)
         }
     }
 
@@ -142,6 +159,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     open fun onViewEvent(event: E) {}
 
     /**
+     * Allow view state to be updated without notifying observers
      * Capture view diffs from the view delegate in case the system is about to destroy the application.
      */
     open fun onViewDiffReceived(viewDiff: ViewDiff) {
@@ -259,7 +277,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
         this.savedStateHandle = handle
 
         consumePersistedOrNull<S?>(viewStateKey(TAG_INSTANCE))?.let { state ->
-            if (DEBUG_LOGGING) Log.v(TAG_INSTANCE, "Pushing restored state: $state")
+            debugLog(TAG_INSTANCE, "Pushing restored state: $state")
             pushState(state)
             onViewStateRestored(state)
         } ?: loadInitialState()
