@@ -12,7 +12,7 @@ class ExampleFragment1Presenter : BasePresenter<ExampleFragment1ViewState, Examp
     }
 
     override fun onViewDiffReceived(viewDiff: ViewDiff) {
-        updateViewStateSilently { old ->
+        updateViewStateSilently {
             ExampleFragment1ViewState.Loaded(viewDiff as ExampleFragment1ViewDiff)
         }
     }
