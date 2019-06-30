@@ -233,7 +233,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * It will not be called after process death IFF the view state is parcelable and can be restored
      * It will be called again after process death if the view state is not parceable
      */
-    abstract fun loadInitialState()
+    open fun loadInitialState() {}
 
     /**
      * An explicit wrapper around viewmodels onCleared indication.
