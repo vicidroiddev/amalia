@@ -79,8 +79,11 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
    */
   open fun onViewEvent(event: E) {}
 
-  //TODO remove this in favour of [ViewDelegate]
-  //TODO make this a private method that is called by [bind]
+  //TODO Consider making this a protectedmethod if legacy code can implement ViewDelegate nicely
+  @Deprecated(
+    message = "[bindViewLifecycleOwner] will be made private/protected soon. Instead implement [ViewDelegate] interface",
+    replaceWith = ReplaceWith("bind(viewDelegate)")
+  )
   fun bindViewLifecycleOwner(viewLifecycleOwner: LifecycleOwner) {
     this.viewLifecycleOwner?.let { error("Second call to bind() is suspicious.") }
     this.viewLifecycleOwner = viewLifecycleOwner
@@ -101,19 +104,19 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
    * • state propagation from presenter to delegate
    */
   fun bind(viewDelegate: ViewDelegate<S,E>) {
-    bindViewLifecycleOwner(viewDelegate.lifecycleOwner)
+    bindViewLifecycleOwner(viewDelegate.viewDelegateLifecycleOwner)
 
     // Observe events sent from the delegate
     viewDelegate
         .eventLiveData()
-        .observe(viewDelegate.lifecycleOwner, Observer { event -> processViewEvent(event) })
+        ?.observe(viewDelegate.viewDelegateLifecycleOwner, Observer { event -> processViewEvent(event) })
 
     // Observe states sent from this presenter and propagate them to the delegate.
     // Propagation will only occur if the delegate's lifecycle owner indicates a good state.
     // Furthermore, the observer which holds on to a delegate will be removed according to the delegate's lifecycleowner
     // This will prevent leaks
     stateLiveData()
-        .observe(viewDelegate.lifecycleOwner, Observer { state -> viewDelegate.renderViewState(state) })
+        .observe(viewDelegate.viewDelegateLifecycleOwner, Observer { state -> viewDelegate.renderViewState(state) })
 
     onBindViewDelegate(viewDelegate)
   }

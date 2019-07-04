@@ -16,7 +16,7 @@ import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.ext.DEBUG_LOGGING
 
 abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
-    override val lifecycleOwner: LifecycleOwner,
+    override val viewDelegateLifecycleOwner: LifecycleOwner,
     val rootView: View,
     injectLayoutId: Int? = null,
     rootViewAnchorId: Int = R.id.amalia_stub
@@ -91,12 +91,12 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
      * Parent view delegates may use this to intercept events sent from child delegates.
      */
     fun propagateEventsTo(observer: (E) -> Unit) =
-        eventLiveData().observe(lifecycleOwner, Observer { observer(it) })
+        eventLiveData().observe(viewDelegateLifecycleOwner, Observer { observer(it) })
 
     /**
-     * Exposes the lifecycle from the [lifecycleOwner]
+     * Exposes the lifecycle from the [viewDelegateLifecycleOwner]
      */
-    override fun getLifecycle() = lifecycleOwner.lifecycle
+    override fun getLifecycle() = viewDelegateLifecycleOwner.lifecycle
 
     /**
      * Sends event from some interaction or UI change to an active subscriber (Presenter)

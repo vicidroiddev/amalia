@@ -110,7 +110,7 @@ class BasePresenterTest : TestCase() {
         bindPresenter()
         lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
 
-        assertTrue(viewDelegate.lifecycleOwner == lifecycleOwner)
+        assertTrue(viewDelegate.viewDelegateLifecycleOwner == lifecycleOwner)
         verify(presenter).onViewDestroyed(lifecycleOwner)
         assertNull(presenter.viewLifecycleOwner)
         assertEquals(lifecycle.observerCount, 0)
@@ -259,7 +259,7 @@ class BasePresenterTest : TestCase() {
         val childPresenter = parentPresenter.childPresenterProvider { FakePresenter() }.value
         childPresenter.bind(viewDelegate)
 
-        Assert.assertEquals(childPresenter.viewLifecycleOwner, viewDelegate.lifecycleOwner)
+        Assert.assertEquals(childPresenter.viewLifecycleOwner, viewDelegate.viewDelegateLifecycleOwner)
         Assert.assertEquals(childPresenter.applicationContext, activity.application)
     }
 

@@ -7,9 +7,9 @@ import com.vicidroid.amalia.core.ViewState
 
 interface ViewDelegate<S : ViewState, E : ViewEvent> {
 
-    val lifecycleOwner: LifecycleOwner
+    val viewDelegateLifecycleOwner: LifecycleOwner
 
-    fun eventLiveData(): LiveData<E>
+    fun eventLiveData(): LiveData<E>? = null
 
     /**
      * Render a view state that is provided by the Presenter.
