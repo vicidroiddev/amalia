@@ -110,7 +110,7 @@ class BasePresenterTest : TestCase() {
         bindPresenter()
         lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
 
-        assertTrue(viewDelegate.lifecycleOwner == lifecycleOwner)
+        assertTrue(viewDelegate.viewDelegateLifecycleOwner == lifecycleOwner)
         verify(presenter).onViewDestroyed(lifecycleOwner)
         assertNull(presenter.viewLifecycleOwner)
         assertEquals(lifecycle.observerCount, 0)
@@ -120,7 +120,7 @@ class BasePresenterTest : TestCase() {
     fun `presenter is lifecycle aware when using bind without view delegate`() {
         val presenter = spy(FakePresenter())
         lifecycle.currentState = Lifecycle.State.CREATED
-        presenter.bind(lifecycleOwner)
+        presenter.bindViewLifecycleOwner(lifecycleOwner)
 
         verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
         verify(presenter).onViewCreated(lifecycleOwner)
@@ -151,12 +151,12 @@ class BasePresenterTest : TestCase() {
     @Test
     fun `throws exception when bind is performed twice with lifecycle owner`() {
         val presenter = spy(FakePresenter())
-        presenter.bind(lifecycleOwner)
+        presenter.bindViewLifecycleOwner(lifecycleOwner)
 
         var thrownException: Exception? = null
 
         try {
-            presenter.bind(lifecycleOwner)
+            presenter.bindViewLifecycleOwner(lifecycleOwner)
         } catch (e: Exception) {
             thrownException = e
         } finally {
@@ -259,7 +259,7 @@ class BasePresenterTest : TestCase() {
         val childPresenter = parentPresenter.childPresenterProvider { FakePresenter() }.value
         childPresenter.bind(viewDelegate)
 
-        Assert.assertEquals(childPresenter.viewLifecycleOwner, viewDelegate.lifecycleOwner)
+        Assert.assertEquals(childPresenter.viewLifecycleOwner, viewDelegate.viewDelegateLifecycleOwner)
         Assert.assertEquals(childPresenter.applicationContext, activity.application)
     }
 

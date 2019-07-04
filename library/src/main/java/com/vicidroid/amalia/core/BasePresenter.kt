@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Looper
 import androidx.annotation.CallSuper
 import androidx.lifecycle.*
-import com.vicidroid.amalia.ui.BaseViewDelegate
+import com.vicidroid.amalia.ui.ViewDelegate
 
 /**
  * Backed by Android's ViewModel in order to easily survive configuration changes.
@@ -79,10 +79,22 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
    */
   open fun onViewEvent(event: E) {}
 
-  fun bind(viewLifecycleOwner: LifecycleOwner) {
+  //TODO Consider making this a protectedmethod if legacy code can implement ViewDelegate nicely
+  @Deprecated(
+    message = "[bindViewLifecycleOwner] will be made private/protected soon. Instead implement [ViewDelegate] interface",
+    replaceWith = ReplaceWith("bind(viewDelegate)")
+  )
+  fun bindViewLifecycleOwner(viewLifecycleOwner: LifecycleOwner) {
     this.viewLifecycleOwner?.let { error("Second call to bind() is suspicious.") }
     this.viewLifecycleOwner = viewLifecycleOwner
+
+    // Keep track of the lifecycle owner belonging to the delegate.
+    // This allows event delegation to other presenters in a heirachy.
+    // This must be nulled out should the lifecycle owner of the delegate go through onDestroy
+    // Remember, presenters outlive the view lifecycle.
     viewLifecycleObserver = createViewLifecycleObserver()
+    // Allow this class to listen for lifecycle events from the view delegate.
+    // Just override a lifecycle method, example #onViewCreated()
     viewLifecycleOwner.lifecycle.addObserver(viewLifecycleObserver)
   }
 
@@ -91,31 +103,20 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
    * • event propagation from delegate to presenter
    * • state propagation from presenter to delegate
    */
-  fun bind(viewDelegate: BaseViewDelegate<S, E>) {
-    this.viewLifecycleOwner?.let { error("Second call to bind() is suspicious.") }
-
-    // Allow this class to listen for lifecycle events from the view delegate.
-    // Just override a lifecycle method, example #onViewCreated()
-    viewLifecycleObserver = createViewLifecycleObserver()
-    viewDelegate.lifecycleOwner.lifecycle.addObserver(viewLifecycleObserver)
+  fun bind(viewDelegate: ViewDelegate<S,E>) {
+    bindViewLifecycleOwner(viewDelegate.viewDelegateLifecycleOwner)
 
     // Observe events sent from the delegate
     viewDelegate
         .eventLiveData()
-        .observe(viewDelegate.lifecycleOwner, Observer { event -> processViewEvent(event) })
+        ?.observe(viewDelegate.viewDelegateLifecycleOwner, Observer { event -> processViewEvent(event) })
 
     // Observe states sent from this presenter and propagate them to the delegate.
     // Propagation will only occur if the delegate's lifecycle owner indicates a good state.
     // Furthermore, the observer which holds on to a delegate will be removed according to the delegate's lifecycleowner
     // This will prevent leaks
     stateLiveData()
-        .observe(viewDelegate.lifecycleOwner, Observer { state -> viewDelegate.renderViewState(state) })
-
-    // Keep track of the lifecycle owner belonging to the delegate.
-    // This allows event delegation to other presenters in a heirachy.
-    // This must be nulled out should the lifecycle owner of the delegate go through onDestroy
-    // Remember, presenters outlive the view lifecycle.
-    viewLifecycleOwner = viewDelegate.lifecycleOwner
+        .observe(viewDelegate.viewDelegateLifecycleOwner, Observer { state -> viewDelegate.renderViewState(state) })
 
     onBindViewDelegate(viewDelegate)
   }
@@ -156,10 +157,11 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
    * Override [onBindViewDelegate] in your parent presenter and call [bind] on your child presenters
    * [viewDelegate] represents the view delegate that is bound to this presenter.
    */
-  open fun onBindViewDelegate(viewDelegate: BaseViewDelegate<S, E>) {
+  open fun onBindViewDelegate(viewDelegate: ViewDelegate<S, E>) {
 
   }
 
+  //TODO remove this in favour of [ViewDelegate]
   open fun onBindViewLifecycleOwner(owner: LifecycleOwner) {
 
   }

@@ -6,7 +6,7 @@ import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.sample.main.MainActivity
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
 import com.vicidroid.amalia.sample.utils.toastLong
-import com.vicidroid.amalia.ui.BaseViewDelegate
+import com.vicidroid.amalia.ui.ViewDelegate
 
 class HomePresenter
     : BasePresenter<HomeState, HomeEvent>(),
@@ -23,7 +23,7 @@ class HomePresenter
 
     }
 
-    override fun onBindViewDelegate(viewDelegate: BaseViewDelegate<HomeState, HomeEvent>) {
+    override fun onBindViewDelegate(viewDelegate: ViewDelegate<HomeState, HomeEvent>) {
         loadData()
     }
 
