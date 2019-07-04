@@ -84,7 +84,14 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
   fun bindViewLifecycleOwner(viewLifecycleOwner: LifecycleOwner) {
     this.viewLifecycleOwner?.let { error("Second call to bind() is suspicious.") }
     this.viewLifecycleOwner = viewLifecycleOwner
+
+    // Keep track of the lifecycle owner belonging to the delegate.
+    // This allows event delegation to other presenters in a heirachy.
+    // This must be nulled out should the lifecycle owner of the delegate go through onDestroy
+    // Remember, presenters outlive the view lifecycle.
     viewLifecycleObserver = createViewLifecycleObserver()
+    // Allow this class to listen for lifecycle events from the view delegate.
+    // Just override a lifecycle method, example #onViewCreated()
     viewLifecycleOwner.lifecycle.addObserver(viewLifecycleObserver)
   }
 
@@ -94,12 +101,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
    * • state propagation from presenter to delegate
    */
   fun bind(viewDelegate: ViewDelegate<S,E>) {
-    this.viewLifecycleOwner?.let { error("Second call to bind() is suspicious.") }
-
-    // Allow this class to listen for lifecycle events from the view delegate.
-    // Just override a lifecycle method, example #onViewCreated()
-    viewLifecycleObserver = createViewLifecycleObserver()
-    viewDelegate.lifecycleOwner.lifecycle.addObserver(viewLifecycleObserver)
+    bindViewLifecycleOwner(viewDelegate.lifecycleOwner)
 
     // Observe events sent from the delegate
     viewDelegate
@@ -112,12 +114,6 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     // This will prevent leaks
     stateLiveData()
         .observe(viewDelegate.lifecycleOwner, Observer { state -> viewDelegate.renderViewState(state) })
-
-    // Keep track of the lifecycle owner belonging to the delegate.
-    // This allows event delegation to other presenters in a heirachy.
-    // This must be nulled out should the lifecycle owner of the delegate go through onDestroy
-    // Remember, presenters outlive the view lifecycle.
-    viewLifecycleOwner = viewDelegate.lifecycleOwner
 
     onBindViewDelegate(viewDelegate)
   }
