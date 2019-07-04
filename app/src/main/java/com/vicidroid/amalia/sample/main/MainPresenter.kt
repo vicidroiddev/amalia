@@ -7,7 +7,7 @@ import com.vicidroid.amalia.sample.main.dashboard.DashboardPresenter
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
 import com.vicidroid.amalia.sample.main.home.HomePresenter
 import com.vicidroid.amalia.sample.main.notification.NotificationPresenter
-import com.vicidroid.amalia.ui.BaseViewDelegate
+import com.vicidroid.amalia.ui.ViewDelegate
 
 class MainPresenter : BasePresenter<MainState, MainEvent>() {
 
@@ -17,7 +17,7 @@ class MainPresenter : BasePresenter<MainState, MainEvent>() {
     val dashboardPresenter by childPresenterProvider { DashboardPresenter() }
     val notificationPresenter by childPresenterProvider { NotificationPresenter() }
 
-    override fun onBindViewDelegate(viewDelegate: BaseViewDelegate<MainState, MainEvent>) {
+    override fun onBindViewDelegate(viewDelegate: ViewDelegate<MainState, MainEvent>) {
         when (viewDelegate) {
             is MainViewDelegate -> {
                 homePresenter.bind(viewDelegate.homeViewDelegate)

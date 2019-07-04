@@ -16,11 +16,11 @@ import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.ext.DEBUG_LOGGING
 
 abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
-    val lifecycleOwner: LifecycleOwner,
+    override val lifecycleOwner: LifecycleOwner,
     val rootView: View,
     injectLayoutId: Int? = null,
     rootViewAnchorId: Int = R.id.amalia_stub
-) : LifecycleOwner, ViewDelegateLifecycleCallbacks {
+) : LifecycleOwner, ViewDelegateLifecycleCallbacks, ViewDelegate<S,E> {
 
     constructor(components: DelegateComponents) : this(
         components.viewLifecycleOwner,
@@ -84,7 +84,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     /**
      * Exposes view event live data that the view delegate can leverage to reflect UI changes.
      */
-    fun eventLiveData(): LiveData<E> = eventLiveData
+    override fun eventLiveData(): LiveData<E> = eventLiveData
 
     /**
      * Allows view delegates to know about events that are sent.
@@ -104,12 +104,6 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     fun pushEvent(event: E) {
         eventLiveData.value = event
     }
-
-    /**
-     * Render a view state that is provided by the Presenter.
-     * The view delegate updates the UI accordingly.
-     */
-    abstract fun renderViewState(state: S)
 
     fun toast(id: Int) {
         Toast.makeText(context, id, Toast.LENGTH_LONG).show()
