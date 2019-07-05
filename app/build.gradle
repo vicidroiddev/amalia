@@ -25,7 +25,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField('String', 'themoviedbToken', themoviedbToken)
+        buildConfigField('String', 'themoviedbToken', themoviedbToken ?: "NOT_THE_REAL_KEY")
 
     }
 
