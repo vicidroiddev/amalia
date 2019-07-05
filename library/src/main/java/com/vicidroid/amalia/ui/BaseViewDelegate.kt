@@ -133,6 +133,10 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
         Toast.makeText(context, id, Toast.LENGTH_LONG).show()
     }
 
+    fun toast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
     fun setHostActivity(activity: AppCompatActivity) {
         hostActivity?.let { "Duplicate setting of host activity is suspicious." }
         hostActivity = activity
