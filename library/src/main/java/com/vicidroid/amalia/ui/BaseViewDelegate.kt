@@ -193,7 +193,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     fun viewDiffLiveData() : LiveData<ViewDiff> = viewDiffLiveData
 
     inline fun observeViewDiff(crossinline observer: (ViewDiff) -> Unit) {
-        viewDiffLiveData().observe(lifecycleOwner, Observer<ViewDiff> { interaction ->
+        viewDiffLiveData().observe(viewDelegateLifecycleOwner, Observer<ViewDiff> { interaction ->
             observer(interaction)
         })
     }
