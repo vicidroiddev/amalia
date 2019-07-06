@@ -5,7 +5,7 @@ import com.vicidroid.amalia.ext.childPresenterProvider
 import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.main.dashboard.DashboardPresenter
 import com.vicidroid.amalia.sample.main.home.HomePresenter
-import com.vicidroid.amalia.sample.main.notification.NotificationPresenter
+import com.vicidroid.amalia.sample.main.discover.DiscoverPresenter
 import com.vicidroid.amalia.ui.ViewDelegate
 import com.vicidroid.amalia.sample.utils.toastLong
 
@@ -13,7 +13,7 @@ class MainPresenter : BasePresenter<MainState, MainEvent>() {
 
     private val homePresenter by childPresenterProvider { HomePresenter() }
     private val dashboardPresenter by childPresenterProvider { DashboardPresenter() }
-    private val notificationPresenter by childPresenterProvider { NotificationPresenter() }
+    private val discoverPresenter by childPresenterProvider { DiscoverPresenter() }
 
     override fun onViewStateRestored(restoredViewState: MainState) {
         // Just an example, we don't need to save this field since the view state is parceable, the selected tab is restored automatically :)
@@ -30,7 +30,7 @@ class MainPresenter : BasePresenter<MainState, MainEvent>() {
             is MainViewDelegate -> {
                 homePresenter.bind(viewDelegate.homeViewDelegate)
                 dashboardPresenter.bind(viewDelegate.dashboardViewDelegate)
-                notificationPresenter.bind(viewDelegate.notificationsViewDelegate)
+                discoverPresenter.bind(viewDelegate.discoverViewDelegate)
             }
         }
     }
@@ -41,7 +41,7 @@ class MainPresenter : BasePresenter<MainState, MainEvent>() {
                 when (event.toId) {
                     R.id.navigation_home -> homePresenter.onRefreshRequest()
                     R.id.navigation_dashboard -> dashboardPresenter.onRefreshRequest()
-                    R.id.navigation_notifications -> notificationPresenter.onRefreshRequest()
+                    R.id.navigation_discover -> discoverPresenter.onRefreshRequest()
                 }
                 pushNavigationItem(event.toId)
             }

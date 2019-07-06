@@ -10,7 +10,7 @@ import com.vicidroid.amalia.ext.viewDelegateProvider
 import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.main.dashboard.DashboardViewDelegate
 import com.vicidroid.amalia.sample.main.home.HomeViewDelegate
-import com.vicidroid.amalia.sample.main.notification.NavigationViewDelegate
+import com.vicidroid.amalia.sample.main.discover.DiscoverViewDelegate
 import com.vicidroid.amalia.sample.utils.inflate
 import com.vicidroid.amalia.ui.BaseViewDelegate
 
@@ -46,11 +46,11 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         )
     }
 
-    val notificationsViewDelegate by viewDelegateProvider {
-        NavigationViewDelegate(
+    val discoverViewDelegate by viewDelegateProvider {
+        DiscoverViewDelegate(
             viewLifeCycleOwner,
             context.inflate(
-                R.layout.main_notifications_page
+                R.layout.main_discover_page
             )
         )
     }
@@ -58,7 +58,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
     val navigationIdMap = SparseArray<BaseViewDelegate<*, *>>(3).apply {
         append(R.id.navigation_home, homeViewDelegate)
         append(R.id.navigation_dashboard, dashboardViewDelegate)
-        append(R.id.navigation_notifications, notificationsViewDelegate)
+        append(R.id.navigation_discover, discoverViewDelegate)
     }
 
     init {
