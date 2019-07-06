@@ -24,7 +24,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Text Entry without id - should not retain text"
+            android:hint="Without id"
             tools:showIn="@layout/example_fragment1">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -37,7 +37,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Text Entry with id - text retained"
+            android:hint="With id"
             tools:showIn="@layout/example_fragment1">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -51,12 +51,6 @@
             android:id="@+id/exampleFragment1DynamicRoot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/exampleFragmentAddEditTextBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add edit text" />
 
     </LinearLayout>
 </ScrollView>

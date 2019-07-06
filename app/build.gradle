@@ -4,6 +4,17 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+Properties devProperties = new Properties()
+def devPropertiesFile = project.file('dev.properties')
+
+if (devPropertiesFile.exists()) {
+    devProperties.load(devPropertiesFile.newDataInputStream())
+}
+
+def devPropertiesToken = devProperties.getProperty('api.themoviedb')
+
+ext.themoviedbToken = devPropertiesToken != null ? devPropertiesToken : System.getenv('api.themoviedb')
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -13,6 +24,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField('String', 'themoviedbToken', themoviedbToken ?: "NOT_THE_REAL_KEY")
+
     }
 
     // Target Java 8 to use androidx.lifecycle.DefaultLifecycleObserver
@@ -27,7 +41,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 androidExtensions {

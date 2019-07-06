@@ -1,6 +1,11 @@
 package com.vicidroid.amalia.core
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.vicidroid.amalia.ui.ViewItem
+import kotlinx.android.parcel.Parceler
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 
 
 /**
@@ -12,7 +17,8 @@ import com.vicidroid.amalia.ui.ViewItem
 sealed class ListViewState<D, VI : ViewItem> : ViewState {
   class Loading<D, VI : ViewItem> : ListViewState<D, VI>()
   class Empty<D, VI : ViewItem> : ListViewState<D, VI>()
-  class DataLoaded<D, VI : ViewItem>(val data: MutableList<D>) : ListViewState<D, VI>()
+  @Parcelize
+  class DataLoaded<D, VI : ViewItem>(val data: @RawValue MutableList<D>) : ListViewState<D, VI>(), Parcelable
   class ItemAdded<D, VI : ViewItem>(val data: D) : ListViewState<D, VI>()
   class ItemRemoved<D, VI : ViewItem>(val viewItem: VI) : ListViewState<D, VI>()
   class ConfirmationRequired<D, VI : ViewItem> : ListViewState<D, VI>()

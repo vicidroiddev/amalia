@@ -13,6 +13,8 @@ import androidx.lifecycle.*
 import com.vicidroid.amalia.R
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
+import com.vicidroid.amalia.core.viewdiff.ViewDiff
+import com.vicidroid.amalia.core.viewdiff.ViewDiffProvider
 import com.vicidroid.amalia.ext.DEBUG_LOGGING
 
 abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
@@ -30,6 +32,14 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     private lateinit var viewAttachStateChangeListener: View.OnAttachStateChangeListener
 
     private val lifecycleObserver = object : DefaultLifecycleObserver {
+        override fun onPause(owner: LifecycleOwner) {
+            /**
+             * We call this in onPause since there is no guarantee an Activity
+             * will go through onDestroy after being backgrounded and engaging in process death.
+             */
+            populateViewDiff()
+        }
+
         override fun onDestroy(owner: LifecycleOwner) {
             onDestroyInternal()
         }
@@ -64,6 +74,20 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
      * Emits view events that should be processed by #onEvent from a presenter.
      */
     private val eventLiveData = MutableLiveData<E>()
+
+    /**
+     * Emits view diffs generally upon app going to background.
+     * This is helpful to avoid pushing view events for every minor view change.
+     *
+     * Implement [ViewDiffProvider] in your view delegate.
+     *
+     * Example usage is a long form with several dynamically added edit texts (after onCreateView).
+     *
+     * Normally to ensure survival of user entered data during config changes or process death,
+     * the presenter would need to know about every single view change as it happens to ensure persistence.
+     * One could attach a textwatcher to every edit text and call pushEvent as an alternative.
+     */
+    private val viewDiffLiveData = MutableLiveData<ViewDiff>()
 
     /**
      * Convenience method which uses [rootView] as the parent for view traversal
@@ -107,6 +131,10 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
 
     fun toast(id: Int) {
         Toast.makeText(context, id, Toast.LENGTH_LONG).show()
+    }
+
+    fun toast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
     fun setHostActivity(activity: AppCompatActivity) {
@@ -160,6 +188,24 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
                 onViewDetached()
             }
         }
+
+    //region VIEW DIFF
+    fun viewDiffLiveData() : LiveData<ViewDiff> = viewDiffLiveData
+
+    inline fun observeViewDiff(crossinline observer: (ViewDiff) -> Unit) {
+        viewDiffLiveData().observe(viewDelegateLifecycleOwner, Observer<ViewDiff> { interaction ->
+            observer(interaction)
+        })
+    }
+
+    private fun populateViewDiff() {
+        (this as? ViewDiffProvider)?.provideViewDiff()?.let { pushViewDiff(it) }
+    }
+
+    protected fun pushViewDiff(viewDiff : ViewDiff) {
+        viewDiffLiveData.value = viewDiff
+    }
+    //endregion
 }
 
 

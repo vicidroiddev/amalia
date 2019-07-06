@@ -11,7 +11,7 @@ class DashboardPresenter : BasePresenter<DashboardState, DashboardEvent>(),
     val imageUrl =
         "https://external-preview.redd.it/WTW1JY99hC5jGBSOsjFdmQYyWTKgoeywBL9JK6z29QA.jpg?auto=webp&s=74d4338ddb3523817e51dfcef0e0c67a666ee3a4"
 
-    override fun onBindViewDelegate(viewDelegate: ViewDelegate<DashboardState, DashboardEvent>) {
+    override fun loadInitialState() {
         calculateTimestamp()
     }
 
@@ -24,13 +24,12 @@ class DashboardPresenter : BasePresenter<DashboardState, DashboardEvent>(),
     }
 
     override fun onRefreshRequest() {
-        calculateTimestamp(true)
+        calculateTimestamp()
     }
 
-    fun calculateTimestamp(force: Boolean = false) {
+    fun calculateTimestamp() {
         pushState(
-            DashboardState.Loaded("Dashboard " + System.currentTimeMillis().toString(), imageUrl),
-            preferCachedState = !force
+            DashboardState.Loaded("Dashboard " + System.currentTimeMillis().toString(), imageUrl)
         )
     }
 }

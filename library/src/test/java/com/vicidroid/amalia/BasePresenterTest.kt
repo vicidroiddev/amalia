@@ -10,10 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ViewModelStore
 import androidx.savedstate.SavedStateRegistry
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
@@ -102,7 +99,7 @@ class BasePresenterTest : TestCase() {
         bindPresenter()
         assertNotNull(presenter.viewLifecycleOwner)
         verify(lifecycle).addObserver(presenter.viewLifecycleObserver)
-        verify(presenter).onViewCreated(lifecycleOwner)
+        verify(presenter).onViewAttached(lifecycleOwner)
     }
 
     @Test
@@ -111,7 +108,7 @@ class BasePresenterTest : TestCase() {
         lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
 
         assertTrue(viewDelegate.viewDelegateLifecycleOwner == lifecycleOwner)
-        verify(presenter).onViewDestroyed(lifecycleOwner)
+        verify(presenter).onViewDetached(lifecycleOwner)
         assertNull(presenter.viewLifecycleOwner)
         assertEquals(lifecycle.observerCount, 0)
     }
@@ -123,12 +120,12 @@ class BasePresenterTest : TestCase() {
         presenter.bindViewLifecycleOwner(lifecycleOwner)
 
         verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
-        verify(presenter).onViewCreated(lifecycleOwner)
+        verify(presenter).onViewAttached(lifecycleOwner)
         verify(lifecycle).addObserver(presenter.viewLifecycleObserver)
         assertNotNull(presenter.viewLifecycleOwner)
 
         lifecycle.currentState = Lifecycle.State.DESTROYED
-        verify(presenter).onViewDestroyed(lifecycleOwner)
+        verify(presenter).onViewDetached(lifecycleOwner)
         assertNull(presenter.viewLifecycleOwner)
     }
 
@@ -286,10 +283,16 @@ class BasePresenterTest : TestCase() {
     }
 
     class FakePresenter : SharedBasePresenter() {
+        override fun loadInitialState() {
+        }
+
         override fun onViewEvent(event: ViewEvent) {}
     }
 
     class FakeParentPresenter : BasePresenter<ViewState, ViewEvent>() {
+        override fun loadInitialState() {
+        }
+
         lateinit var childPresenter: BasePresenter<ViewState, ViewEvent>
 
         fun propagate() {

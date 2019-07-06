@@ -2,7 +2,6 @@ package com.vicidroid.amalia.ext
 
 import android.content.Context
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -53,10 +52,8 @@ inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterP
     viewLifecycleOwner ?: error("The parent presenter must be bound to a view delegate.")
     presenterLifecycleOwner ?: error("The parent presenter must have been initialized.")
     presenterCreator().also { childPresenter ->
-        childPresenter.applicationContext = applicationContext
         childPresenter.presenterLifecycleOwner = presenterLifecycleOwner
-        childPresenter.savedStateHandle = savedStateHandle
-        childPresenter.onSaveStateHandleProvided(savedStateHandle)
+        childPresenter.initializePresenter(applicationContext, savedStateHandle)
     }
 }
 
@@ -82,9 +79,7 @@ inline fun <reified P : BasePresenter<*, *>> presenterProvider(
         override fun <VM : ViewModel?> create(key: String, modelClass: Class<VM>, handle: SavedStateHandle): VM {
             return (presenterCreator() as VM).also { presenter ->
                 (presenter as P).let {
-                    presenter.applicationContext = lifecycleOwner.applicationContext
-                    presenter.savedStateHandle = handle
-                    presenter.onSaveStateHandleProvided(handle)
+                    presenter.initializePresenter(lifecycleOwner.applicationContext, handle)
                     externalHooks?.invoke(it)
                 }
             }

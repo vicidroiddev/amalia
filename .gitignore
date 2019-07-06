@@ -93,3 +93,12 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+/app/dev.properties
+/app/.settings/org.eclipse.buildship.core.prefs
+/app/.project
+/app/.classpath
+/.vscode/settings.json
+/.settings/org.eclipse.buildship.core.prefs
+/library/.settings/org.eclipse.buildship.core.prefs
+/library/.project
+/library/.classpath

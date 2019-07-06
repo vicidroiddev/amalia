@@ -2,4 +2,7 @@
 <resources>
     <item name="textEntry1" type="id" />
     <item name="textEntry2" type="id" />
+    <item name="nickname" type="id" />
+    <item name="mother" type="id" />
+    <item name="motherRoot" type="id" />
 </resources>
