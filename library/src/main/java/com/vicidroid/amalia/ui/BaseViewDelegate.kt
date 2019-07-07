@@ -2,6 +2,7 @@ package com.vicidroid.amalia.ui
 
 import android.content.Context
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
@@ -48,6 +49,8 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     private var hostActivity: AppCompatActivity? = null
 
     val context: Context = rootView.context
+
+    val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     /**
      * The parent view delegate is accessible from a child when using [com.vicidroid.amalia.ext.viewDelegateProvider]
