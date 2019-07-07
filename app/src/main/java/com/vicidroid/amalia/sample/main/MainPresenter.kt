@@ -3,6 +3,7 @@ package com.vicidroid.amalia.sample.main
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.ext.childPresenterProvider
 import com.vicidroid.amalia.sample.R
+import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverRepository
 import com.vicidroid.amalia.sample.main.dashboard.DashboardPresenter
 import com.vicidroid.amalia.sample.main.home.HomePresenter
 import com.vicidroid.amalia.sample.main.discover.DiscoverPresenter
@@ -13,7 +14,7 @@ class MainPresenter : BasePresenter<MainState, MainEvent>() {
 
     private val homePresenter by childPresenterProvider { HomePresenter() }
     private val dashboardPresenter by childPresenterProvider { DashboardPresenter() }
-    private val discoverPresenter by childPresenterProvider { DiscoverPresenter() }
+    private val discoverPresenter by childPresenterProvider { DiscoverPresenter(DiscoverRepository()) }
 
     override fun onViewStateRestored(restoredViewState: MainState) {
         // Just an example, we don't need to save this field since the view state is parceable, the selected tab is restored automatically :)
@@ -22,7 +23,7 @@ class MainPresenter : BasePresenter<MainState, MainEvent>() {
     }
 
     override fun loadInitialState() {
-        pushNavigationItem(R.id.navigation_home)
+        pushNavigationItem(R.id.navigation_discover)
     }
 
     override fun onBindViewDelegate(viewDelegate: ViewDelegate<MainState, MainEvent>) {

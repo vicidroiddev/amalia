@@ -1,10 +1,8 @@
 package com.vicidroid.amalia.sample.main.discover
 
-import android.os.Parcelable
 import com.vicidroid.amalia.core.ViewState
-import kotlinx.android.parcel.Parcelize
+import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverResult
 
 sealed class DiscoverState : ViewState {
-    @Parcelize
-    data class Loaded(val data: String, val imageUrl: String) : DiscoverState(), Parcelable
+    data class Loaded(val data: List<DiscoverResult>) : DiscoverState()
 }
