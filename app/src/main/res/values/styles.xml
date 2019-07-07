@@ -15,4 +15,9 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <style name="CardView.Standard" parent="Base.CardView">
+        <item name="cardCornerRadius">8dp</item>
+        <item name="cardElevation">8dp</item>
+    </style>
+
 </resources>
