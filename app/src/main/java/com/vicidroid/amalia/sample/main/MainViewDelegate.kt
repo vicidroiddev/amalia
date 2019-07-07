@@ -65,7 +65,6 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
 
-
     override fun renderViewState(state: MainState) {
         when (state) {
             is MainState.BottomNavigationItemSelected -> renderBottomNavigationItem(state.navigationId)
@@ -73,6 +72,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
     }
 
     private fun renderBottomNavigationItem(navigationId: Int) {
+        bottomNavigationView.menu.findItem(navigationId).isChecked = true
         navigationIdMap[navigationId].showDelegate()
     }
 
