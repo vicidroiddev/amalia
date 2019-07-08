@@ -12,7 +12,8 @@ open class RecyclerViewDelegate<I : RecyclerBinding<VH>, VH : BaseRecyclerViewHo
     viewLifeCycleOwner: LifecycleOwner,
     rootView: View,
     @IdRes recyclerViewId: Int,
-    layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(rootView.context)
+    layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(rootView.context),
+    dividerDecoration: RecyclerView.ItemDecoration = SpaceItemOffsetDecoration(rootView.context, 16)
 ) :
     BaseViewDelegate<RecyclerViewState<I>, E>(
         viewLifeCycleOwner,
@@ -24,6 +25,7 @@ open class RecyclerViewDelegate<I : RecyclerBinding<VH>, VH : BaseRecyclerViewHo
 
     init {
         recyclerView.layoutManager = layoutManager
+        recyclerView.addItemDecoration(dividerDecoration)
         recyclerView.adapter = adapter
     }
 
