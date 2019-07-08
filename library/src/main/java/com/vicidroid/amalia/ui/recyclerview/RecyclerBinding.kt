@@ -16,7 +16,7 @@ interface RecyclerBinding<VH : RecyclerView.ViewHolder> {
      * Called by adapter via [RecyclerView.Adapter.onViewRecycled]
      * Ensure editable data is saved prior to recycling for EditTexts or Checkboxes.
      */
-    fun unbind(viewHolder: VH)
+    fun unbind(viewHolder: VH) {}
 
     /**
      * By default the view type for a recycler view item can be tied to the inflated layout.
