@@ -9,6 +9,7 @@ _2017-XX-XX_
 * Add automatic handling of savedInstanceState to amalia components (https://github.com/vicidroiddev/amalia/issues/2)
 * Improve overrides in presenter for save state handling (https://github.com/vicidroiddev/amalia/issues/11)
 * Abstract ViewDelegate functionality to an interface (https://github.com/vicidroiddev/amalia/issues/13)
+* Added access to layout inflater from BaseViewDelegate
 
 #####Dependency updates:
 
