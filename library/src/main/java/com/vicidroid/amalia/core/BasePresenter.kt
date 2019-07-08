@@ -202,14 +202,6 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * Override [onBindViewDelegate] in your parent presenter and call [bind] on your child presenters
      * [viewDelegate] represents the view delegate that is bound to this presenter.
      */
-    open fun onBindViewDelegate(viewDelegate: ViewDelegate<S, E>, restoredViewState: Boolean) {
-        onBindViewDelegate(viewDelegate)
-    }
-
-    @Deprecated(
-        message = "Use onBindViewDelegate override which indicates restoration state",
-        replaceWith = ReplaceWith("onBindViewDelegate(viewDelegate, restoredViewState)")
-    )
     open fun onBindViewDelegate(viewDelegate: ViewDelegate<S, E>) {
 
     }
