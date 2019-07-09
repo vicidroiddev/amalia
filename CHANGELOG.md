@@ -2,14 +2,15 @@
 
 ## Amalia 0.3.0
 
-_2017-XX-XX_
+_2017-06-09_
+
+Note: This version will rely on android x saved state library to be included in your app.
 
 #####Library changes:
 
 * Add automatic handling of savedInstanceState to amalia components (https://github.com/vicidroiddev/amalia/issues/2)
 * Improve overrides in presenter for save state handling (https://github.com/vicidroiddev/amalia/issues/11)
 * Abstract ViewDelegate functionality to an interface (https://github.com/vicidroiddev/amalia/issues/13)
-* Added access to layout inflater from BaseViewDelegate
 
 #####Dependency updates:
 
