@@ -50,8 +50,6 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
 
     val context: Context = rootView.context
 
-    val layoutInflater: LayoutInflater = LayoutInflater.from(context)
-
     /**
      * The parent view delegate is accessible from a child when using [com.vicidroid.amalia.ext.viewDelegateProvider]
      */
