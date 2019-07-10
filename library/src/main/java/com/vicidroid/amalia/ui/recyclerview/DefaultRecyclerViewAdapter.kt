@@ -34,6 +34,12 @@ open class DefaultRecyclerViewAdapter<in I : RecyclerBinding<VH>, VH : BaseRecyc
         items[holder.adapterPosition].unbind(holder)
     }
 
+    override fun onFailedToRecycleView(holder: VH): Boolean {
+        recyclerViewDebugLog("onFailedToRecycleView() / unbind(): adapterPosition=${holder.adapterPosition}")
+        items[holder.adapterPosition].unbind(holder)
+        return super.onFailedToRecycleView(holder)
+    }
+
     override fun getItemCount() = items.size
 
     override fun getItemViewType(position: Int) = items[position].viewType
