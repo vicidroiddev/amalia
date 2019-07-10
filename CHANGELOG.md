@@ -1,5 +1,14 @@
 #Changelog - Amalia
 
+## Amalia 0.3.1
+
+_2017-06-10_
+
+#####Library changes:
+
+* Remove live data from ViewDelegate interface (https://github.com/vicidroiddev/amalia/issues/15)
+
+
 ## Amalia 0.3.0
 
 _2017-06-09_

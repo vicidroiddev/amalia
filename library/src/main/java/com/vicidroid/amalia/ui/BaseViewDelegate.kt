@@ -2,7 +2,6 @@ package com.vicidroid.amalia.ui
 
 import android.content.Context
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
@@ -23,7 +22,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     val rootView: View,
     injectLayoutId: Int? = null,
     rootViewAnchorId: Int = R.id.amalia_stub
-) : LifecycleOwner, ViewDelegateLifecycleCallbacks, ViewDelegate<S,E> {
+) : LifecycleOwner, ViewDelegateLifecycleCallbacks, ViewDelegate<S, E>, ViewEventProvider<E> {
 
     constructor(components: DelegateComponents) : this(
         components.viewLifecycleOwner,
@@ -108,15 +107,11 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
 
     /**
      * Exposes view event live data that the view delegate can leverage to reflect UI changes.
-     */
-    override fun eventLiveData(): LiveData<E> = eventLiveData
-
-    /**
      * Allows view delegates to know about events that are sent.
-     * Parent view delegates may use this to intercept events sent from child delegates.
      */
-    fun propagateEventsTo(observer: (E) -> Unit) =
-        eventLiveData().observe(viewDelegateLifecycleOwner, Observer { observer(it) })
+    override fun observeEvents(lifecycleOwner: LifecycleOwner, observer: (E) -> Unit) {
+        eventLiveData.observe(lifecycleOwner, Observer { observer(it) })
+    }
 
     /**
      * Exposes the lifecycle from the [viewDelegateLifecycleOwner]
@@ -191,7 +186,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
         }
 
     //region VIEW DIFF
-    fun viewDiffLiveData() : LiveData<ViewDiff> = viewDiffLiveData
+    fun viewDiffLiveData(): LiveData<ViewDiff> = viewDiffLiveData
 
     inline fun observeViewDiff(crossinline observer: (ViewDiff) -> Unit) {
         viewDiffLiveData().observe(viewDelegateLifecycleOwner, Observer<ViewDiff> { interaction ->
@@ -203,7 +198,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
         (this as? ViewDiffProvider)?.provideViewDiff()?.let { pushViewDiff(it) }
     }
 
-    protected fun pushViewDiff(viewDiff : ViewDiff) {
+    protected fun pushViewDiff(viewDiff: ViewDiff) {
         viewDiffLiveData.value = viewDiff
     }
     //endregion

@@ -10,6 +10,7 @@ import com.vicidroid.amalia.core.persistance.PersistableState
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
 import com.vicidroid.amalia.ext.debugLog
 import com.vicidroid.amalia.ui.ViewDelegate
+import com.vicidroid.amalia.ui.ViewEventProvider
 
 /**
  * Backed by Android's ViewModel in order to easily survive configuration changes.
@@ -88,17 +89,21 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     fun bind(viewDelegate: ViewDelegate<S, E>) {
         bindViewLifecycleOwner(viewDelegate.viewDelegateLifecycleOwner)
 
-        // Observe events sent from the delegate
-        viewDelegate
-            .eventLiveData()
-            ?.observe(viewDelegate.viewDelegateLifecycleOwner, Observer { event -> processViewEvent(event) })
-
+        // Observe events sent via an event provider
+        if (viewDelegate is ViewEventProvider<*>) {
+            viewDelegate.observeEvents(viewDelegate.viewDelegateLifecycleOwner) { event ->
+                @Suppress("UNCHECKED_CAST")
+                processViewEvent(event as E)
+            }
+        }
         // Observe states sent from this presenter and propagate them to the delegate.
         // Propagation will only occur if the delegate's lifecycle owner indicates a good state.
         // Furthermore, the observer which holds on to a delegate will be removed according to the delegate's lifecycleowner
         // This will prevent leaks
         stateLiveData()
-            .observe(viewDelegate.viewDelegateLifecycleOwner, Observer { state -> viewDelegate.renderViewState(state) })
+            .observe(
+                viewDelegate.viewDelegateLifecycleOwner,
+                Observer { state -> viewDelegate.renderViewState(state) })
 
         onBindViewDelegate(viewDelegate)
     }
@@ -107,7 +112,9 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * Delegate view events to additional presenters.
      */
     fun viewEventDelegator(presenter: BasePresenter<*, E>) {
-        viewEventPropagatorLiveData.observe(viewLifecycleOwner!!, Observer { presenter.onViewEvent(it) })
+        viewEventPropagatorLiveData.observe(
+            viewLifecycleOwner!!,
+            Observer { presenter.onViewEvent(it) })
     }
 
     /**

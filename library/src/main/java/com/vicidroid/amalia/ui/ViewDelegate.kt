@@ -9,8 +9,6 @@ interface ViewDelegate<S : ViewState, E : ViewEvent> {
 
     val viewDelegateLifecycleOwner: LifecycleOwner
 
-    fun eventLiveData(): LiveData<E>? = null
-
     /**
      * Render a view state that is provided by the Presenter.
      * The view delegate updates the UI accordingly.

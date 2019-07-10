@@ -17,6 +17,7 @@ import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.ext.childPresenterProvider
 import com.vicidroid.amalia.ext.presenterProvider
 import com.vicidroid.amalia.ui.BaseViewDelegate
+import com.vicidroid.amalia.ui.ViewDelegate
 import junit.framework.TestCase
 import org.junit.Assert
 import org.junit.Before
@@ -264,6 +265,23 @@ class BasePresenterTest : TestCase() {
     fun `presenter injects save state handle`() {
         val presenter by activity.presenterProvider { FakePresenter() }
         assertNotNull(presenter.savedStateHandle)
+    }
+
+    @Test
+    fun `presenter binds to simple view delegate interface implementation`() {
+        val viewDelegateImpl = spy(object: ViewDelegate<ViewState, ViewEvent> {
+            override val viewDelegateLifecycleOwner = lifecycleOwner
+            override fun renderViewState(state: ViewState) {
+            }
+        })
+
+        val presenter by activity.presenterProvider { FakePresenter() }
+        val fakeState = FakeViewState()
+
+        presenter.bind(viewDelegateImpl)
+        presenter.pushState(fakeState)
+
+        verify(viewDelegateImpl).renderViewState(fakeState)
     }
 
     private fun bindPresenter() {
