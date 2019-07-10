@@ -10,6 +10,7 @@ import com.vicidroid.amalia.core.persistance.PersistableState
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
 import com.vicidroid.amalia.ext.debugLog
 import com.vicidroid.amalia.ui.ViewDelegate
+import com.vicidroid.amalia.ui.ViewEventProvider
 
 /**
  * Backed by Android's ViewModel in order to easily survive configuration changes.
@@ -100,7 +101,9 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
         // Furthermore, the observer which holds on to a delegate will be removed according to the delegate's lifecycleowner
         // This will prevent leaks
         stateLiveData()
-            .observe(viewDelegate.viewDelegateLifecycleOwner, Observer { state -> viewDelegate.renderViewState(state) })
+            .observe(
+                viewDelegate.viewDelegateLifecycleOwner,
+                Observer { state -> viewDelegate.renderViewState(state) })
 
         onBindViewDelegate(viewDelegate)
     }
@@ -109,7 +112,9 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * Delegate view events to additional presenters.
      */
     fun viewEventDelegator(presenter: BasePresenter<*, E>) {
-        viewEventPropagatorLiveData.observe(viewLifecycleOwner!!, Observer { presenter.onViewEvent(it) })
+        viewEventPropagatorLiveData.observe(
+            viewLifecycleOwner!!,
+            Observer { presenter.onViewEvent(it) })
     }
 
     /**

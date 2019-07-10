@@ -2,7 +2,6 @@ package com.vicidroid.amalia.ui
 
 import android.content.Context
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
@@ -187,7 +186,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
         }
 
     //region VIEW DIFF
-    fun viewDiffLiveData() : LiveData<ViewDiff> = viewDiffLiveData
+    fun viewDiffLiveData(): LiveData<ViewDiff> = viewDiffLiveData
 
     inline fun observeViewDiff(crossinline observer: (ViewDiff) -> Unit) {
         viewDiffLiveData().observe(viewDelegateLifecycleOwner, Observer<ViewDiff> { interaction ->
@@ -199,7 +198,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
         (this as? ViewDiffProvider)?.provideViewDiff()?.let { pushViewDiff(it) }
     }
 
-    protected fun pushViewDiff(viewDiff : ViewDiff) {
+    protected fun pushViewDiff(viewDiff: ViewDiff) {
         viewDiffLiveData.value = viewDiff
     }
     //endregion
