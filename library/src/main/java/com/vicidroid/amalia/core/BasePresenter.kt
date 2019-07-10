@@ -88,11 +88,13 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     fun bind(viewDelegate: ViewDelegate<S, E>) {
         bindViewLifecycleOwner(viewDelegate.viewDelegateLifecycleOwner)
 
-        // Observe events sent from the delegate
-        viewDelegate
-            .eventLiveData()
-            ?.observe(viewDelegate.viewDelegateLifecycleOwner, Observer { event -> processViewEvent(event) })
-
+        // Observe events sent via an event provider
+        if (viewDelegate is ViewEventProvider<*>) {
+            viewDelegate.observeEvents(viewDelegate.viewDelegateLifecycleOwner) { event ->
+                @Suppress("UNCHECKED_CAST")
+                processViewEvent(event as E)
+            }
+        }
         // Observe states sent from this presenter and propagate them to the delegate.
         // Propagation will only occur if the delegate's lifecycle owner indicates a good state.
         // Furthermore, the observer which holds on to a delegate will be removed according to the delegate's lifecycleowner
