@@ -91,7 +91,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
         // Observe events sent via an event provider
         if (viewDelegate is ViewEventProvider<*>) {
-            viewDelegate.observeEvents(viewDelegate.viewDelegateLifecycleOwner) { event ->
+            viewDelegate.propagateEventsTo { event ->
                 @Suppress("UNCHECKED_CAST")
                 processViewEvent(event as E)
             }

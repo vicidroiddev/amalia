@@ -16,6 +16,7 @@ import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
 import com.vicidroid.amalia.core.viewdiff.ViewDiffProvider
 import com.vicidroid.amalia.ext.DEBUG_LOGGING
+import java.util.Observer
 
 abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     override val viewDelegateLifecycleOwner: LifecycleOwner,
@@ -109,8 +110,8 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
      * Exposes view event live data that the view delegate can leverage to reflect UI changes.
      * Allows view delegates to know about events that are sent.
      */
-    override fun observeEvents(lifecycleOwner: LifecycleOwner, observer: (E) -> Unit) {
-        eventLiveData.observe(lifecycleOwner, Observer { observer(it) })
+    override fun propagateEventsTo(observer: (E) -> Unit) {
+        eventLiveData.observe(viewDelegateLifecycleOwner, Observer { observer(it) })
     }
 
     /**
