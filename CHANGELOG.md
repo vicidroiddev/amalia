@@ -1,5 +1,14 @@
 #Changelog - Amalia
 
+## Amalia 0.X.X
+
+_2017-XX-XX_
+
+#####Library changes:
+
+* Remove unnecessary argument for lifecycleowner when observing events (https://github.com/vicidroiddev/amalia/commit/975f5254826d49c6826a71fb279f837740592c7f)
+
+
 ## Amalia 0.3.1
 
 _2017-06-10_
