@@ -16,7 +16,6 @@ import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
 import com.vicidroid.amalia.core.viewdiff.ViewDiffProvider
 import com.vicidroid.amalia.ext.DEBUG_LOGGING
-import java.util.Observer
 
 abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     override val viewDelegateLifecycleOwner: LifecycleOwner,
