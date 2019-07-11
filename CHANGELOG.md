@@ -1,8 +1,8 @@
 #Changelog - Amalia
 
-## Amalia 0.X.X
+## Amalia 0.3.2
 
-_2017-XX-XX_
+_2017-06_11_
 
 #####Library changes:
 
