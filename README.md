@@ -80,9 +80,9 @@ In your root level build.gradle file:
 ```
 allprojects {
   repositories {
-    mavenCentral()
-    google()
-    jcenter()
+    maven {
+        url 'https://jitpack.io'
+    }
   }
 }
 
@@ -96,7 +96,7 @@ dependencies {
 }
 
 ```
-> The latest version can be seen on maven: https://bit.ly/2ZWmBSk
+> The latest version can be seen on jitpack: https://jitpack.io/#vicidroiddev/amalia
 
 ## Examples
 
