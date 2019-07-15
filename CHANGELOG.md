@@ -1,5 +1,14 @@
 #Changelog - Amalia
 
+## Amalia 0.3.3
+
+_2017-06_15_
+
+#####Library changes:
+
+* Hooks for presenter should be initialized before loadInitialState (https://github.com/vicidroiddev/amalia/issues/17)
+
+
 ## Amalia 0.3.2
 
 _2017-06_11_
