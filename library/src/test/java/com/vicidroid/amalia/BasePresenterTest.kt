@@ -202,6 +202,13 @@ class BasePresenterTest : TestCase() {
     }
 
     @Test
+    fun `ensure hooks are applied before loadInitialState is called`() {
+        val presenter by activity.presenterProvider {
+            FakePresenter()
+        }
+    }
+
+    @Test
     fun `applies hooks to shared base presenter`() {
         val currentUri = Uri.Builder()
             .scheme("appName")
@@ -212,17 +219,21 @@ class BasePresenterTest : TestCase() {
             .appendPath("profile")
             .build()
 
-        val hooks: ((BasePresenter<*, *>) -> Unit)? = {
-            (it as SharedBasePresenter).currentUri = currentUri
+        val hooks: ((FakePresenterWithUri) -> Unit)? = {
+            it.currentUri = currentUri
         }
+
+        val mockedHooks = spy(hooks)
 
         lifecycle.currentState = Lifecycle.State.CREATED
 
-        val presenter by activity.presenterProvider(hooks) {
-            FakePresenter()
-        }
+        val presenterThatAccessesUriEarly = spy(FakePresenterWithUri())
 
-        assertEquals(presenter.currentUri, currentUri)
+        activity.presenterProvider(mockedHooks) { presenterThatAccessesUriEarly }.value
+
+        verify(presenterThatAccessesUriEarly).loadInitialState()
+        verify(mockedHooks)!!.invoke(presenterThatAccessesUriEarly)
+        assertEquals(presenterThatAccessesUriEarly.currentUri, currentUri)
     }
 
     @Test
@@ -302,6 +313,15 @@ class BasePresenterTest : TestCase() {
 
     class FakePresenter : SharedBasePresenter() {
         override fun loadInitialState() {
+        }
+
+        override fun onViewEvent(event: ViewEvent) {}
+    }
+
+    class FakePresenterWithUri : SharedBasePresenter() {
+        override fun loadInitialState() {
+            //Access currentUri
+            this.currentUri
         }
 
         override fun onViewEvent(event: ViewEvent) {}

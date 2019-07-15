@@ -79,8 +79,8 @@ inline fun <reified P : BasePresenter<*, *>> presenterProvider(
         override fun <VM : ViewModel?> create(key: String, modelClass: Class<VM>, handle: SavedStateHandle): VM {
             return (presenterCreator() as VM).also { presenter ->
                 (presenter as P).let {
-                    presenter.initializePresenter(lifecycleOwner.applicationContext, handle)
                     externalHooks?.invoke(it)
+                    presenter.initializePresenter(lifecycleOwner.applicationContext, handle)
                 }
             }
         }
