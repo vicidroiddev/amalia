@@ -2,6 +2,7 @@ package com.vicidroid.amalia.sample.api.themoviedb.discover
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
 
 @JsonClass(generateAdapter = true)
 data class DiscoverResponse(
@@ -25,7 +26,9 @@ data class DiscoverResult(
     @Json(name = "id") val id : Int,
     @Json(name = "vote_average") val voteAverage : Double,
     @Json(name = "overview") val overview : String,
-    @Json(name = "poster_path") val posterPath : String) {
+    @Json(name = "poster_path") val posterPath : String) : DiffItem {
+
+    override val diffId = id.toLong()
 
     val postPathUrl = "https://image.tmdb.org/t/p/w500$posterPath"
 }

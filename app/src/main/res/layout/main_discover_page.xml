@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_discover_page_list_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="50dp"
-    android:fillViewport="true">
-
-    <LinearLayout
-        android:id="@+id/main_discover_page_list_root"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_vertical_margin"
-        tools:context=".main.MainActivity">
-
-    </LinearLayout>
-</ScrollView>
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".main.MainActivity" />
