@@ -8,25 +8,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.ui.BaseViewDelegate
 
-open class RecyclerViewDelegate<I : RecyclerBinding<VH>, VH : BaseRecyclerViewHolder, E : ViewEvent>(
+open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
     viewLifeCycleOwner: LifecycleOwner,
     rootView: View,
     @IdRes recyclerViewId: Int,
     layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(rootView.context),
     dividerDecoration: RecyclerView.ItemDecoration = SpaceItemOffsetDecoration(rootView.context, 16)
 ) :
-    BaseViewDelegate<RecyclerViewState<I>, E>(
+    BaseViewDelegate<RecyclerViewState<I>, ViewEvent>(
         viewLifeCycleOwner,
         rootView
     ) {
 
-    val recyclerView = findViewById<RecyclerView>(recyclerViewId)
-    val adapter = DefaultRecyclerViewAdapter<I, VH>()
+    protected val recyclerView = findViewById<RecyclerView>(recyclerViewId)
+    private val adapter = DefaultRecyclerViewAdapter<I, VH>()
 
     init {
         recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(dividerDecoration)
+
+        adapter.setHasStableIds(true)
+
         recyclerView.adapter = adapter
+
+        adapter.viewHolderEventStore.observe(viewLifeCycleOwner) { event ->
+            pushEvent(event.originalEvent)
+        }
     }
 
     override fun renderViewState(state: RecyclerViewState<I>) {

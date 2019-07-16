@@ -5,8 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-interface RecyclerBinding<VH : RecyclerView.ViewHolder> {
-
+interface RecyclerItem<VH : RecyclerView.ViewHolder> {
     /**
      * Called by adapter via [RecyclerView.Adapter.onBindViewHolder]
      */
@@ -17,6 +16,15 @@ interface RecyclerBinding<VH : RecyclerView.ViewHolder> {
      * Ensure editable data is saved prior to recycling for EditTexts or Checkboxes.
      */
     fun unbind(viewHolder: VH) {}
+
+    /**
+     * Called by adapter via [RecyclerView.Adapter.getItemId]
+     * Use an id that is unqiue to the content that is displayed.
+     * Do not use position as a value.
+     *
+     * This will be leveraged for [RecyclerView.Adapter.setHasStableIds]
+     */
+    val uniqueItemId: Long
 
     /**
      * By default the view type for a recycler view item can be tied to the inflated layout.

@@ -4,43 +4,74 @@ import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.vicidroid.amalia.core.ViewEventStore
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
 
-open class DefaultRecyclerViewAdapter<in I : RecyclerBinding<VH>, VH : BaseRecyclerViewHolder>
-    : RecyclerView.Adapter<VH>() {
+open class DefaultRecyclerViewAdapter<in I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder> :
+    RecyclerView.Adapter<VH>() {
 
+    val viewHolderEventStore = ViewEventStore<RecyclerViewHolderInteractionEvent>()
+
+    /**
+     * A list of [RecyclerItem]
+     */
     private var items: List<I> = emptyList()
 
     /**
-     * Match view types to a given view item for easy creation of the viewholder.
+     * Match view types to a given view item for easy creation of the [RecyclerView.ViewHolder].
      * Otherwise we would have to search each item in [items] and compare viewtypes
+     *
+     * Warning: This will only store one item even if there are multiple items for one viewtype.
      */
     private val viewTypeToItemCache = SparseArray<I>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         recyclerViewDebugLog("onCreateViewHolder(): viewType=$viewType")
         return viewTypeToItemCache[viewType].let { item ->
-            item.createViewHolder(item.inflateView(parent))
+            val view = item.inflateView(parent)
+
+            item.createViewHolder(view).also {
+                it.eventStore = viewHolderEventStore
+            }
         }
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         recyclerViewDebugLog("onBindViewHolder(): position=$position")
-        items[position].bind(holder)
+        items[position].let { item ->
+            item.bind(holder)
+            holder.adapterItem = item
+        }
     }
 
+    /**
+     * It is possible for the position to be -1 if an item is removed.
+     * Otherwise, it is expected to have this called as the views go off screen
+     */
     override fun onViewRecycled(holder: VH) {
         recyclerViewDebugLog("onViewRecycled() / unbind(): adapterPosition=${holder.adapterPosition}")
-        items[holder.adapterPosition].unbind(holder)
+
+        if (holder.adapterPosition in 0..items.size) {
+            items[holder.adapterPosition].unbind(holder)
+            holder.adapterItem = null
+        }
     }
 
     override fun onFailedToRecycleView(holder: VH): Boolean {
         recyclerViewDebugLog("onFailedToRecycleView() / unbind(): adapterPosition=${holder.adapterPosition}")
-        items[holder.adapterPosition].unbind(holder)
+
+        if (holder.adapterPosition in 0..items.size) {
+            items[holder.adapterPosition].unbind(holder)
+        }
+
+        holder.adapterItem = null
+
         return super.onFailedToRecycleView(holder)
     }
 
     override fun getItemCount() = items.size
+
+    override fun getItemId(position: Int) = items[position].uniqueItemId
 
     override fun getItemViewType(position: Int) = items[position].viewType
 
