@@ -5,5 +5,9 @@ package com.vicidroid.amalia.ui.recyclerview.diff
  * Leverage this interface for your data
  */
 interface DiffItem {
-    val diffId: Long
+    val diffId: String
+
+    companion object {
+        val INVALID_ID: String? = null
+    }
 }

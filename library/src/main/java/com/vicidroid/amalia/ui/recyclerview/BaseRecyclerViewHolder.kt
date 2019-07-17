@@ -25,4 +25,3 @@ abstract class BaseRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view
         eventStore.pushEvent(wrappedEvent)
     }
 }
-
