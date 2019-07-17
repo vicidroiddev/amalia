@@ -9,13 +9,12 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.test.Data
+import com.vicidroid.amalia.ui.recyclerview.BaseRecyclerItem
 import com.vicidroid.amalia.ui.recyclerview.BaseRecyclerViewHolder
 import com.vicidroid.amalia.ui.recyclerview.RecyclerItem
 
-data class TestRecyclerItem(val data: Data) : RecyclerItem<TestRecyclerItem.TestViewHolder> {
-    override val diffItem = data
+data class TestRecyclerItem(val data: Data) : BaseRecyclerItem<TestRecyclerItem.TestViewHolder>(data) {
     override val layoutRes = R.layout.list_item_flow_test
-    override val uniqueItemId = data.id
 
     override fun createViewHolder(itemView: View) = TestViewHolder(itemView)
 

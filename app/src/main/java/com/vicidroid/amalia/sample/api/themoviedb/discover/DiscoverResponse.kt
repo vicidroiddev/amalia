@@ -28,7 +28,7 @@ data class DiscoverResult(
     @Json(name = "overview") val overview : String,
     @Json(name = "poster_path") val posterPath : String) : DiffItem {
 
-    override val diffId = id.toLong()
+    override val diffId = id.toString()
 
     val postPathUrl = "https://image.tmdb.org/t/p/w500$posterPath"
 }

@@ -16,7 +16,7 @@ class TestPresenter : BasePresenter<RecyclerViewState<TestRecyclerItem>, ViewEve
             data.add(
                 TestRecyclerItem(
                     Data(
-                        i.toLong(),
+                        i.toString(),
                         "Title $i",
                         "Subtitle $i",
                         "Default Text $i"
