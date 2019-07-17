@@ -1,4 +1,5 @@
-# Amalia [![Build Status](https://app.bitrise.io/app/75917df26e15facf/status.svg?token=D9tM0WbyOEdD_LmUP1g5ZA&branch=master)](https://app.bitrise.io/app/75917df26e15facf)
+# Amalia [![Build Status](https://app.bitrise.io/app/75917df26e15facf/status.svg?token=D9tM0WbyOEdD_LmUP1g5ZA&branch=master)](https://app.bitrise.io/app/75917df26e15facf)[![Jitpack](https://jitpack.io/v/vicidroiddev/amalia.svg)]
+(https://jitpack.io/#vicidroiddev/amalia)
 ### What is this library and why bother?
 - Amalia is an MVP implementation which dictates a straightforward pattern of uni-directional flow of view states to render and view events to process.
 - 100% written in Kotlin with pleasant apis that can still be consumed from Java when needed. 
