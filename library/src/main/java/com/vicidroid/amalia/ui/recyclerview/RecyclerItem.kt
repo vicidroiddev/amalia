@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
 
 interface RecyclerItem<VH : RecyclerView.ViewHolder> {
     /**
@@ -25,6 +26,12 @@ interface RecyclerItem<VH : RecyclerView.ViewHolder> {
      * This will be leveraged for [RecyclerView.Adapter.setHasStableIds]
      */
     val uniqueItemId: Long
+
+
+    /**
+     * Return the item you wish to perform a diff on using [RecyclerItemDiffCallback]
+     */
+    val diffItem: DiffItem
 
     /**
      * By default the view type for a recycler view item can be tied to the inflated layout.

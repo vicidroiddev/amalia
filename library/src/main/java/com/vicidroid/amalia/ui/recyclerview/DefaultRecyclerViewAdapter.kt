@@ -6,16 +6,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.core.ViewEventStore
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
+import com.vicidroid.amalia.ui.recyclerview.diff.RecyclerItemDiffCallback
 
-open class DefaultRecyclerViewAdapter<in I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder> :
+open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder> :
     RecyclerView.Adapter<VH>() {
 
     val viewHolderEventStore = ViewEventStore<RecyclerViewHolderInteractionEvent>()
 
     /**
-     * A list of [RecyclerItem]
+     * A list of [RecyclerItem] which wraps the data and allows bind and unbind calls
      */
-    private var items: List<I> = emptyList()
+    protected var items: List<I> = mutableListOf()
 
     /**
      * Match view types to a given view item for easy creation of the [RecyclerView.ViewHolder].
@@ -75,9 +76,9 @@ open class DefaultRecyclerViewAdapter<in I : RecyclerItem<VH>, VH : BaseRecycler
 
     override fun getItemViewType(position: Int) = items[position].viewType
 
-    private fun <T> calculateDiff(oldItems: List<T>, newItems: List<T>) =
+    private fun calculateDiff(oldItems: List<I>, newItems: List<I>) =
         DiffUtil.calculateDiff(
-            DiffUtilCallback(
+            RecyclerItemDiffCallback(
                 oldItems,
                 newItems
             )
