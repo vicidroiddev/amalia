@@ -21,7 +21,7 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
     ) {
 
     protected val recyclerView = findViewById<RecyclerView>(recyclerViewId)
-    private val adapter = DefaultRecyclerViewAdapter<I, VH>()
+    protected val adapter = DefaultRecyclerViewAdapter<I, VH>()
 
     init {
         recyclerView.layoutManager = layoutManager
