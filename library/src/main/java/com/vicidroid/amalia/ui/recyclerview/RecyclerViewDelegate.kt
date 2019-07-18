@@ -5,15 +5,18 @@ import androidx.annotation.IdRes
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.vicidroid.amalia.R
 import com.vicidroid.amalia.core.ViewEvent
+import com.vicidroid.amalia.ext.recyclerViewDebugLog
 import com.vicidroid.amalia.ui.BaseViewDelegate
 
 open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
     viewLifeCycleOwner: LifecycleOwner,
     rootView: View,
-    @IdRes recyclerViewId: Int,
+    @IdRes recyclerViewId: Int = R.id.amalia_recycled_list,
     layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(rootView.context),
-    dividerDecoration: RecyclerView.ItemDecoration = SpaceItemOffsetDecoration(rootView.context, 16)
+    spaceSeparationInDp: Int = 8,
+    dividerDecoration: RecyclerView.ItemDecoration = SpaceItemOffsetDecoration(rootView.context, spaceSeparationInDp)
 ) :
     BaseViewDelegate<RecyclerViewState<I>, ViewEvent>(
         viewLifeCycleOwner,
@@ -24,16 +27,27 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
     protected val adapter = DefaultRecyclerViewAdapter<I, VH>()
 
     init {
-        recyclerView.layoutManager = layoutManager
-        recyclerView.addItemDecoration(dividerDecoration)
-
+        // ADAPTER SETUP
         adapter.setHasStableIds(true)
-
-        recyclerView.adapter = adapter
-
         adapter.viewHolderEventStore.observe(viewLifeCycleOwner) { event ->
+            onInterceptEventChain(event)
             pushEvent(event.originalEvent)
         }
+
+
+        // RECYCLER VIEW SETUP
+        recyclerView.layoutManager = layoutManager
+
+        if (spaceSeparationInDp > 0) {
+            recyclerViewDebugLog("Adding item decorator with space: ${spaceSeparationInDp}dp ")
+            recyclerView.addItemDecoration(dividerDecoration)
+        }
+
+        recyclerView.adapter = adapter
+    }
+
+
+    open fun onInterceptEventChain(event: RecyclerViewHolderInteractionEvent) {
     }
 
     override fun renderViewState(state: RecyclerViewState<I>) {
