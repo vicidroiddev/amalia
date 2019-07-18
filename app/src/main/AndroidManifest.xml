@@ -8,6 +8,7 @@
     <dist:module dist:instant="true" />
 
     <application
+        android:name="com.vicidroid.amalia.sample.AmaliaApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

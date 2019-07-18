@@ -91,6 +91,7 @@ dependencies {
     // AMALIA LIB
     implementation project(path: ':library')
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-3'
 }
 
 apply plugin: 'kotlin-android-extensions'
