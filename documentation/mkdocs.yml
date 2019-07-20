@@ -1,0 +1,65 @@
+# pip install mkdocs mkdocs-material
+# mkdocs serve
+# mkdocs gh-deploy
+
+site_name: Amalia Documentation
+site_description: 'State-machine-driven MVP library with unidirectional data flow via states and events'
+site_author: 'Vicidroiddev'
+site_url: 'https://vicidroiddev.github.io/amalia/'
+
+repo_name: 'vicidroiddev/amalia'
+repo_url: 'https://github.com/vicidroiddev/amalia'
+
+copyright: 'Copyright &copy; 2019 Raphael K'
+
+theme:
+  name: 'material'
+
+  language: 'en'
+
+  feature:
+    tabs: false
+
+  logo:
+    icon: 'transform'
+
+  palette:
+    primary: 'deep purple'
+    accent: 'amber'
+
+  font:
+    text: 'Fira Sans'
+    code: 'Fira Mono'
+
+  extra:
+    social:
+      - type: 'github'
+        link: 'https://github.com/vicidroiddev/amalia'
+
+nav:
+  - 'Overview': index.md
+  - 'Getting Started': gettingstarted.md
+  - 'Components':
+      - 'Presenters': components/presenters.md
+      - 'View Delegate': components/viewdelegates.md
+      - 'View State': components/viewstates.md
+      - 'View Event': components/viewevents.md
+
+  - 'Change Log': changelog.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+
+
