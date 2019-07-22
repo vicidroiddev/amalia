@@ -1,15 +1,59 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+
 buildscript {
-    ext.kotlin_version = '1.3.31'
+
+    ext.versions = [
+            'junit' : '4.12',
+            'kotlin': '1.3.31',
+    ]
+
+    ext.androidXDeps = [
+            'appcompat'       : "androidx.appcompat:appcompat:1.0.2",
+            'annotation'      : "androidx.annotation:annotation:1.1.0",
+            'coreKtx'         : "androidx.core:core-ktx:1.2.0-alpha02",
+            'constraintLayout': "androidx.constraintlayout:constraintlayout:2.0.0-beta2",
+            'legacySupport'   : "androidx.legacy:legacy-support-v4:1.0.0",
+            'recyclerview'    : "androidx.recyclerview:recyclerview:1.0.0",
+            'savedState'      : "androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-alpha01",
+    ]
+
+    ext.archDeps = [
+            'archCoreTesting': "android.arch.core:core-testing:1.1.1",
+            'extensions'     : "android.arch.lifecycle:extensions:1.1.1",
+            'commonJava8'    : "android.arch.lifecycle:common-java8:1.1.1",
+    ]
+
+    ext.deps = [
+            'android'        : "com.google.android:android:${versions.android}",
+            'junit'          : "junit:junit:${versions.junit}",
+            'kotlinStdlib'   : "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
+            'mjaarmanMockito': "com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0",
+            'roboelectric'   : "org.robolectric:robolectric:3.8",
+            'coroutines'     : "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1"
+    ]
+
+    ext.toolchainDeps = [
+            'gradlePlugin': "com.android.tools.build:gradle:3.5.0-beta05",
+            'kotlinPlugin': "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+    ]
+
+    ext.toolchainVersions = [
+            minSdk    : 21,
+            targetSdk : 28,
+            compileSdk: 28,
+            buildTools: "29.0.1"
+    ]
+
     repositories {
         mavenCentral()
         google()
         jcenter()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0-beta05'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath toolchainDeps.gradlePlugin
+        classpath toolchainDeps.kotlinPlugin
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

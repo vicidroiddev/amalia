@@ -18,11 +18,12 @@ def devPropertiesToken = devProperties.getProperty('api.themoviedb')
 ext.themoviedbToken = devPropertiesToken != null ? devPropertiesToken : System.getenv('api.themoviedb')
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion toolchainVersions.compileSdk
+    buildToolsVersion toolchainVersions.buildTools
     defaultConfig {
         applicationId "com.vicidroid.amalia.sample"
-        minSdkVersion 21
-        targetSdkVersion 28
+        minSdkVersion toolchainVersions.minSdk
+        targetSdkVersion toolchainVersions.targetSdk
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -56,28 +57,27 @@ kapt {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // JETBRAINS
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation deps.coroutines
+    implementation deps.kotlinStdlib
 
     // ANDROID X
-    implementation 'androidx.appcompat:appcompat:1.1.0-beta01'
-    implementation 'androidx.core:core-ktx:1.2.0-alpha02'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-alpha01'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation androidXDeps.appcompat
+    implementation androidXDeps.annotation
+    implementation androidXDeps.coreKtx
+    implementation androidXDeps.constraintLayout
+    implementation androidXDeps.legacySupport
+    implementation androidXDeps.recyclerview
+    implementation androidXDeps.savedState
 
     // ANDROID ARCHITECTURE COMPONENTS
     // Required to use androidx.lifecycle.DefaultLifecycleObserver
-    implementation "android.arch.lifecycle:common-java8:1.1.1"
+    implementation archDeps.commonJava8
 
     // MATERIAL
     implementation 'com.google.android.material:material:1.1.0-alpha07'
 
     // TESTS
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.3.0-alpha01'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha01'
-
+    testImplementation deps.junit
 
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.6.0'

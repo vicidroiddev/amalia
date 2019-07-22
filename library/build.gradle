@@ -11,12 +11,6 @@ buildscript {
     }
 }
 
-def toolchainVersions = [
-        minSdk    : 21,
-        targetSdk : 28,
-        compileSdk: 28,
-]
-
 android {
     compileSdkVersion toolchainVersions.compileSdk
 
@@ -42,20 +36,20 @@ androidExtensions {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation deps.kotlinStdlib
 
-    testImplementation "junit:junit:4.12"
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0"
-    testImplementation "org.robolectric:robolectric:3.8"
-    testImplementation "android.arch.core:core-testing:1.1.1"
+    testImplementation deps.junit
+    testImplementation deps.mjaarmanMockito
+    testImplementation deps.roboelectric
+    testImplementation archDeps.archCoreTesting
 
-    implementation "android.arch.lifecycle:extensions:1.1.1"
-    implementation "android.arch.lifecycle:common-java8:1.1.1"
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-alpha01'
+    implementation archDeps.extensions
+    implementation archDeps.commonJava8
 
-
-    implementation "androidx.appcompat:appcompat:1.0.2"
-    implementation "androidx.annotation:annotation:1.1.0"
+    implementation androidXDeps.appcompat
+    implementation androidXDeps.annotation
+    implementation androidXDeps.recyclerview
+    implementation androidXDeps.savedState
 }
 
 apply plugin: 'kotlin-android-extensions'
