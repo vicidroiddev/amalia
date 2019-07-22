@@ -102,8 +102,6 @@ dependencies {
 //    implementation project(path: ':amalia-coroutine-scopes')
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-3'
-
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
 }
 
 apply plugin: 'kotlin-android-extensions'
