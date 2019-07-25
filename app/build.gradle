@@ -90,6 +90,7 @@ dependencies {
 
     // AMALIA LIB
     implementation project(path: ':library')
+    implementation project(path: ':amalia-coroutine-scopes')
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-3'
 }
