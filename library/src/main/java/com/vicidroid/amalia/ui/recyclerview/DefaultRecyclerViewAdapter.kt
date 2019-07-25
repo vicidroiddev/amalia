@@ -2,14 +2,18 @@ package com.vicidroid.amalia.ui.recyclerview
 
 import android.util.SparseArray
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.core.ViewEventStore
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
 import com.vicidroid.amalia.ui.recyclerview.diff.RecyclerItemDiffCallback
 
-open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder> :
-    RecyclerView.Adapter<VH>() {
+open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
+    override val lifecycleOwner: LifecycleOwner,
+    override val viewDelegate: RecyclerViewDelegate<*, *>
+) :
+    RecyclerView.Adapter<VH>(), RecyclerViewAdapter {
 
     val viewHolderEventStore = ViewEventStore<RecyclerViewHolderInteractionEvent>()
 
@@ -32,7 +36,7 @@ open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerVie
             val view = item.inflateView(parent)
 
             item.createViewHolder(view).also {
-                it.eventStore = viewHolderEventStore
+                it.provideExtras(item, this, viewHolderEventStore)
             }
         }
     }

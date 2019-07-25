@@ -10,9 +10,25 @@ import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewEventStore
 
 abstract class BaseRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    internal lateinit var eventStore: ViewEventStore<RecyclerViewHolderInteractionEvent>
+    lateinit var adapter: RecyclerViewAdapter
     var adapterItem: RecyclerItem<*>? = null
 
-    internal lateinit var eventStore: ViewEventStore<RecyclerViewHolderInteractionEvent>
+    fun provideExtras(
+        adapterItem: RecyclerItem<*>,
+        adapter: RecyclerViewAdapter,
+        eventStore: ViewEventStore<RecyclerViewHolderInteractionEvent>
+    ) {
+        this.adapter = adapter
+        this.adapterItem = adapterItem
+        this.eventStore = eventStore
+        onExtrasProvided()
+    }
+
+    open fun onExtrasProvided() {
+
+    }
+
 
     fun getString(@StringRes stringRes: Int) = itemView.resources.getString(stringRes)
 

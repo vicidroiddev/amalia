@@ -24,7 +24,7 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
     ) {
 
     protected val recyclerView = findViewById<RecyclerView>(recyclerViewId)
-    protected val adapter = DefaultRecyclerViewAdapter<I, VH>()
+    protected val adapter = DefaultRecyclerViewAdapter<I, VH>(viewLifeCycleOwner, this)
 
     init {
         // ADAPTER SETUP
