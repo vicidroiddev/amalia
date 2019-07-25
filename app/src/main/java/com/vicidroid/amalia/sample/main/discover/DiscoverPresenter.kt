@@ -1,12 +1,11 @@
 package com.vicidroid.amalia.sample.main.discover
 
+import androidx.lifecycle.mainScope
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.ext.debugLog
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverRepository
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class DiscoverPresenter(private val repository: DiscoverRepository) :
@@ -23,16 +22,5 @@ class DiscoverPresenter(private val repository: DiscoverRepository) :
     }
 
     override fun onRefreshRequest() {
-    }
-
-    //TODO, generalize this, could perhaps use the logic of viewModelScope.
-    //https://github.com/vicidroiddev/amalia/issues/12
-    private val supervisorJob = SupervisorJob()
-
-    private val mainScope = CoroutineScope(Dispatchers.Main + supervisorJob)
-
-    override fun onCleared() {
-        supervisorJob.cancel()
-        super.onCleared()
     }
 }

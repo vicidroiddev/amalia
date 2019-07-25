@@ -8,7 +8,7 @@ class DiscoverRepository(val api: DiscoverTvApi = Retrofit.instance.create(Disco
 
     //TODO caching, db support, error handling
     suspend fun discoverFromApi(): List<DiscoverResult> {
-        return withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.Default) {
             val response = api.discover().execute()
 
             when {
