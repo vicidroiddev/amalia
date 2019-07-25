@@ -259,7 +259,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     }
 
     @CallSuper
-    override fun onCleared() {
+    final override fun onCleared() {
         presenterLifecycleOwner = null
         onPresenterDestroyed()
     }

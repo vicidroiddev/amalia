@@ -33,7 +33,8 @@ _2019-06_26_
 #####Library changes:
 
 * More useful bind method provided which takes a lifecycleOwner and a lambda for states
-* Add coroutine scope to presenter #12 (https://github.com/vicidroiddev/amalia/issues/12)
+* Add coroutine scopes as extension property to presenters (https://github.com/vicidroiddev/amalia/issues/12)
+* BasePresenter.onCleared has been made final, rely on #onPresenterDestroyed
 
 
 ## Amalia 0.3.3
