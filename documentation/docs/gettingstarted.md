@@ -21,9 +21,14 @@ implementation 'com.github.vicidroiddev:amalia:{latest_version}'
 
 ##1. Define states and events
 
-You can define the states that define represent a snapshot in time of what the view should render. Sealed classes are perfect for this.
+You can define states representing a snapshot in time of what the view should render. Sealed classes are perfect for this!
 
-You can also define the UI events that can be propagated to the presenter for further processing
+You can also define the UI events that can be propagated to the presenter for further processing.
+
+In short:
+
+- Presenter pushes state -> ViewDelegate renders the state
+- ViewDelegate pushes event -> Presenter processes the event
 
 ```kotlin
 sealed class DiscoverState : ViewState {
@@ -38,7 +43,9 @@ sealed class DiscoverEvent : ViewEvent {
 
 ##2. Define presenter
 
-Extend from the `BasePresenter` class and load all your data here. When you are finished loading push an appropriate state.
+Extend from the `BasePresenter` class and load all your data here. When you are finished loading, push an appropriate state.
+Before loading, you can push a state to represent _loading_.
+This can be rendered in the view event as a progress dialog or an empty state view.
 
 ```kotlin
 class DiscoverTvPresenter() :
