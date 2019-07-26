@@ -5,10 +5,7 @@ import android.net.Uri
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistry
 import com.nhaarman.mockitokotlin2.*
 import com.vicidroid.amalia.core.BasePresenter
@@ -59,6 +56,9 @@ class BasePresenterTest : TestCase() {
 
     @Mock
     lateinit var savedStateRegistry: SavedStateRegistry
+
+    @Mock
+    lateinit var savedStateHandle: SavedStateHandle
 
     private lateinit var lifecycle: LifecycleRegistry
 
@@ -178,7 +178,19 @@ class BasePresenterTest : TestCase() {
     }
 
     @Test
-    fun `view state propogated to parent presenter`() {
+    fun `view state caught by provided observer`() {
+        val observer = spy (object: (ViewState) -> Unit {
+            override fun invoke(p1: ViewState) {
+            }
+        })
+
+        presenter.bind(lifecycleOwner, observer)
+        presenter.pushState(viewState)
+        verify(observer).invoke(viewState)
+    }
+
+    @Test
+    fun `view state propagated to parent presenter`() {
         bindPresenter()
         parentPresenter.childPresenter = presenter
         parentPresenter.propagate()
@@ -202,10 +214,23 @@ class BasePresenterTest : TestCase() {
     }
 
     @Test
-    fun `ensure hooks are applied before loadInitialState is called`() {
-        val presenter by activity.presenterProvider {
-            FakePresenter()
+    fun `ensure order of initialization prior to loadInitialState`() {
+
+        val hooks: ((FakePresenterWithUri) -> Unit) = {
+            it.currentUri = Uri.EMPTY
         }
+
+        val mockedHooks = spy(hooks)
+
+        val presenter = spy(FakePresenterWithUri())
+
+        activity.presenterProvider(mockedHooks) { presenter }.value
+
+        val inorder = inOrder(mockedHooks, presenter)
+
+        inorder.verify(mockedHooks).invoke(presenter)
+        inorder.verify(presenter).initializePresenter(any(), any())
+        inorder.verify(presenter).loadInitialState()
     }
 
     @Test

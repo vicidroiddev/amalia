@@ -64,8 +64,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
     //TODO Consider making this a protectedmethod if legacy code can implement ViewDelegate nicely
     @Deprecated(
-        message = "[bindViewLifecycleOwner] will be made private/protected soon. Instead implement [ViewDelegate] interface",
-        replaceWith = ReplaceWith("bind(viewDelegate)")
+        message = "[bindViewLifecycleOwner] will be made protected soon. Instead implement [ViewDelegate] interface",
+        replaceWith = ReplaceWith("bind(lifecycleOwner, stateObserver)")
     )
     fun bindViewLifecycleOwner(viewLifecycleOwner: LifecycleOwner) {
         this.viewLifecycleOwner?.let { error("Second call to bind() is suspicious.") }
@@ -79,6 +79,16 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
         // Allow this class to listen for lifecycle events from the view delegate.
         // Just override a lifecycle method, example #onViewCreated()
         viewLifecycleOwner.lifecycle.addObserver(viewLifecycleObserver)
+    }
+
+    /**
+     * Binds the presenter with a required [lifecycleOwner] and a [stateObserver]
+     * States will be propagated to the [stateObserver]
+     * In most cases [bind(viewDelegate)] is preferred.
+     */
+    fun bind(lifecycleOwner: LifecycleOwner, stateObserver: (S) -> Unit) {
+        bindViewLifecycleOwner(lifecycleOwner)
+        propagateStatesTo(stateObserver)
     }
 
     /**

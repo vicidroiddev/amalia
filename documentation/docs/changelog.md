@@ -1,5 +1,13 @@
 #Changelog - Amalia
 
+## Amalia 0.X.X
+
+_2017-XX_XX_
+
+#####Library changes:
+
+* More useful bind method provided which takes a lifecycleOwner and a lambda for states
+
 ## Amalia 0.3.3
 
 _2017-06_15_
