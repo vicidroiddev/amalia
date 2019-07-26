@@ -373,15 +373,15 @@
                 
                 <h1 id="viewstate">ViewState<a class="headerlink" href="#viewstate" title="Permanent link">&para;</a></h1>
 <p>Create your own ViewState by implementing the  <code class="codehilite"><span class="n">ViewState</span></code>  interface.</p>
-<div class="codehilite"><pre><span></span>sealed class ProfileViewState : ViewState {
-  class ProfileLoaded(val profile: Profile) : ProfileViewState()
-  object NoProfileFound : ProfileViewState()
-}
+<div class="codehilite"><pre><span></span><span class="k">sealed</span> <span class="k">class</span> <span class="nc">ProfileViewState</span> <span class="p">:</span> <span class="n">ViewState</span> <span class="p">{</span>
+  <span class="k">class</span> <span class="nc">ProfileLoaded</span><span class="p">(</span><span class="k">val</span> <span class="py">profile</span><span class="p">:</span> <span class="n">Profile</span><span class="p">)</span> <span class="p">:</span> <span class="n">ProfileViewState</span><span class="p">()</span>
+  <span class="k">object</span> <span class="nc">NoProfileFound</span> <span class="p">:</span> <span class="n">ProfileViewState</span><span class="p">()</span>
+<span class="p">}</span>
 </pre></div>
 
-<p>In your presenter, after performing database queries in the background call</p>
-<p><div class="codehilite"><pre><span></span><span class="o">//</span> <span class="n">Can</span> <span class="n">be</span> <span class="k">called</span> <span class="k">from</span> <span class="n">a</span> <span class="n">background</span> <span class="n">thread</span>
-<span class="n">pushState</span><span class="p">(</span><span class="n">MyViewState</span><span class="p">.</span><span class="n">ProfileLoaded</span><span class="p">(</span><span class="n">profile</span><span class="p">))</span>
+<p>In your presenter, after performing database queries in the background call:</p>
+<p><div class="codehilite"><pre><span></span><span class="c1">// Can be called from a background thread</span>
+<span class="n">pushState</span><span class="p">(</span><span class="n">ProfileViewState</span><span class="p">.</span><span class="n">ProfileLoaded</span><span class="p">(</span><span class="n">profile</span><span class="p">))</span>
 </pre></div>
 In your view delegate, override <code class="codehilite"><span class="n">renderViewState</span><span class="p">(</span><span class="k">state</span><span class="p">:</span> <span class="n">S</span><span class="p">)</span></code> to receive the <code class="codehilite"><span class="n">ProfileLoaded</span></code> state that was just sent.</p>
                 

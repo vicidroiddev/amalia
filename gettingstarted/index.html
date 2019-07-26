@@ -481,8 +481,13 @@
 
 <p><a href="https://jitpack.io/#vicidroiddev/amalia"><img alt="Jitpack" src="https://jitpack.io/v/vicidroiddev/amalia.svg" /></a></p>
 <h2 id="1-define-states-and-events">1. Define states and events<a class="headerlink" href="#1-define-states-and-events" title="Permanent link">&para;</a></h2>
-<p>You can define the states that define represent a snapshot in time of what the view should render. Sealed classes are perfect for this.</p>
-<p>You can also define the UI events that can be propagated to the presenter for further processing</p>
+<p>You can define states representing a snapshot in time of what the view should render. Sealed classes are perfect for this!</p>
+<p>You can also define the UI events that can be propagated to the presenter for further processing.</p>
+<p>In short:</p>
+<ul>
+<li>Presenter pushes state -&gt; ViewDelegate renders the state</li>
+<li>ViewDelegate pushes event -&gt; Presenter processes the event</li>
+</ul>
 <div class="codehilite"><pre><span></span><span class="k">sealed</span> <span class="k">class</span> <span class="nc">DiscoverState</span> <span class="p">:</span> <span class="n">ViewState</span> <span class="p">{</span>
     <span class="k">data</span> <span class="k">class</span> <span class="nc">Loaded</span><span class="p">(</span><span class="k">val</span> <span class="py">data</span><span class="p">:</span> <span class="n">DiscoverTvResult</span><span class="p">)</span> <span class="p">:</span> <span class="n">DiscoverState</span><span class="p">()</span>
 <span class="p">}</span>
@@ -494,7 +499,9 @@
 </pre></div>
 
 <h2 id="2-define-presenter">2. Define presenter<a class="headerlink" href="#2-define-presenter" title="Permanent link">&para;</a></h2>
-<p>Extend from the <code class="codehilite"><span class="n">BasePresenter</span></code> class and load all your data here. When you are finished loading push an appropriate state.</p>
+<p>Extend from the <code class="codehilite"><span class="n">BasePresenter</span></code> class and load all your data here. When you are finished loading, push an appropriate state.
+Before loading, you can push a state to represent <em>loading</em>.
+This can be rendered in the view event as a progress dialog or an empty state view.</p>
 <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DiscoverTvPresenter</span><span class="p">()</span> <span class="p">:</span>
     <span class="n">BasePresenter</span><span class="p">&lt;</span><span class="n">DiscoverState</span><span class="p">,</span> <span class="n">DiscoverEvent</span><span class="p">&gt;()</span> <span class="p">{</span>
 

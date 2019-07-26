@@ -373,17 +373,18 @@
                 
                 <h1 id="viewevent">ViewEvent<a class="headerlink" href="#viewevent" title="Permanent link">&para;</a></h1>
 <p>Create your own ViewEvent by implementing the  <code class="codehilite"><span class="n">ViewEvent</span></code>  interface.</p>
-<div class="codehilite"><pre><span></span>sealed class ProfileViewEvent : ViewEvent {
-  class SaveProfile(val profile: Profile) : ProfileViewEvent()
-  object CancelEditProfile() : ProfileViewEvent()
-}
+<div class="codehilite"><pre><span></span><span class="k">sealed</span> <span class="k">class</span> <span class="nc">ProfileViewEvent</span> <span class="p">:</span> <span class="n">ViewEvent</span> <span class="p">{</span>
+  <span class="k">class</span> <span class="nc">SaveProfile</span><span class="p">(</span><span class="k">val</span> <span class="py">profile</span><span class="p">:</span> <span class="n">Profile</span><span class="p">)</span> <span class="p">:</span> <span class="n">ProfileViewEvent</span><span class="p">()</span>
+  <span class="k">object</span> <span class="nc">CancelEditProfile</span><span class="p">()</span> <span class="p">:</span> <span class="n">ProfileViewEvent</span><span class="p">()</span>
+<span class="p">}</span>
 </pre></div>
 
-<p>In your view delegate, in any appropriate listener you could fire an event</p>
-<p><div class="codehilite"><pre><span></span><span class="o">//</span> <span class="n">Can</span> <span class="k">only</span> <span class="n">be</span> <span class="k">called</span> <span class="k">from</span> <span class="n">the</span> <span class="n">main</span> <span class="n">tread</span><span class="p">.</span>
+<p>In your view delegate, in any appropriate listener you could fire an event:</p>
+<div class="codehilite"><pre><span></span><span class="c1">// Can only be called from the main thread.</span>
 <span class="n">pushEvent</span><span class="p">(</span><span class="n">ProfileViewEvent</span><span class="p">.</span><span class="n">SaveProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">))</span>
 </pre></div>
-In your presenter, override <code class="codehilite"><span class="n">onViewEvent</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">E</span><span class="p">)</span></code> to receive the <code class="codehilite"><span class="n">SaveProfile</span></code> event that was just sent.</p>
+
+<p>In your presenter, override <code class="codehilite"><span class="n">onViewEvent</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">E</span><span class="p">)</span></code> to receive the <code class="codehilite"><span class="n">SaveProfile</span></code> event that was just sent.</p>
                 
                   
                 
