@@ -31,6 +31,16 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
+     <loc>https://vicidroiddev.github.io/amalia/components/recyclerview/</loc>
+     <lastmod>2019-07-25</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://vicidroiddev.github.io/amalia/components/coroutinescopes/</loc>
+     <lastmod>2019-07-25</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
      <loc>https://vicidroiddev.github.io/amalia/changelog/</loc>
      <lastmod>2019-07-25</lastmod>
      <changefreq>daily</changefreq>
