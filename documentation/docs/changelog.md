@@ -2,7 +2,7 @@
 
 ## Amalia 0.X.X
 
-_2017-XX_XX_
+_2019-XX_XX_
 
 #####Library changes:
 
@@ -10,7 +10,7 @@ _2017-XX_XX_
 
 ## Amalia 0.3.3
 
-_2017-06_15_
+_2019-06_15_
 
 #####Library changes:
 
@@ -19,7 +19,7 @@ _2017-06_15_
 
 ## Amalia 0.3.2
 
-_2017-06_11_
+_2019-06_11_
 
 #####Library changes:
 
@@ -28,7 +28,7 @@ _2017-06_11_
 
 ## Amalia 0.3.1
 
-_2017-06-10_
+_2019-06-10_
 
 #####Library changes:
 
@@ -37,7 +37,7 @@ _2017-06-10_
 
 ## Amalia 0.3.0
 
-_2017-06-09_
+_2019-06-09_
 
 Note: This version will rely on android x saved state library to be included in your app.
 
@@ -57,7 +57,7 @@ Note: This version will rely on android x saved state library to be included in 
 
 ## Amalia 0.2.0
 
-_2017-06-04_
+_2019-06-04_
 
 * Add lifecycle methods to view delegate (https://github.com/vicidroiddev/amalia/issues/4)
 * Enhance the concept of binding to a presenter (https://github.com/vicidroiddev/amalia/issues/5)
