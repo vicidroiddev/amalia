@@ -1,13 +1,14 @@
 #Changelog - Amalia
 
-## Amalia 0.X.X
+## Amalia 0.3.4
 
-_2019-XX_XX_
+_2019-06_26_
 
 #####Library changes:
 
 * More useful bind method provided which takes a lifecycleOwner and a lambda for states
 * Add coroutine scope to presenter #12 (https://github.com/vicidroiddev/amalia/issues/12)
+
 
 ## Amalia 0.3.3
 
