@@ -44,6 +44,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
 }
 
 androidExtensions {
@@ -88,7 +92,11 @@ dependencies {
         exclude group: "com.android.support"
     }
 
-    // AMALIA LIB
+    // AMALIA LIB EXTERNAL
+//    implementation 'com.github.vicidroiddev.amalia:amalia-coroutine-scopes:raph_multi_module-SNAPSHOT'
+//    implementation 'com.github.vicidroiddev:amalia:0.3.3'
+
+    // AMALIA LIB INTERNAL
     implementation project(path: ':library')
     implementation project(path: ':amalia-coroutine-scopes')
 
