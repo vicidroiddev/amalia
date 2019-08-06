@@ -1,5 +1,14 @@
 #Changelog - Amalia
 
+## Amalia 0.3.6
+
+_2019-07_06_
+
+#####Library changes:
+
+* Name space for library changed after adding second gradle module, docs reflect proper names.
+
+
 ## Amalia 0.3.5
 
 _2019-07_06_
