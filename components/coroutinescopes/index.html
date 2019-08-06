@@ -42,7 +42,7 @@
     
     
       
-        <title>Pending - Coroutine Scopes - Amalia Documentation</title>
+        <title>Coroutine Scopes - Amalia Documentation</title>
       
     
     
@@ -117,7 +117,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Pending - Coroutine Scopes
+                Coroutine Scopes
               
             </span>
           
@@ -319,18 +319,6 @@
           
           
 
-
-  <li class="md-nav__item">
-    <a href="../recyclerview/" title="Pending - RecyclerView Delegate" class="md-nav__link">
-      Pending - RecyclerView Delegate
-    </a>
-  </li>
-
-        
-          
-          
-          
-
   
 
 
@@ -341,10 +329,65 @@
       
     
     
-    <a href="./" title="Pending - Coroutine Scopes" class="md-nav__link md-nav__link--active">
-      Pending - Coroutine Scopes
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Coroutine Scopes
+      </label>
+    
+    <a href="./" title="Coroutine Scopes" class="md-nav__link md-nav__link--active">
+      Coroutine Scopes
     </a>
     
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#available-scopes-in-a-presenter-extending-frombasepresenter" title="Available scopes in a presenter extending from&lt;BasePresenter&lt;*,*&gt;" class="md-nav__link">
+    Available scopes in a presenter extending from&lt;BasePresenter&lt;*,*&gt;
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-gradle-dependency" title="Adding gradle dependency" class="md-nav__link">
+    Adding gradle dependency
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage" title="Example usage:" class="md-nav__link">
+    Example usage:
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../recyclerview/" title="Pending - RecyclerView Delegate" class="md-nav__link">
+      Pending - RecyclerView Delegate
+    </a>
   </li>
 
         
@@ -382,6 +425,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#available-scopes-in-a-presenter-extending-frombasepresenter" title="Available scopes in a presenter extending from&lt;BasePresenter&lt;*,*&gt;" class="md-nav__link">
+    Available scopes in a presenter extending from&lt;BasePresenter&lt;*,*&gt;
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-gradle-dependency" title="Adding gradle dependency" class="md-nav__link">
+    Adding gradle dependency
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-usage" title="Example usage:" class="md-nav__link">
+    Example usage:
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -396,11 +469,37 @@
                 
                 
                 <h1 id="coroutine-scopes">Coroutine Scopes<a class="headerlink" href="#coroutine-scopes" title="Permanent link">&para;</a></h1>
-<ul>
-<li>Coroutine support will be provided as part of an external gradle module <em>amalia-coroutine-scopes</em></li>
-<li>Extension oriented design will be used to provide added scopes on <code class="codehilite"><span class="o">&lt;</span><span class="n">BasePresenter</span><span class="o">&lt;*</span><span class="p">,</span><span class="o">*&gt;</span></code> for main/io/default dispatchers</li>
-<li>Will be tackled with <a href="https://github.com/vicidroiddev/amalia/issues/12">https://github.com/vicidroiddev/amalia/issues/12</a></li>
-</ul>
+<p>All provided coroutine scope extensions are cancelled when the presenter goes through destruction, dictated by the <code class="codehilite"><span class="n">presenterProvider</span></code>.</p>
+<h5 id="available-scopes-in-a-presenter-extending-frombasepresenter">Available scopes in a presenter extending from<code class="codehilite"><span class="o">&lt;</span><span class="n">BasePresenter</span><span class="o">&lt;*</span><span class="p">,</span><span class="o">*&gt;</span></code><a class="headerlink" href="#available-scopes-in-a-presenter-extending-frombasepresenter" title="Permanent link">&para;</a></h5>
+<div class="codehilite"><pre><span></span><span class="n">mainScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">//uses the coroutine IO dispatcher } </span>
+
+<span class="n">ioScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">//uses the coroutine IO dispatcher } </span>
+
+<span class="n">defaultScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">//uses the default coroutine dispatcher } </span>
+</pre></div>
+
+<h2 id="adding-gradle-dependency">Adding gradle dependency<a class="headerlink" href="#adding-gradle-dependency" title="Permanent link">&para;</a></h2>
+<p>Add the amalia dependency in your app level build.gradle file.</p>
+<p><div class="codehilite"><pre><span></span><span class="n">implementation</span> <span class="s1">&#39;com.github.vicidroiddev.amalia:amalia-coroutine-scopes:{latest_version}@aar&#39;</span>
+</pre></div>
+<a href="https://jitpack.io/#vicidroiddev/amalia"><img alt="Jitpack" src="https://jitpack.io/v/vicidroiddev/amalia.svg" /></a></p>
+<h2 id="example-usage">Example usage:<a class="headerlink" href="#example-usage" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DiscoverPresenter</span><span class="p">(</span><span class="k">private</span> <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">DiscoverRepository</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">BasePresenter</span><span class="p">&lt;</span><span class="n">DiscoverState</span><span class="p">,</span> <span class="n">DiscoverEvent</span><span class="p">&gt;()</span> <span class="p">{</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">loadInitialState</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// mainScope is provided via amalia-coroutine-scopes dependency</span>
+        <span class="n">mainScope</span><span class="p">.</span><span class="n">launch</span><span class="p">(</span><span class="n">Dispatchers</span><span class="p">.</span><span class="n">Main</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// discoverFromApi is a suspending function which runs on the io dispatcher</span>
+            <span class="c1">// if it takes a long time and the view is closed, we will automatically call cancel() on the scope.</span>
+            <span class="k">val</span> <span class="py">results</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">discoverFromApi</span><span class="p">()</span>
+
+            <span class="c1">//Okay main thread here, lets push the view state</span>
+            <span class="n">pushState</span><span class="p">(</span><span class="n">DiscoverState</span><span class="p">.</span><span class="n">Loaded</span><span class="p">(</span><span class="n">results</span><span class="p">))</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
                 
                   
                 
@@ -421,7 +520,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../recyclerview/" title="Pending - RecyclerView Delegate" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../viewevents/" title="View Event" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -430,19 +529,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Pending - RecyclerView Delegate
+                View Event
               </span>
             </div>
           </a>
         
         
-          <a href="../../changelog/" title="Change Log" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../recyclerview/" title="Pending - RecyclerView Delegate" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Change Log
+                Pending - RecyclerView Delegate
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
