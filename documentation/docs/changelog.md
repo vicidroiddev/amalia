@@ -1,5 +1,14 @@
 #Changelog - Amalia
 
+## Amalia 0.3.5
+
+_2019-07_06_
+
+#####Library changes:
+
+* Ensure coroutine scopes is present as separate android artifact
+
+
 ## Amalia 0.3.4
 
 _2019-06_26_

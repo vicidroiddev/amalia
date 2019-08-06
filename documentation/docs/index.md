@@ -7,7 +7,8 @@ Amalia is an MVP/MVI implementation dictating a straightforward uni-directional 
 
 ##Features
 - **100% Kotlin** with pleasant apis that can still be consumed from Java
-- **Decouple** the UI from business logic but allow communication between the two
+- **Coroutine scope cancellation support** via optional gradle dependency
+- **Decouple the UI** from business logic but allow communication between the two
 - **Lifecycle-aware presenters** which automatically clean up
 - **Modern Android Jetpack components**
 	 - presenters survive configuration changes via Jetpack's `ViewModelStore`

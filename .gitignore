@@ -103,3 +103,6 @@ lint/tmp/
 /library/.project
 /library/.classpath
 /documentation/site
+/amalia-coroutine-scopes/.settings
+/amalia-coroutine-scopes/.project
+/amalia-coroutine-scopes/.classpath
