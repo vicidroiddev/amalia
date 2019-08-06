@@ -106,3 +106,7 @@ lint/tmp/
 /amalia-coroutine-scopes/.settings
 /amalia-coroutine-scopes/.project
 /amalia-coroutine-scopes/.classpath
+/amalia-core/.settings
+/amalia-core/.project
+/amalia-core/.gitignore
+/amalia-core/.classpath

@@ -40,5 +40,5 @@ dependencies {
     implementation androidXDeps.appcompat
     implementation androidXDeps.annotation
 
-    implementation project(path: ':library')
+    implementation project(path: ':amalia-core')
 }

@@ -93,11 +93,11 @@ dependencies {
     }
 
     // AMALIA LIB EXTERNAL
-//    implementation 'com.github.vicidroiddev.amalia:amalia-coroutine-scopes:raph_multi_module-SNAPSHOT'
-//    implementation 'com.github.vicidroiddev:amalia:0.3.3'
+//    implementation 'com.github.vicidroiddev.amalia:library:0.3.5@aar'
+//    implementation 'com.github.vicidroiddev.amalia:amalia-coroutine-scopes:0.3.5@aar'
 
     // AMALIA LIB INTERNAL
-    implementation project(path: ':library')
+    implementation project(path: ':amalia-core')
     implementation project(path: ':amalia-coroutine-scopes')
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-3'

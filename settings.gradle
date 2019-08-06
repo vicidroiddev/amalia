@@ -1,1 +1,1 @@
-include ':app', ':library', ':amalia-coroutine-scopes'
+include ':app', ':amalia-core', ':amalia-coroutine-scopes'
