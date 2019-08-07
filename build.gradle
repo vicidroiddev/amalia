@@ -34,7 +34,7 @@ buildscript {
     ]
 
     ext.toolchainDeps = [
-            'gradlePlugin': "com.android.tools.build:gradle:3.5.0-beta05",
+            'gradlePlugin': "com.android.tools.build:gradle:3.5.0-rc02",
             'kotlinPlugin': "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
             'jitpackMavenPlugin': "com.github.dcendents:android-maven-gradle-plugin:2.1"
     ]
@@ -53,7 +53,7 @@ buildscript {
     }
 
     dependencies {
-        classpath toolchainDeps.gradlePlugin
+        classpath 'com.android.tools.build:gradle:3.5.0-rc02'
         classpath toolchainDeps.kotlinPlugin
         classpath toolchainDeps.jitpackMavenPlugin
         // NOTE: Do not place your application dependencies here; they belong
