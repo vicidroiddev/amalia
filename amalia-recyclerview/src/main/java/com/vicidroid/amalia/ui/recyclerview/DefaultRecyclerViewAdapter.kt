@@ -49,6 +49,12 @@ open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerVie
         }
     }
 
+
+    //    last time, had to solve problem of payloads for prompt animation
+    override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
+        super.onBindViewHolder(holder, position, payloads)
+    }
+
     /**
      * It is possible for the position to be -1 if an item is removed.
      * Otherwise, it is expected to have this called as the views go off screen

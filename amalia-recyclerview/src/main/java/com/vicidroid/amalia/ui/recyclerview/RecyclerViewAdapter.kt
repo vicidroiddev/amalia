@@ -4,5 +4,5 @@ import androidx.lifecycle.LifecycleOwner
 
 interface RecyclerViewAdapter {
     abstract val lifecycleOwner: LifecycleOwner
-    abstract val viewDelegate: RecyclerViewDelegate<*,*>
+    abstract val viewDelegate: RecyclerViewDelegate<*, *>
 }

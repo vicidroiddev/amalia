@@ -37,7 +37,10 @@ abstract class BaseRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view
     fun <T : View> findViewById(@IdRes id: Int): T = itemView.findViewById(id)
 
     fun pushEvent(event: ViewEvent) {
-        val wrappedEvent = RecyclerViewHolderInteractionEvent(adapterPosition, event)
+        val wrappedEvent = RecyclerViewHolderInteractionEvent(
+            adapterPosition,
+            event
+        )
         eventStore.pushEvent(wrappedEvent)
     }
 }

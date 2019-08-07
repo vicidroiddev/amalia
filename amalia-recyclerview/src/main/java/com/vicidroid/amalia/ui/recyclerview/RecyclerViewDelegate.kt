@@ -16,7 +16,10 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
     @IdRes recyclerViewId: Int = R.id.amalia_recycled_list,
     layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(rootView.context),
     spaceSeparationInDp: Int = 8,
-    dividerDecoration: RecyclerView.ItemDecoration = SpaceItemOffsetDecoration(rootView.context, spaceSeparationInDp)
+    dividerDecoration: RecyclerView.ItemDecoration = SpaceItemOffsetDecoration(
+        rootView.context,
+        spaceSeparationInDp
+    )
 ) :
     BaseViewDelegate<RecyclerViewState<I>, ViewEvent>(
         viewLifeCycleOwner,
@@ -24,7 +27,10 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
     ) {
 
     protected val recyclerView = findViewById<RecyclerView>(recyclerViewId)
-    protected val adapter = DefaultRecyclerViewAdapter<I, VH>(viewLifeCycleOwner, this)
+    protected val adapter = DefaultRecyclerViewAdapter<I, VH>(
+        viewLifeCycleOwner,
+        this
+    )
 
     init {
         // ADAPTER SETUP

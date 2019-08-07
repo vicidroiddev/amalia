@@ -2,7 +2,6 @@ package com.vicidroid.amalia.sample
 
 import android.app.Application
 import com.vicidroid.amalia.ext.AmaliaLogging
-import com.vicidroid.amalia.ext.debugLog
 import leakcanary.LeakSentry
 
 class AmaliaApplication : Application() {

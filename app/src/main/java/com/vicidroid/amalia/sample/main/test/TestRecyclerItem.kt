@@ -11,7 +11,6 @@ import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.test.Data
 import com.vicidroid.amalia.ui.recyclerview.BaseRecyclerItem
 import com.vicidroid.amalia.ui.recyclerview.BaseRecyclerViewHolder
-import com.vicidroid.amalia.ui.recyclerview.RecyclerItem
 
 data class TestRecyclerItem(val data: Data) : BaseRecyclerItem<TestRecyclerItem.TestViewHolder>(data) {
     override val layoutRes = R.layout.list_item_flow_test
