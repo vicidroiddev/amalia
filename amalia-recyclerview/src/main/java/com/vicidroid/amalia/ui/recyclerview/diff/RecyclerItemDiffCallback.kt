@@ -1,14 +1,15 @@
 package com.vicidroid.amalia.ui.recyclerview.diff
 
 import androidx.recyclerview.widget.DiffUtil
-import com.vicidroid.amalia.ui.recyclerview.RecyclerItem
+import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
 
 /**
  * Generic implementation of DiffUtil.Callback focused on classes extending [RecyclerItem]
  *
  * Assumes [RecyclerItem.diffItem] is overridden to know what item to diff
  */
-class RecyclerItemDiffCallback<T : RecyclerItem<*>>(val oldItems: List<T>, val newItems: List<T>) : DiffUtil.Callback() {
+class RecyclerItemDiffCallback<T : RecyclerItem<*>>(val oldItems: List<T>, val newItems: List<T>) :
+    DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
         oldItems[oldItemPosition].diffItem.diffId == newItems[newItemPosition].diffItem.diffId

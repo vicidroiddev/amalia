@@ -1,30 +1,39 @@
-package com.vicidroid.amalia.ui.recyclerview
+package com.vicidroid.amalia.ui.recyclerview.adapter
 
 import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.core.ViewEventStore
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
+import com.vicidroid.amalia.ui.recyclerview.*
+import com.vicidroid.amalia.ui.recyclerview.diff.AsyncRecyclerItemDiffCallback
 import com.vicidroid.amalia.ui.recyclerview.diff.RecyclerItemDiffCallback
 
-open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
+class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
     override val lifecycleOwner: LifecycleOwner,
-    override val viewDelegate: RecyclerViewDelegate<*, *>
+    override val viewDelegate: RecyclerViewDelegate<*, *>,
+    asyncDiffCallback: DiffUtil.ItemCallback<I> = AsyncRecyclerItemDiffCallback()
 ) :
     RecyclerView.Adapter<VH>(), RecyclerViewAdapter {
 
     val viewHolderEventStore = ViewEventStore<RecyclerViewHolderInteractionEvent>()
+    private val asyncListDiffer = AsyncListDiffer(this, asyncDiffCallback)
 
     /**
-     * A list of [RecyclerItem] which wraps the data and allows bind and unbind calls
+     * A list of [RecyclerItem] which wraps the data and allows bind and unbind calls.
+     * Only used if [USE_ASYNC_LIST_DIFFER] is false
      */
-    protected var items: List<I> = mutableListOf()
+    private var items: List<I> = mutableListOf()
+
+    val adapterItems: List<I>
+        get() = if (USE_ASYNC_LIST_DIFFER) asyncListDiffer.currentList else items
 
     /**
      * Match view types to a given view item for easy creation of the [RecyclerView.ViewHolder].
-     * Otherwise we would have to search each item in [items] and compare viewtypes
+     * Otherwise we would have to search each item in [adapterItems] and compare viewtypes
      *
      * Warning: This will only store one item even if there are multiple items for one viewtype.
      */
@@ -43,13 +52,13 @@ open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerVie
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         recyclerViewDebugLog("onBindViewHolder(): position=$position")
-        items[position].let { item ->
+        adapterItems[position].let { item ->
             item.bind(holder)
             holder.adapterItem = item
         }
     }
 
-
+    //TODO
     //    last time, had to solve problem of payloads for prompt animation
     override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
         super.onBindViewHolder(holder, position, payloads)
@@ -62,8 +71,8 @@ open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerVie
     override fun onViewRecycled(holder: VH) {
         recyclerViewDebugLog("onViewRecycled() / unbind(): adapterPosition=${holder.adapterPosition}")
 
-        if (holder.adapterPosition in 0..items.size) {
-            items[holder.adapterPosition].unbind(holder)
+        if (holder.adapterPosition in 0..adapterItems.size) {
+            adapterItems[holder.adapterPosition].unbind(holder)
             holder.adapterItem = null
         }
     }
@@ -71,8 +80,8 @@ open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerVie
     override fun onFailedToRecycleView(holder: VH): Boolean {
         recyclerViewDebugLog("onFailedToRecycleView() / unbind(): adapterPosition=${holder.adapterPosition}")
 
-        if (holder.adapterPosition in 0..items.size) {
-            items[holder.adapterPosition].unbind(holder)
+        if (holder.adapterPosition in 0..adapterItems.size) {
+            adapterItems[holder.adapterPosition].unbind(holder)
         }
 
         holder.adapterItem = null
@@ -80,11 +89,11 @@ open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerVie
         return super.onFailedToRecycleView(holder)
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount() = adapterItems.size
 
-    override fun getItemId(position: Int) = items[position].uniqueItemId
+    override fun getItemId(position: Int) = adapterItems[position].uniqueItemId
 
-    override fun getItemViewType(position: Int) = items[position].viewType
+    override fun getItemViewType(position: Int) = adapterItems[position].viewType
 
     private fun calculateDiff(oldItems: List<I>, newItems: List<I>) =
         DiffUtil.calculateDiff(
@@ -95,20 +104,36 @@ open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerVie
         )
 
     fun update(newItems: List<I>) {
-        val diff = calculateDiff(items, newItems)
-        items = newItems
+        recyclerViewDebugLog("update(): newItems.size() = ${newItems.size}")
 
-        cacheViewHolderCreatorCache(items)
+        if (!USE_ASYNC_LIST_DIFFER) {
+            val diff = calculateDiff(adapterItems, newItems)
+            items = newItems
 
-        diff.dispatchUpdatesTo(this)
-        //TODO page registry so we can automatically add viewtypes for flows in a unique way.
-        // This will solve the problem of having two pages with the same layout but represented by different viewholders.
+            diff.dispatchUpdatesTo(this)
+            //TODO page registry so we can automatically add viewtypes for flows in a unique way.
+            // This will solve the problem of having two pages with the same layout but represented by different viewholders.
+        } else {
+            updateAsync(newItems)
+        }
+
+        cacheViewTypeToItem(newItems)
     }
 
-    private fun cacheViewHolderCreatorCache(items: List<I>) {
-        recyclerViewDebugLog("cacheViewHolderCreatorCache()")
+    private fun updateAsync(newItems: List<I>) {
+        recyclerViewDebugLog("updateAsync(): newItems.size() = ${newItems.size}")
+        asyncListDiffer.submitList(newItems)
+        cacheViewTypeToItem(adapterItems)
+    }
+
+    private fun cacheViewTypeToItem(items: List<I>) {
+        recyclerViewDebugLog("cacheViewTypeToItem()")
 
         viewTypeToItemCache.clear()
         items.distinctBy { it.viewType }.forEach { i -> viewTypeToItemCache.append(i.viewType, i) }
+    }
+
+    companion object {
+        const val USE_ASYNC_LIST_DIFFER = true
     }
 }

@@ -1,4 +1,4 @@
-package com.vicidroid.amalia.ui.recyclerview
+package com.vicidroid.amalia.ui.recyclerview.adapter
 
 import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
 

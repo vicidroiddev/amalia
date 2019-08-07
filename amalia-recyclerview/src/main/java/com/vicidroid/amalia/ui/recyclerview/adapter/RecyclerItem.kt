@@ -1,4 +1,4 @@
-package com.vicidroid.amalia.ui.recyclerview
+package com.vicidroid.amalia.ui.recyclerview.adapter
 
 import android.view.LayoutInflater
 import android.view.View

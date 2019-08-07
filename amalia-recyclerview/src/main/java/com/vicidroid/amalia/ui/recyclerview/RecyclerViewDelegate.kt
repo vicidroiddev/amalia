@@ -9,6 +9,9 @@ import com.vicidroid.amalia.R
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
 import com.vicidroid.amalia.ui.BaseViewDelegate
+import com.vicidroid.amalia.ui.recyclerview.adapter.BaseRecyclerViewHolder
+import com.vicidroid.amalia.ui.recyclerview.adapter.DefaultRecyclerViewAdapter
+import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
 
 open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
     viewLifeCycleOwner: LifecycleOwner,

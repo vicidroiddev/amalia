@@ -8,8 +8,8 @@ import com.bumptech.glide.Glide
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
 import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverResult
-import com.vicidroid.amalia.ui.recyclerview.BaseRecyclerItem
-import com.vicidroid.amalia.ui.recyclerview.BaseRecyclerViewHolder
+import com.vicidroid.amalia.ui.recyclerview.adapter.BaseRecyclerItem
+import com.vicidroid.amalia.ui.recyclerview.adapter.BaseRecyclerViewHolder
 
 class DiscoverTvItem(val discoverResult: DiscoverResult) : BaseRecyclerItem<DiscoverTvItem.ViewHolder>(discoverResult) {
     override val layoutRes = R.layout.list_item_discover_tv

@@ -1,4 +1,4 @@
-package com.vicidroid.amalia.ui.recyclerview
+package com.vicidroid.amalia.ui.recyclerview.adapter
 
 import android.view.View
 import androidx.annotation.ColorRes
@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewEventStore
+import com.vicidroid.amalia.ui.recyclerview.RecyclerViewHolderInteractionEvent
 
 abstract class BaseRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     internal lateinit var eventStore: ViewEventStore<RecyclerViewHolderInteractionEvent>
