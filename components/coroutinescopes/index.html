@@ -471,7 +471,7 @@
                 <h1 id="coroutine-scopes">Coroutine Scopes<a class="headerlink" href="#coroutine-scopes" title="Permanent link">&para;</a></h1>
 <p>All provided coroutine scope extensions are cancelled when the presenter goes through destruction, dictated by the <code class="codehilite"><span class="n">presenterProvider</span></code>.</p>
 <h5 id="available-scopes-in-a-presenter-extending-frombasepresenter">Available scopes in a presenter extending from<code class="codehilite"><span class="o">&lt;</span><span class="n">BasePresenter</span><span class="o">&lt;*</span><span class="p">,</span><span class="o">*&gt;</span></code><a class="headerlink" href="#available-scopes-in-a-presenter-extending-frombasepresenter" title="Permanent link">&para;</a></h5>
-<div class="codehilite"><pre><span></span><span class="n">mainScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">//uses the coroutine IO dispatcher } </span>
+<div class="codehilite"><pre><span></span><span class="n">mainScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">//uses the coroutine Main dispatcher, preferred scope for presenters } </span>
 
 <span class="n">ioScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">//uses the coroutine IO dispatcher } </span>
 
