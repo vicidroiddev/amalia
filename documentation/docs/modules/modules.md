@@ -5,7 +5,9 @@
 ### Amalia Core
 
 ```groovy
-implementation 'com.github.vicidroiddev.amalia:amalia-coroutine-scopes:{latest_version}@aar'
+implementation ("com.github.vicidroiddev.amalia:amalia-core:{latest_version}@aar") {
+    transitive = true
+}
 ```
 
 ###Coroutine Scope Helper
