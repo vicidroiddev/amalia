@@ -14,7 +14,7 @@ class DiscoverPresenter(private val repository: DiscoverRepository) :
 
     override fun loadInitialState() {
         debugLog(TAG_INSTANCE, "loadInitialState()")
-        mainScope.launch(Dispatchers.Main) {
+        mainScope.launch {
             val results = repository.discoverFromApi()
             results.forEach { debugLog(TAG_INSTANCE, it.toString()) }
             pushState(DiscoverState.Loaded(results))
