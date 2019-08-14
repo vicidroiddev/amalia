@@ -71,11 +71,11 @@ dependencies {
     implementation androidXDeps.constraintLayout
     implementation androidXDeps.legacySupport
     implementation androidXDeps.recyclerview
-    implementation androidXDeps.savedState
+//    implementation androidXDeps.savedState
 
     // ANDROID ARCHITECTURE COMPONENTS
     // Required to use androidx.lifecycle.DefaultLifecycleObserver
-    implementation archDeps.commonJava8
+//    implementation archDeps.commonJava8
 
     // MATERIAL
     implementation 'com.google.android.material:material:1.1.0-alpha07'

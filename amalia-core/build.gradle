@@ -59,13 +59,12 @@ dependencies {
     testImplementation deps.roboelectric
     testImplementation archDeps.archCoreTesting
 
-    implementation archDeps.extensions
-    implementation archDeps.commonJava8
+    api archDeps.extensions
+    api archDeps.commonJava8
 
     implementation androidXDeps.appcompat
     implementation androidXDeps.annotation
-    implementation androidXDeps.recyclerview
-    implementation androidXDeps.savedState
+    api androidXDeps.savedState
 }
 
 task sourcesJar(type: Jar) {
