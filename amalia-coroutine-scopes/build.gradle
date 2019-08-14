@@ -19,6 +19,12 @@ android {
         consumerProguardFiles 'consumer-rules.pro'
     }
 
+    // Target Java 8 to use androidx.lifecycle.DefaultLifecycleObserver
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     buildTypes {
         release {
             minifyEnabled false

@@ -15,6 +15,7 @@ buildscript {
 
 android {
     compileSdkVersion toolchainVersions.compileSdk
+    buildToolsVersion toolchainVersions.buildTools
 
     defaultConfig {
         minSdkVersion toolchainVersions.minSdk
@@ -34,7 +35,11 @@ android {
         abortOnError false
     }
 
-    buildToolsVersion = '28.0.3'
+    // Target Java 8 to use androidx.lifecycle.DefaultLifecycleObserver
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
