@@ -5,7 +5,7 @@ All provided coroutine scope extensions are cancelled when the presenter goes th
 #####Available scopes in a presenter extending from`<BasePresenter<*,*>`
 
 ```kotlin
-mainScope.launch { //uses the coroutine IO dispatcher } 
+mainScope.launch { //uses the coroutine Main dispatcher, preferred scope for presenters } 
 
 ioScope.launch { //uses the coroutine IO dispatcher } 
 
