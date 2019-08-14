@@ -39,13 +39,15 @@ theme:
 nav:
   - 'Overview': index.md
   - 'Getting Started': gettingstarted.md
-  - 'Components':
+  - 'Standard Components':
       - 'Presenters': components/presenters.md
       - 'View Delegate': components/viewdelegates.md
       - 'View State': components/viewstates.md
       - 'View Event': components/viewevents.md
-      - 'Coroutine Scopes': components/coroutinescopes.md
-      - 'Pending - RecyclerView Delegate': components/recyclerview.md
+  - 'Modules': 
+      - 'Dependencies': modules/modules.md
+      - 'Coroutine Scopes': modules/coroutinescopes.md
+      - 'RecyclerView Delegate': modules/recyclerview.md
   - 'Change Log': changelog.md
 
 markdown_extensions:
