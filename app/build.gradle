@@ -20,6 +20,7 @@ ext.themoviedbToken = devPropertiesToken != null ? devPropertiesToken : System.g
 android {
     compileSdkVersion toolchainVersions.compileSdk
     buildToolsVersion toolchainVersions.buildTools
+
     defaultConfig {
         applicationId "com.vicidroid.amalia.sample"
         minSdkVersion toolchainVersions.minSdk
@@ -71,11 +72,6 @@ dependencies {
     implementation androidXDeps.constraintLayout
     implementation androidXDeps.legacySupport
     implementation androidXDeps.recyclerview
-//    implementation androidXDeps.savedState
-
-    // ANDROID ARCHITECTURE COMPONENTS
-    // Required to use androidx.lifecycle.DefaultLifecycleObserver
-//    implementation archDeps.commonJava8
 
     // MATERIAL
     implementation 'com.google.android.material:material:1.1.0-alpha07'
@@ -93,12 +89,17 @@ dependencies {
     }
 
     // AMALIA LIB EXTERNAL
-//    implementation 'com.github.vicidroiddev.amalia:amalia-core:0.3.6@aar'
-//    implementation 'com.github.vicidroiddev.amalia:amalia-coroutine-scopes:0.3.6@aar'
+    def amaliaVersion = "0.3.7-SNAPSHOT-2"
+
+    implementation ("com.github.vicidroiddev.amalia:amalia-core:$amaliaVersion@aar") {
+        transitive = true // Must include transitive
+    }
+
+    implementation "com.github.vicidroiddev.amalia:amalia-coroutine-scopes:$amaliaVersion@aar"
 
     // AMALIA LIB INTERNAL
-    implementation project(path: ':amalia-core')
-    implementation project(path: ':amalia-coroutine-scopes')
+//    implementation project(path: ':amalia-core')
+//    implementation project(path: ':amalia-coroutine-scopes')
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-3'
 }

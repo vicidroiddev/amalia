@@ -14,8 +14,9 @@ allprojects {
 Now add the amalia dependency in your app level build.gradle file.
 
 ```groovy
-implementation 'com.github.vicidroiddev.amalia:amalia-core:{latest_version}@aar'
-```
+implementation ("com.github.vicidroiddev.amalia:amalia-core:{latest_version}@aar") {
+    transitive = true // Must include transitive
+}```
 
 [![Jitpack](https://jitpack.io/v/vicidroiddev/amalia.svg)](https://jitpack.io/#vicidroiddev/amalia)
 
