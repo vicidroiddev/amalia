@@ -28,7 +28,7 @@ class DiscoverPresenter(private val repository: DiscoverRepository) :
 
     override fun loadInitialState() {
         // mainScope is provided via amalia-coroutine-scopes dependency
-        mainScope.launch(Dispatchers.Main) {
+        mainScope.launch {
             // discoverFromApi is a suspending function which runs on the io dispatcher
             // if it takes a long time and the view is closed, we will automatically call cancel() on the scope.
             val results = repository.discoverFromApi()
