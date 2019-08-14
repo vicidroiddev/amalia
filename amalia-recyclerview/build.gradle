@@ -1,6 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = "com.github.vicidroiddev"
+
 android {
     compileSdkVersion toolchainVersions.compileSdk
     toolchainVersions.buildTools
@@ -13,6 +18,12 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    // Target Java 8 to use androidx.lifecycle.DefaultLifecycleObserver
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
