@@ -507,7 +507,9 @@
                 <h1 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h1>
 <p><a href="https://jitpack.io/#vicidroiddev/amalia"><img alt="Jitpack" src="https://jitpack.io/v/vicidroiddev/amalia.svg" /></a></p>
 <h3 id="amalia-core">Amalia Core<a class="headerlink" href="#amalia-core" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><span class="n">implementation</span> <span class="s1">&#39;com.github.vicidroiddev.amalia:amalia-coroutine-scopes:{latest_version}@aar&#39;</span>
+<div class="codehilite"><pre><span></span><span class="n">implementation</span> <span class="o">(</span><span class="s2">&quot;com.github.vicidroiddev.amalia:amalia-core:{latest_version}@aar&quot;</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">transitive</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="o">}</span>
 </pre></div>
 
 <h3 id="coroutine-scope-helper">Coroutine Scope Helper<a class="headerlink" href="#coroutine-scope-helper" title="Permanent link">&para;</a></h3>
