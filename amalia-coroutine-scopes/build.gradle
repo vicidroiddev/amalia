@@ -33,12 +33,8 @@ dependencies {
     implementation deps.kotlinStdlib
     implementation deps.coroutines
 
-    implementation archDeps.extensions
+    implementation archDeps.viewmodel
     implementation archDeps.commonJava8
-
-    implementation androidXDeps.savedState
-    implementation androidXDeps.appcompat
-    implementation androidXDeps.annotation
 
     implementation project(path: ':amalia-core')
 }

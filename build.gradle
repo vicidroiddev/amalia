@@ -23,6 +23,7 @@ buildscript {
             'archCoreTesting': "android.arch.core:core-testing:${versions.lifecycle}",
             'extensions'     : "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}", //Viewmodel + Livedata
             'commonJava8'    : "android.arch.lifecycle:common-java8:${versions.lifecycle}",
+            'viewmodel'     : "androidx.lifecycle:lifecycle-viewmodel:${versions.lifecycle}",
     ]
 
     ext.deps = [
