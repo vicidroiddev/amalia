@@ -489,7 +489,7 @@
 
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">loadInitialState</span><span class="p">()</span> <span class="p">{</span>
         <span class="c1">// mainScope is provided via amalia-coroutine-scopes dependency</span>
-        <span class="n">mainScope</span><span class="p">.</span><span class="n">launch</span><span class="p">(</span><span class="n">Dispatchers</span><span class="p">.</span><span class="n">Main</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">mainScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span>
             <span class="c1">// discoverFromApi is a suspending function which runs on the io dispatcher</span>
             <span class="c1">// if it takes a long time and the view is closed, we will automatically call cancel() on the scope.</span>
             <span class="k">val</span> <span class="py">results</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">discoverFromApi</span><span class="p">()</span>
