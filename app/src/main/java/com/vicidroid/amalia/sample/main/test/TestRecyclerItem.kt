@@ -17,8 +17,7 @@ data class TestRecyclerItem(val data: Data) : BaseRecyclerItem<TestRecyclerItem.
 
     override fun createViewHolder(itemView: View) = TestViewHolder(itemView)
 
-
-    override fun bind(viewHolder: TestViewHolder) {
+    override fun bind(viewHolder: TestViewHolder, payloads: List<Any>) {
         Log.v(TAG,"bind() on $data}")
 
         viewHolder.apply {

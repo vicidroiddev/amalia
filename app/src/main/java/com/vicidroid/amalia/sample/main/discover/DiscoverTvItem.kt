@@ -16,7 +16,7 @@ class DiscoverTvItem(val discoverResult: DiscoverResult) : BaseRecyclerItem<Disc
 
     override fun createViewHolder(itemView: View) = ViewHolder(itemView)
 
-    override fun bind(viewHolder: ViewHolder) {
+    override fun bind(viewHolder: ViewHolder, payloads: List<Any>) {
         with(viewHolder) {
             name.text = discoverResult.name
             Glide.with(viewHolder.itemView.context)

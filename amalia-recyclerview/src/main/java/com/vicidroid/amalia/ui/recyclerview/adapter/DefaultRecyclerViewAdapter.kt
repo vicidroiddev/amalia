@@ -51,17 +51,15 @@ class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerViewHold
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        recyclerViewDebugLog("onBindViewHolder(): position=$position")
-        adapterItems[position].let { item ->
-            item.bind(holder)
-            holder.adapterItem = item
-        }
+        onBindViewHolder(holder, position, emptyList())
     }
 
-    //TODO
-    //    last time, had to solve problem of payloads for prompt animation
-    override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
-        super.onBindViewHolder(holder, position, payloads)
+    override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any>) {
+        recyclerViewDebugLog("onBindViewHolder() with payloads: position=$position")
+        adapterItems[position].let { item ->
+            item.bind(holder, payloads)
+            holder.adapterItem = item
+        }
     }
 
     /**

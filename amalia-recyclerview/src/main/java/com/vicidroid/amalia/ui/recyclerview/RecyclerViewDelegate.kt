@@ -43,7 +43,6 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
             pushEvent(event.originalEvent)
         }
 
-
         // RECYCLER VIEW SETUP
         recyclerView.layoutManager = layoutManager
 

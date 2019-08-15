@@ -4,13 +4,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.vicidroid.amalia.ui.recyclerview.diff.ChangePayload
 import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
 
 interface RecyclerItem<VH : RecyclerView.ViewHolder> {
     /**
      * Called by adapter via [RecyclerView.Adapter.onBindViewHolder]
+     * [payloads] denotes the change payload when items are the same but contents differ somewhat
      */
-    fun bind(viewHolder: VH)
+    fun bind(viewHolder: VH, payloads: List<Any>)
 
     /**
      * Called by adapter via [RecyclerView.Adapter.onViewRecycled]
@@ -29,7 +31,7 @@ interface RecyclerItem<VH : RecyclerView.ViewHolder> {
 
 
     /**
-     * Return the item you wish to perform a diff on using [RecyclerItemDiffCallback]
+     * Return the item you wish to perform a diff on using [RecyclerItemDiffCallback] or [AsyncRecyclerItemDiffCallback]
      */
     val diffItem: DiffItem
 

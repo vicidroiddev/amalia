@@ -24,6 +24,6 @@ class RecyclerItemDiffCallback<T : RecyclerItem<*>>(val oldItems: List<T>, val n
         oldItems[oldItemPosition].diffItem == newItems[newItemPosition].diffItem
 
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-        return super.getChangePayload(oldItemPosition, newItemPosition)
+        return ChangePayload(oldItems[oldItemPosition], newItems[newItemPosition])
     }
 }

@@ -14,6 +14,6 @@ class AsyncRecyclerItemDiffCallback<T : RecyclerItem<*>> : DiffUtil.ItemCallback
         oldItem.diffItem == newItem.diffItem
 
     override fun getChangePayload(oldItem: T, newItem: T): Any? {
-        return super.getChangePayload(oldItem, newItem)
+        return ChangePayload(oldItem, newItem)
     }
 }
