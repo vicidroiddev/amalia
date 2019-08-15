@@ -15,7 +15,7 @@ import com.vicidroid.amalia.ui.recyclerview.diff.RecyclerItemDiffCallback
 class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
     override val lifecycleOwner: LifecycleOwner,
     override val viewDelegate: RecyclerViewDelegate<*, *>,
-    asyncDiffCallback: DiffUtil.ItemCallback<I> = AsyncRecyclerItemDiffCallback()
+    asyncDiffCallback: DiffUtil.ItemCallback<I>
 ) :
     RecyclerView.Adapter<VH>(), RecyclerViewAdapter {
 

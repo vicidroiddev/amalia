@@ -3,6 +3,7 @@ package com.vicidroid.amalia.ui.recyclerview
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.R
@@ -12,6 +13,7 @@ import com.vicidroid.amalia.ui.BaseViewDelegate
 import com.vicidroid.amalia.ui.recyclerview.adapter.BaseRecyclerViewHolder
 import com.vicidroid.amalia.ui.recyclerview.adapter.DefaultRecyclerViewAdapter
 import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
+import com.vicidroid.amalia.ui.recyclerview.diff.AsyncRecyclerItemDiffCallback
 
 open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
     viewLifeCycleOwner: LifecycleOwner,
@@ -22,7 +24,8 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
     dividerDecoration: RecyclerView.ItemDecoration = SpaceItemOffsetDecoration(
         rootView.context,
         spaceSeparationInDp
-    )
+    ),
+    asyncDiffCallback: DiffUtil.ItemCallback<I> = AsyncRecyclerItemDiffCallback()
 ) :
     BaseViewDelegate<RecyclerViewState<I>, ViewEvent>(
         viewLifeCycleOwner,
@@ -30,9 +33,10 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
     ) {
 
     protected val recyclerView = findViewById<RecyclerView>(recyclerViewId)
-    protected val adapter = DefaultRecyclerViewAdapter<I, VH>(
+    protected val adapter = DefaultRecyclerViewAdapter(
         viewLifeCycleOwner,
-        this
+        this,
+        asyncDiffCallback
     )
 
     init {
