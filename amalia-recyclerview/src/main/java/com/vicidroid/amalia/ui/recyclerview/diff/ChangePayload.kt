@@ -1,3 +1,3 @@
 package com.vicidroid.amalia.ui.recyclerview.diff
 
-class ChangePayload<T>(oldItem: T, newItem: T)
+data class ChangePayload<T>(val oldItem: T, val newItem: T)
