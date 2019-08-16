@@ -5,5 +5,4 @@ import com.vicidroid.amalia.ui.recyclerview.RecyclerViewDelegate
 
 interface RecyclerViewAdapter {
     abstract val lifecycleOwner: LifecycleOwner
-    abstract val viewDelegate: RecyclerViewDelegate<*, *>
 }

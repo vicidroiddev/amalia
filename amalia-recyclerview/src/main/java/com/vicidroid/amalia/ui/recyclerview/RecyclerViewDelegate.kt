@@ -35,7 +35,6 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
     protected val recyclerView = findViewById<RecyclerView>(recyclerViewId)
     protected val adapter = DefaultRecyclerViewAdapter(
         viewLifeCycleOwner,
-        this,
         asyncDiffCallback
     )
 

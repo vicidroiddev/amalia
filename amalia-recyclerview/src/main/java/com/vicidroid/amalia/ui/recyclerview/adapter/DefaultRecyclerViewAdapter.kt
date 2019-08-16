@@ -8,13 +8,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.core.ViewEventStore
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
-import com.vicidroid.amalia.ui.recyclerview.*
-import com.vicidroid.amalia.ui.recyclerview.diff.AsyncRecyclerItemDiffCallback
+import com.vicidroid.amalia.ui.recyclerview.RecyclerViewHolderInteractionEvent
 import com.vicidroid.amalia.ui.recyclerview.diff.RecyclerItemDiffCallback
 
-class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
+open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
     override val lifecycleOwner: LifecycleOwner,
-    override val viewDelegate: RecyclerViewDelegate<*, *>,
     asyncDiffCallback: DiffUtil.ItemCallback<I>
 ) :
     RecyclerView.Adapter<VH>(), RecyclerViewAdapter {

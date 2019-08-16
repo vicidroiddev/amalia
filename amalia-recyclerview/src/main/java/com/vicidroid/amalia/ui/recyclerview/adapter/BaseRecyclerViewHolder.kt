@@ -30,7 +30,6 @@ abstract class BaseRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view
 
     }
 
-
     fun getString(@StringRes stringRes: Int) = itemView.resources.getString(stringRes)
 
     fun getColor(@ColorRes colorRes: Int) = ContextCompat.getColor(itemView.context, colorRes)
