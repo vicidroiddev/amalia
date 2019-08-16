@@ -8,7 +8,7 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.*
 import com.vicidroid.amalia.core.persistance.PersistableState
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
-import com.vicidroid.amalia.ext.debugLog
+import com.vicidroid.amalia.ext.presenterDebugLog
 import com.vicidroid.amalia.ui.ViewDelegate
 import com.vicidroid.amalia.ui.ViewEventProvider
 
@@ -68,6 +68,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
         replaceWith = ReplaceWith("bind(lifecycleOwner, stateObserver)")
     )
     fun bindViewLifecycleOwner(viewLifecycleOwner: LifecycleOwner) {
+        presenterDebugLog(TAG_INSTANCE, "bindViewLifecycleOwner()")
         this.viewLifecycleOwner?.let { error("Second call to bind() is suspicious.") }
         this.viewLifecycleOwner = viewLifecycleOwner
 
@@ -138,6 +139,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     fun pushState(state: S, ignoreDuplicateState: Boolean = false) {
         if (ignoreDuplicateState && stateLiveData().value?.javaClass == state.javaClass) return
 
+        presenterDebugLog(TAG_INSTANCE, "Pushing state: $state")
+
         persistViewStateIfPossible(state)
 
         when (Looper.myLooper() == Looper.getMainLooper()) {
@@ -159,7 +162,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
     private fun persistViewStateIfPossible(state: S) {
         if (state is Parcelable) {
-            debugLog(TAG_INSTANCE, "Persisting: $state")
+            presenterDebugLog(TAG_INSTANCE, "Persisting: $state")
             persistViewState(TAG_INSTANCE, state)
         }
     }
@@ -245,7 +248,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     open fun loadInitialState() {}
 
     /**
-     * An explicit wrapper around viewmodels onCleared indication.
+     * An explicit wrapper around viewmodel's onCleared indication.
      * While presenters will survive configuration changes, they will be removed according to
      * to the lifecycle owner's ON_DESTROY event emitted by the instance of the activity or fragment.
      * Note this does not follow the viewlifecycleowner used for fragments.
@@ -286,7 +289,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
         this.savedStateHandle = handle
 
         consumePersistedOrNull<S?>(viewStateKey(TAG_INSTANCE))?.let { state ->
-            debugLog(TAG_INSTANCE, "Pushing restored state: $state")
+            presenterDebugLog(TAG_INSTANCE, "View state is being restored: $state")
             pushState(state)
             onViewStateRestored(state)
         } ?: loadInitialState()
@@ -301,8 +304,4 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
         savedStateHandle[key] = value
     }
     //endregion
-
-    companion object {
-        val TAG: String = BasePresenter::class.java.simpleName
-    }
 }

@@ -1,5 +1,14 @@
 #Changelog - Amalia
 
+## Amalia 0.X.X
+
+_2019-XX_XX_
+
+#####Library changes:
+
+* Add feature logging capability for presenters and recyclerviews, see Logging.kt
+
+
 ## Amalia 0.3.7
 
 _2019-08_14_
@@ -7,6 +16,7 @@ _2019-08_14_
 #####Library changes:
 
 * Fix dependency issues with samples
+
 
 ## Amalia 0.3.6
 

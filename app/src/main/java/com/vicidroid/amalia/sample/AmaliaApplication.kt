@@ -10,5 +10,6 @@ class AmaliaApplication : Application() {
         LeakSentry.config = LeakSentry.config.copy(watchFragmentViews = false)
 
         AmaliaLogging.enableFeatureLogging(AmaliaLogging.Feature.FEATURE_RECYCLER_VIEW)
+        AmaliaLogging.enableFeatureLogging(AmaliaLogging.Feature.FEATURE_PRESENTER)
     }
 }

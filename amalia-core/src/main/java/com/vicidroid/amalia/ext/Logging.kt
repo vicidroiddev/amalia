@@ -1,6 +1,7 @@
 package com.vicidroid.amalia.ext
 
 import android.util.Log
+import com.vicidroid.amalia.ext.AmaliaLogging.Feature.Companion.FEATURE_PRESENTER
 import com.vicidroid.amalia.ext.AmaliaLogging.Feature.Companion.FEATURE_RECYCLER_VIEW
 
 const val DEBUG_LOGGING = true
@@ -9,6 +10,10 @@ fun debugLog(tag: String, msg: String) {
     if (DEBUG_LOGGING) Log.v(tag, msg)
 }
 
+
+fun presenterDebugLog(tag: String, msg: String) {
+    if (FEATURE_PRESENTER.enabled) Log.v(tag, msg)
+}
 
 fun recyclerViewDebugLog(msg: String) {
     if (FEATURE_RECYCLER_VIEW.enabled) Log.v(FEATURE_RECYCLER_VIEW, msg)
@@ -28,6 +33,8 @@ object AmaliaLogging {
         companion object {
             @Feature
             const val FEATURE_RECYCLER_VIEW = "AmaliaRecyclerView"
+            @Feature
+            const val FEATURE_PRESENTER = "Presenter"
         }
     }
 }
