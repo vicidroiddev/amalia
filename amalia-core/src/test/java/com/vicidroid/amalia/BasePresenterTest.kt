@@ -215,7 +215,6 @@ class BasePresenterTest : TestCase() {
 
     @Test
     fun `ensure order of initialization prior to loadInitialState`() {
-
         val hooks: ((FakePresenterWithUri) -> Unit) = {
             it.currentUri = Uri.EMPTY
         }
@@ -229,36 +228,50 @@ class BasePresenterTest : TestCase() {
         val inorder = inOrder(mockedHooks, presenter)
 
         inorder.verify(mockedHooks).invoke(presenter)
-        inorder.verify(presenter).initializePresenter(any(), any())
+        inorder.verify(presenter).initializePresenter(eq(application), any() )
         inorder.verify(presenter).loadInitialState()
     }
 
     @Test
     fun `applies hooks to shared base presenter`() {
-        val currentUri = Uri.Builder()
-            .scheme("appName")
-            .authority("com.vicidroiddev.amalia")
-            .appendPath("person")
-            .appendPath("1")
-            .appendPath("module")
-            .appendPath("profile")
-            .build()
+        val currentUri = buildUri()
 
-        val hooks: ((FakePresenterWithUri) -> Unit)? = {
+        val hooks: ((FakePresenterWithUri) -> Unit) = {
             it.currentUri = currentUri
         }
 
         val mockedHooks = spy(hooks)
-
-        lifecycle.currentState = Lifecycle.State.CREATED
 
         val presenterThatAccessesUriEarly = spy(FakePresenterWithUri())
 
         activity.presenterProvider(mockedHooks) { presenterThatAccessesUriEarly }.value
 
         verify(presenterThatAccessesUriEarly).loadInitialState()
-        verify(mockedHooks)!!.invoke(presenterThatAccessesUriEarly)
+        verify(mockedHooks).invoke(presenterThatAccessesUriEarly)
         assertEquals(presenterThatAccessesUriEarly.currentUri, currentUri)
+    }
+
+    @Test
+    fun `applies hooks to child presenter`() {
+        val currentUri = buildUri()
+
+        val hooks: ((SharedBasePresenter) -> Unit) = {
+            it.currentUri = currentUri
+        }
+
+        val mockedHooks = spy(hooks)
+
+        val presenterThatAccessesUriEarly = spy(FakePresenterWithUri())
+        activity.presenterProvider(mockedHooks) { presenterThatAccessesUriEarly }.value
+
+        presenterThatAccessesUriEarly.bind(viewDelegate)
+
+        val childPresenterThatAccessesUriEarly = spy(ChildFakePresenterWithUri())
+        presenterThatAccessesUriEarly.childPresenterProvider(mockedHooks) { childPresenterThatAccessesUriEarly }.value
+
+        verify(childPresenterThatAccessesUriEarly).loadInitialState()
+        verify(mockedHooks).invoke(childPresenterThatAccessesUriEarly)
+        assertEquals(childPresenterThatAccessesUriEarly.currentUri, currentUri)
     }
 
     @Test
@@ -352,6 +365,15 @@ class BasePresenterTest : TestCase() {
         override fun onViewEvent(event: ViewEvent) {}
     }
 
+    class ChildFakePresenterWithUri : SharedBasePresenter() {
+        override fun loadInitialState() {
+            //Access currentUri
+            this.currentUri
+        }
+
+        override fun onViewEvent(event: ViewEvent) {}
+    }
+
     class FakeParentPresenter : BasePresenter<ViewState, ViewEvent>() {
         override fun loadInitialState() {
         }
@@ -368,5 +390,16 @@ class BasePresenterTest : TestCase() {
     class FakeViewDelegate(lifecycleOwner: LifecycleOwner, rootView: View) :
         BaseViewDelegate<ViewState, ViewEvent>(lifecycleOwner, rootView) {
         override fun renderViewState(state: ViewState) {}
+    }
+
+    private fun buildUri(): Uri {
+        return Uri.Builder()
+            .scheme("appName")
+            .authority("com.vicidroiddev.amalia")
+            .appendPath("person")
+            .appendPath("1")
+            .appendPath("module")
+            .appendPath("profile")
+            .build()
     }
 }
