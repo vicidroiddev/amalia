@@ -25,7 +25,8 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
         rootView.context,
         spaceSeparationInDp
     ),
-    asyncDiffCallback: DiffUtil.ItemCallback<I> = AsyncRecyclerItemDiffCallback()
+    asyncDiffCallback: DiffUtil.ItemCallback<I> = AsyncRecyclerItemDiffCallback(),
+    recyclerViewHasFixedSize: Boolean = true
 ) :
     BaseViewDelegate<RecyclerViewState<I>, ViewEvent>(
         viewLifeCycleOwner,
@@ -47,6 +48,7 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
         }
 
         // RECYCLER VIEW SETUP
+        recyclerView.setHasFixedSize(recyclerViewHasFixedSize)
         recyclerView.layoutManager = layoutManager
 
         if (spaceSeparationInDp > 0) {
