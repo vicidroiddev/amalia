@@ -66,7 +66,13 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
             viewAttachStateChangeListener = createAttachStateChangeListener()
             rootView.addOnAttachStateChangeListener(viewAttachStateChangeListener)
             // Invoke the callbacks on this view delegate if there is an attached root.
-            rootView.parent?.let { viewAttachStateChangeListener.onViewAttachedToWindow(rootView) }
+            rootView.parent?.let {
+                rootView.post {
+                    viewAttachStateChangeListener.onViewAttachedToWindow(
+                        rootView
+                    )
+                }
+            }
         }
     }
 

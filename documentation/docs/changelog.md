@@ -8,6 +8,7 @@ _2019-XX_XX_
 
 * Add feature logging capability for presenters and recyclerviews, see Logging.kt
 * Allow child presenter provider to leverage hooks for applying common fields to base presenters
+* View delegates now post onViewAttached() on next event loop
 
 
 ## Amalia 0.3.7
