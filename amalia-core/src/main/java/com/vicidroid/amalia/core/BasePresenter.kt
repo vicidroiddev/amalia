@@ -64,7 +64,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
     //TODO Consider making this a protectedmethod if legacy code can implement ViewDelegate nicely
     @Deprecated(
-        message = "[bindViewLifecycleOwner] will be made protected soon. Instead implement [ViewDelegate] interface",
+        message = "[bindViewLifecycleOwner] will be made protected soon.",
         replaceWith = ReplaceWith("bind(lifecycleOwner, stateObserver)")
     )
     fun bindViewLifecycleOwner(viewLifecycleOwner: LifecycleOwner) {
@@ -226,10 +226,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * [viewDelegate] represents the view delegate that is bound to this presenter.
      */
     open fun onBindViewDelegate(viewDelegate: ViewDelegate<S, E>) {
-
     }
 
-    //TODO remove this in favour of [ViewDelegate]
     open fun onBindViewLifecycleOwner(owner: LifecycleOwner) {
     }
 
