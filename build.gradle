@@ -5,7 +5,7 @@ buildscript {
 
     ext.versions = [
             'junit'    : '4.12',
-            'kotlin'   : '1.3.31',
+            'kotlin'   : '1.3.50',
             'lifecycle': "2.0.0"
     ]
 
@@ -32,11 +32,11 @@ buildscript {
             'kotlinStdlib'   : "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
             'mjaarmanMockito': "com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0",
             'roboelectric'   : "org.robolectric:robolectric:3.8",
-            'coroutines'     : "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1"
+            'coroutines'     : "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0"
     ]
 
     ext.toolchainDeps = [
-            'gradlePlugin': "com.android.tools.build:gradle:3.5.0-rc02",
+            'gradlePlugin': "com.android.tools.build:gradle:3.5.0",
             'kotlinPlugin': "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
             'jitpackMavenPlugin': "com.github.dcendents:android-maven-gradle-plugin:2.1"
     ]
@@ -45,7 +45,7 @@ buildscript {
             minSdk    : 21,
             targetSdk : 28,
             compileSdk: 28,
-            buildTools: "29.0.1"
+            buildTools: "29.0.2"
     ]
 
     repositories {

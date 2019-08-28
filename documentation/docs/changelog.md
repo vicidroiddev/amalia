@@ -9,6 +9,9 @@ _2019-XX_XX_
 * Add feature logging capability for presenters and recyclerviews, see Logging.kt
 * Allow child presenter provider to leverage hooks for applying common fields to base presenters
 * View delegates now post onViewAttached() on next event loop
+* Updated Coroutine library to 1.3.0 for scope support
+* Updated Kotlin to 1.3.50
+* Updated Build tools to 29.0.2
 
 
 ## Amalia 0.3.7
