@@ -207,7 +207,11 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
             // When the view delegate's lifecycle owner indicates destruction, let's ensure we avoid any leaking.
             viewLifecycleOwner = null
 
-            // When the presenter's lifecycle owner indicates destruction, let's ensure we avoid any leaking.
+            // When the view delegate's lifecycle owner indicates destruction, let's ensure we avoid any leaking.
+            // The presenter provider will restore this instance and also set the lifecycle owner again.
+            // We can't rely on #onCleared since it outlives the re-creation of the activity.
+            // Recall that an activity will be recreated upon a config change.
+            // This will be set again when the presenter provider is invoked.
             presenterLifecycleOwner = null
 
             // https://github.com/googlecodelabs/android-lifecycles/issues/
@@ -262,9 +266,11 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
     }
 
+    /**
+     * Note that viewmodel's onCleared is independent of configuration changes.
+     */
     @CallSuper
     final override fun onCleared() {
-        presenterLifecycleOwner = null
         onPresenterDestroyed()
     }
     //endregion
