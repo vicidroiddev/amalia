@@ -207,6 +207,9 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
             // When the view delegate's lifecycle owner indicates destruction, let's ensure we avoid any leaking.
             viewLifecycleOwner = null
 
+            // When the presenter's lifecycle owner indicates destruction, let's ensure we avoid any leaking.
+            presenterLifecycleOwner = null
+
             // https://github.com/googlecodelabs/android-lifecycles/issues/
             // According to the above we do not need to remove the observer manually.
             // Just to be safe we are doing it here. It will be re-added after bind(...) is called

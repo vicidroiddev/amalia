@@ -96,21 +96,25 @@ class BasePresenterTest : TestCase() {
     }
 
     @Test
-    fun `presenter is viewdelegate lifecycle aware upon creation`() {
-        bindPresenter()
+    fun `presenter is lifecycle aware upon creation`() {
+        val presenter = spy(activity.presenterProvider { (FakePresenter()) }.value)
+        presenter.bind(viewDelegate)
+
         assertNotNull(presenter.viewLifecycleOwner)
+        assertNotNull(presenter.presenterLifecycleOwner)
         verify(lifecycle).addObserver(presenter.viewLifecycleObserver)
         verify(presenter).onViewAttached(lifecycleOwner)
     }
 
     @Test
-    fun `presenter is viewdelegate lifecycle aware upon destruction`() {
+    fun `presenter is lifecycle aware upon destruction`() {
         bindPresenter()
         lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
 
         assertTrue(viewDelegate.viewDelegateLifecycleOwner == lifecycleOwner)
         verify(presenter).onViewDetached(lifecycleOwner)
         assertNull(presenter.viewLifecycleOwner)
+        assertNull(presenter.presenterLifecycleOwner)
         assertEquals(lifecycle.observerCount, 0)
     }
 
