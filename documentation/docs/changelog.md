@@ -1,6 +1,6 @@
 #Changelog - Amalia
 
-## Amalia 0.X.X
+## Amalia 0.4.0
 
 _2019-XX_XX_
 
@@ -9,6 +9,11 @@ _2019-XX_XX_
 * Add feature logging capability for presenters and recyclerviews, see Logging.kt
 * Allow child presenter provider to leverage hooks for applying common fields to base presenters
 * View delegates now post onViewAttached() on next event loop
+* #bindViewLifecycleOwner() has been renamed to regular bind(). There are now 3 bind methods to choose from, check documentation for more info.
+
+
+#####Dependency updates:
+
 * Updated Coroutine library to 1.3.0 for scope support
 * Updated Kotlin to 1.3.50
 * Updated Build tools to 29.0.2

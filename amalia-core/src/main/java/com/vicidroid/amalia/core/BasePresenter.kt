@@ -62,13 +62,16 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
         stateLiveData().observe(viewLifecycleOwner!!, Observer { observer(it) })
     }
 
-    //TODO Consider making this a protectedmethod if legacy code can implement ViewDelegate nicely
-    @Deprecated(
-        message = "[bindViewLifecycleOwner] will be made protected soon.",
-        replaceWith = ReplaceWith("bind(lifecycleOwner, stateObserver)")
-    )
-    fun bindViewLifecycleOwner(viewLifecycleOwner: LifecycleOwner) {
-        presenterDebugLog(TAG_INSTANCE, "bindViewLifecycleOwner()")
+    /**
+     * Binds the presenter with a required [viewLifecycleOwner]
+     * This is used internally.
+     * It may be useful for legacy code where you want to move some code
+     * to a presenter but most of the logic is already in a fragment or activity.
+     *
+     * In most cases [bind(viewDelegate)] or [bind(viewLifecycleOwner)] is preferred.
+     */
+    fun bind(viewLifecycleOwner: LifecycleOwner) {
+        presenterDebugLog(TAG_INSTANCE, "bind(viewLifecycleOwner)")
         this.viewLifecycleOwner?.let { error("Second call to bind() is suspicious.") }
         this.viewLifecycleOwner = viewLifecycleOwner
 
@@ -83,12 +86,13 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     }
 
     /**
-     * Binds the presenter with a required [lifecycleOwner] and a [stateObserver]
+     * Binds the presenter with a required [viewLifecycleOwner] and a [stateObserver]
      * States will be propagated to the [stateObserver]
      * In most cases [bind(viewDelegate)] is preferred.
      */
-    fun bind(lifecycleOwner: LifecycleOwner, stateObserver: (S) -> Unit) {
-        bindViewLifecycleOwner(lifecycleOwner)
+    fun bind(viewLifecycleOwner: LifecycleOwner, stateObserver: (S) -> Unit) {
+        presenterDebugLog(TAG_INSTANCE, "bind(viewLifecycleOwner, stateObserver)")
+        bind(viewLifecycleOwner)
         propagateStatesTo(stateObserver)
     }
 
@@ -98,7 +102,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * • state propagation from presenter to delegate
      */
     fun bind(viewDelegate: ViewDelegate<S, E>) {
-        bindViewLifecycleOwner(viewDelegate.viewDelegateLifecycleOwner)
+        presenterDebugLog(TAG_INSTANCE, "bind(viewDelegate)")
+        bind(viewDelegate.viewDelegateLifecycleOwner)
 
         // Observe events sent via an event provider
         if (viewDelegate is ViewEventProvider<*>) {
