@@ -51,10 +51,8 @@ inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterP
     crossinline presenterCreator: () -> P
 ) = lazy {
     viewLifecycleOwner ?: error("The parent presenter must be bound to a view delegate.")
-    presenterLifecycleOwner ?: error("The parent presenter must have been initialized.")
     presenterCreator().also { childPresenter ->
         hooks?.invoke(childPresenter)
-        childPresenter.presenterLifecycleOwner = presenterLifecycleOwner
         childPresenter.initializePresenter(applicationContext, savedStateHandle)
     }
 }
@@ -92,8 +90,6 @@ inline fun <reified P : BasePresenter<*, *>> presenterProvider(
         is FragmentActivity -> ViewModelProviders.of(lifecycleOwner, savedStateFactory)[P::class.java]
         is Fragment -> ViewModelProviders.of(lifecycleOwner, savedStateFactory)[P::class.java]
         else -> error("Unsupported lifecycle owner detected.")
-    }.also { p ->
-        p.presenterLifecycleOwner = lifecycleOwner
     }
 }
 

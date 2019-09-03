@@ -8,6 +8,7 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.*
 import com.vicidroid.amalia.core.persistance.PersistableState
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
+import com.vicidroid.amalia.ext.debugLog
 import com.vicidroid.amalia.ext.presenterDebugLog
 import com.vicidroid.amalia.ui.ViewDelegate
 import com.vicidroid.amalia.ui.ViewEventProvider
@@ -43,9 +44,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
             value?.let { onBindViewLifecycleOwner(it) }
         }
 
-    var presenterLifecycleOwner: LifecycleOwner? = null
-
-    lateinit var viewLifecycleObserver: DefaultLifecycleObserver
+    internal lateinit var viewLifecycleObserver: DefaultLifecycleObserver
 
     fun stateLiveData(): LiveData<S> = viewStateLiveData
 
@@ -196,28 +195,9 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
             onViewAttached(owner)
         }
 
-        override fun onResume(owner: LifecycleOwner) {
-        }
-
-        override fun onPause(owner: LifecycleOwner) {
-        }
-
-        override fun onStart(owner: LifecycleOwner) {
-        }
-
-        override fun onStop(owner: LifecycleOwner) {
-        }
-
         override fun onDestroy(owner: LifecycleOwner) {
             // When the view delegate's lifecycle owner indicates destruction, let's ensure we avoid any leaking.
             viewLifecycleOwner = null
-
-            // When the view delegate's lifecycle owner indicates destruction, let's ensure we avoid any leaking.
-            // The presenter provider will restore this instance and also set the lifecycle owner again.
-            // We can't rely on #onCleared since it outlives the re-creation of the activity.
-            // Recall that an activity will be recreated upon a config change.
-            // This will be set again when the presenter provider is invoked.
-            presenterLifecycleOwner = null
 
             // https://github.com/googlecodelabs/android-lifecycles/issues/
             // According to the above we do not need to remove the observer manually.
@@ -276,6 +256,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      */
     @CallSuper
     final override fun onCleared() {
+        debugLog(TAG_INSTANCE, "onPresenterDestroyed()")
         onPresenterDestroyed()
     }
     //endregion

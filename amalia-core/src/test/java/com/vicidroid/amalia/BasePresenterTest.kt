@@ -101,7 +101,6 @@ class BasePresenterTest : TestCase() {
         presenter.bind(viewDelegate)
 
         assertNotNull(presenter.viewLifecycleOwner)
-        assertNotNull(presenter.presenterLifecycleOwner)
         verify(lifecycle).addObserver(presenter.viewLifecycleObserver)
         verify(presenter).onViewAttached(lifecycleOwner)
     }
@@ -114,7 +113,6 @@ class BasePresenterTest : TestCase() {
         assertTrue(viewDelegate.viewDelegateLifecycleOwner == lifecycleOwner)
         verify(presenter).onViewDetached(lifecycleOwner)
         assertNull(presenter.viewLifecycleOwner)
-        assertNull(presenter.presenterLifecycleOwner)
         assertEquals(lifecycle.observerCount, 0)
     }
 
@@ -284,7 +282,6 @@ class BasePresenterTest : TestCase() {
         presenter.bind(viewDelegate)
         verify(presenter).onBindViewDelegate(viewDelegate)
         verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
-        assertNotNull(presenter.presenterLifecycleOwner)
     }
 
 //    // This fails because the activity is mocked and won't actually go through the regular handle lifecycle events.
@@ -296,7 +293,6 @@ class BasePresenterTest : TestCase() {
 //        presenter.bind(viewDelegate)
 //        lifecycle.currentState = Lifecycle.State.DESTROYED
 //        verify(presenter).onPresenterDestroyed()
-//        assertNull(presenter.presenterLifecycleOwner)
 //    }
 
     @Test

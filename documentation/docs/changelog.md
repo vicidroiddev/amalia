@@ -10,6 +10,7 @@ _2019-XX_XX_
 * Allow child presenter provider to leverage hooks for applying common fields to base presenters
 * View delegates now post onViewAttached() on next event loop
 * #bindViewLifecycleOwner() has been renamed to regular bind(). There are now 3 bind methods to choose from, check documentation for more info.
+* presenterLifeCycleOwner field has been removed
 
 
 #####Dependency updates:
