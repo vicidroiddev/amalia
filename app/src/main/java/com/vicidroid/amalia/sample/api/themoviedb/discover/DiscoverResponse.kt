@@ -21,12 +21,12 @@ data class DiscoverResult(
     @Json(name = "origin_country") val originCountry : List<String>,
     @Json(name = "vote_count") val voteCount : Int,
     @Json(name = "first_air_date") val firstAirDate : String,
-    @Json(name = "backdrop_path") val backdropPath : String,
+    @Json(name = "backdrop_path") val backdropPath : String?,
     @Json(name = "original_language") val originalLanguage : String,
     @Json(name = "id") val id : Int,
     @Json(name = "vote_average") val voteAverage : Double,
     @Json(name = "overview") val overview : String,
-    @Json(name = "poster_path") val posterPath : String) : DiffItem {
+    @Json(name = "poster_path") val posterPath : String?) : DiffItem {
 
     override val diffId = id.toString()
 
