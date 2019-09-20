@@ -11,13 +11,15 @@ import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.test.Data
 import com.vicidroid.amalia.ui.recyclerview.adapter.BaseRecyclerItem
 import com.vicidroid.amalia.ui.recyclerview.adapter.BaseRecyclerViewHolder
+import com.vicidroid.amalia.ui.recyclerview.diff.ChangePayload
+import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
 
 data class TestRecyclerItem(val data: Data) : BaseRecyclerItem<TestRecyclerItem.TestViewHolder>(data) {
     override val layoutRes = R.layout.list_item_flow_test
 
     override fun createViewHolder(itemView: View) = TestViewHolder(itemView)
 
-    override fun bind(viewHolder: TestViewHolder, payloads: List<Any>) {
+    override fun bind(viewHolder: TestViewHolder, payloads: List<ChangePayload<DiffItem>>) {
         Log.v(TAG,"bind() on $data}")
 
         viewHolder.apply {

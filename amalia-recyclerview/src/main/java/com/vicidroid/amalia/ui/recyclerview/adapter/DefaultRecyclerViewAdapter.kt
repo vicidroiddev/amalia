@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.core.ViewEventStore
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewHolderInteractionEvent
+import com.vicidroid.amalia.ui.recyclerview.diff.ChangePayload
+import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
 import com.vicidroid.amalia.ui.recyclerview.diff.RecyclerItemDiffCallback
 
 open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
@@ -52,10 +54,11 @@ open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerVie
         onBindViewHolder(holder, position, emptyList())
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any>) {
         recyclerViewDebugLog("onBindViewHolder() with payloads: position=$position")
         adapterItems[position].let { item ->
-            item.bind(holder, payloads)
+            item.bind(holder, payloads as List<ChangePayload<DiffItem>>)
             holder.adapterItem = item
         }
     }

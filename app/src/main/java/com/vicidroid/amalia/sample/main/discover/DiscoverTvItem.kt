@@ -10,13 +10,15 @@ import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverResult
 import com.vicidroid.amalia.ui.recyclerview.adapter.BaseRecyclerItem
 import com.vicidroid.amalia.ui.recyclerview.adapter.BaseRecyclerViewHolder
+import com.vicidroid.amalia.ui.recyclerview.diff.ChangePayload
+import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
 
 class DiscoverTvItem(val discoverResult: DiscoverResult) : BaseRecyclerItem<DiscoverTvItem.ViewHolder>(discoverResult) {
     override val layoutRes = R.layout.list_item_discover_tv
 
     override fun createViewHolder(itemView: View) = ViewHolder(itemView)
 
-    override fun bind(viewHolder: ViewHolder, payloads: List<Any>) {
+    override fun bind(viewHolder: ViewHolder, payloads: List<ChangePayload<DiffItem>>) {
         with(viewHolder) {
             name.text = discoverResult.name
             Glide.with(viewHolder.itemView.context)

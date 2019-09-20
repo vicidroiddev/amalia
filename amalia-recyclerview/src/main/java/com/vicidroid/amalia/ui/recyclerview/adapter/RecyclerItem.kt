@@ -12,7 +12,7 @@ interface RecyclerItem<VH : RecyclerView.ViewHolder> {
      * Called by adapter via [RecyclerView.Adapter.onBindViewHolder]
      * [payloads] denotes the change payload when items are the same but contents differ somewhat
      */
-    fun bind(viewHolder: VH, payloads: List<Any>)
+    fun bind(viewHolder: VH, payloads: List<ChangePayload<DiffItem>>)
 
     /**
      * Called by adapter via [RecyclerView.Adapter.onViewRecycled]
