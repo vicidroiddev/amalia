@@ -16,8 +16,7 @@ import com.vicidroid.amalia.ui.ViewEventProvider
 /**
  * Backed by Android's ViewModel in order to easily survive configuration changes.
  */
-abstract class BasePresenter<S : ViewState, E : ViewEvent>
-    : ViewModel(),
+abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
     DefaultLifecycleObserver,
     PersistableState {
 
@@ -50,6 +49,15 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
     val isStatePresent: Boolean
         get() = viewStateLiveData.value != null
+
+
+    /**
+     * Tracks child presenter invoked via [childPresenterProvider]
+     * Child presenters are just objects that live in a parent presenter.
+     * As such they are not added to the internal ViewModelStore (it's not necessary)
+     * We should propagate [onPresenterDestroyedInternal] to these childPresenters.
+     */
+    val childPresenters: MutableList<BasePresenter<*, *>> = mutableListOf()
 
     /**
      * Propagate states sent by this presenter to another observer.
@@ -251,13 +259,18 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
     }
 
+    private fun onPresenterDestroyedInternal() {
+        debugLog(TAG_INSTANCE, "onPresenterDestroyed()")
+        onPresenterDestroyed()
+        childPresenters.forEach { it.onPresenterDestroyedInternal() }
+    }
+
     /**
      * Note that viewmodel's onCleared is independent of configuration changes.
      */
     @CallSuper
-    final override fun onCleared() {
-        debugLog(TAG_INSTANCE, "onPresenterDestroyed()")
-        onPresenterDestroyed()
+    override fun onCleared() {
+        onPresenterDestroyedInternal()
     }
     //endregion
 

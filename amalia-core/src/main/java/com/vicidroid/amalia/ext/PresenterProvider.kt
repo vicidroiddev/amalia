@@ -52,6 +52,7 @@ inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterP
 ) = lazy {
     viewLifecycleOwner ?: error("The parent presenter must be bound to a view delegate.")
     presenterCreator().also { childPresenter ->
+        this.childPresenters += childPresenter
         hooks?.invoke(childPresenter)
         childPresenter.initializePresenter(applicationContext, savedStateHandle)
     }
