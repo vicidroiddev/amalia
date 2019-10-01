@@ -281,9 +281,52 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Presenters
+      </label>
+    
     <a href="./" title="Presenters" class="md-nav__link md-nav__link--active">
       Presenters
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#is-there-a-callback-for-when-my-presenter-is-ready-to-go" title="Is there a callback for when my presenter is ready to go?" class="md-nav__link">
+    Is there a callback for when my presenter is ready to go?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#is-there-a-callback-for-when-my-presenter-is-destroyed" title="Is there a callback for when my presenter is destroyed?" class="md-nav__link">
+    Is there a callback for when my presenter is destroyed?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-a-good-way-to-clean-up-long-running-operations" title="What's a good way to clean up long running operations?" class="md-nav__link">
+    What's a good way to clean up long running operations?
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -418,6 +461,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#is-there-a-callback-for-when-my-presenter-is-ready-to-go" title="Is there a callback for when my presenter is ready to go?" class="md-nav__link">
+    Is there a callback for when my presenter is ready to go?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#is-there-a-callback-for-when-my-presenter-is-destroyed" title="Is there a callback for when my presenter is destroyed?" class="md-nav__link">
+    Is there a callback for when my presenter is destroyed?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-a-good-way-to-clean-up-long-running-operations" title="What's a good way to clean up long running operations?" class="md-nav__link">
+    What's a good way to clean up long running operations?
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -442,6 +515,45 @@
 <li>Can leverage the application context field to get resources</li>
 <li>Can use savedStateHandle for process death restoration</li>
 </ul>
+<h2 id="is-there-a-callback-for-when-my-presenter-is-ready-to-go">Is there a callback for when my presenter is ready to go?<a class="headerlink" href="#is-there-a-callback-for-when-my-presenter-is-ready-to-go" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyPresenter</span> <span class="p">:</span> <span class="n">BasePresenter</span><span class="p">&lt;</span><span class="n">ViewState</span><span class="p">,</span> <span class="n">ViewEvent</span><span class="p">&gt;()</span> <span class="p">{</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">loadInitialState</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Can access applicationContext at this point</span>
+        <span class="n">applicationContext</span><span class="p">.</span><span class="n">getString</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">string</span><span class="p">.</span><span class="n">somestring</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2 id="is-there-a-callback-for-when-my-presenter-is-destroyed">Is there a callback for when my presenter is destroyed?<a class="headerlink" href="#is-there-a-callback-for-when-my-presenter-is-destroyed" title="Permanent link">&para;</a></h2>
+<p><code class="codehilite"><span class="n">onPresenterDestroyed</span><span class="p">()</span></code> will be invoked when the presenter is about to die. This will also be called for child presenters.
+This method is not invoked on configuration changes.</p>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyPresenter</span> <span class="p">:</span> <span class="n">BasePresenter</span><span class="p">&lt;</span><span class="n">ViewState</span><span class="p">,</span> <span class="n">ViewEvent</span><span class="p">&gt;()</span> <span class="p">{</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onPresenterDestroyed</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Clean up time</span>
+        <span class="c1">// Even better track your closeable objects, see below</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2 id="whats-a-good-way-to-clean-up-long-running-operations">What's a good way to clean up long running operations?<a class="headerlink" href="#whats-a-good-way-to-clean-up-long-running-operations" title="Permanent link">&para;</a></h2>
+<p>You may store your object in the presenter cache if it implements <code class="codehilite"><span class="n">Closeable</span></code>.
+That way you can be sure it is automatically cleaned up at the right time.</p>
+<p>Note: Amalia uses this mechanism for <code class="codehilite"><span class="n">amalia</span><span class="o">-</span><span class="n">coroutine</span><span class="o">-</span><span class="n">scopes</span></code> module.</p>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyPresenter</span> <span class="p">:</span> <span class="n">BasePresenter</span><span class="p">&lt;</span><span class="n">ViewState</span><span class="p">,</span> <span class="n">ViewEvent</span><span class="p">&gt;()</span> <span class="p">{</span>
+    <span class="n">init</span> <span class="p">{</span>
+        <span class="k">val</span> <span class="py">longRunningThing</span> <span class="p">=</span> <span class="n">LongRunningThing</span><span class="p">()</span>
+        <span class="c1">// Objects will automatically have close() called when the presenter is destroyed.</span>
+        <span class="n">closeableObjects</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="s">&quot;my_key&quot;</span><span class="p">,</span> <span class="n">longRunningThing</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Ensure we implement Closeable and cancel any operations needed.</span>
+    <span class="k">class</span> <span class="nc">LongRunningThing</span> <span class="p">:</span> <span class="n">Closeable</span> <span class="p">{</span>
+        <span class="k">override</span> <span class="k">fun</span> <span class="nf">close</span><span class="p">()</span> <span class="p">{</span>
+            <span class="c1">// Stop long running thing</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
                 
                   
                 
