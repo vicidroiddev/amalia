@@ -12,6 +12,8 @@ import com.vicidroid.amalia.ext.debugLog
 import com.vicidroid.amalia.ext.presenterDebugLog
 import com.vicidroid.amalia.ui.ViewDelegate
 import com.vicidroid.amalia.ui.ViewEventProvider
+import java.io.Closeable
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Backed by Android's ViewModel in order to easily survive configuration changes.
@@ -31,6 +33,14 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
     override lateinit var savedStateHandle: SavedStateHandle
 
     private var viewStatePropagationPaused: Boolean = false
+
+    /**
+     * A key value cache containing objects implementing [Closeable]
+     * Upon presenter destruction, close will be called on each value in this map.
+     * This is useful for say coroutine scopes which should cancel when going to another screen.
+     * It may be used for any other background tasks that you wish to cancel.
+     */
+    val closeableObjects = ConcurrentHashMap<String, Closeable>()
 
     /**
      * The lifecycle owner belonging to the view delegate.
@@ -259,9 +269,10 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
 
     }
 
-    private fun onPresenterDestroyedInternal() {
+    internal fun onPresenterDestroyedInternal() {
         debugLog(TAG_INSTANCE, "onPresenterDestroyed()")
         onPresenterDestroyed()
+        clearCloseable()
         childPresenters.forEach { it.onPresenterDestroyedInternal() }
     }
 
@@ -269,9 +280,18 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
      * Note that viewmodel's onCleared is independent of configuration changes.
      */
     @CallSuper
-    override fun onCleared() {
+    final override fun onCleared() {
         onPresenterDestroyedInternal()
     }
+
+    /**
+     * Calls [Closeable.close] on cached objects that may need to clean up resources when the presenter is destroyed
+     */
+    private fun clearCloseable() {
+        closeableObjects.values.forEach { it.close() }
+        closeableObjects.clear()
+    }
+
     //endregion
 
     //region PERSISTABLE STATE

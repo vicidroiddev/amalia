@@ -4,13 +4,20 @@
 
 _2019-XX_XX_
 
+#####New module:
+
+* RecyclerView support
+    * Can support support numerous presenters that support a different recycler item
+
 #####Library changes:
 
 * Add feature logging capability for presenters and recyclerviews, see Logging.kt
 * Allow child presenter provider to leverage hooks for applying common fields to base presenters
 * View delegates now post onViewAttached() on next event loop
-* #bindViewLifecycleOwner() has been renamed to regular bind(). There are now 3 bind methods to choose from, check documentation for more info.
+* bindViewLifecycleOwner() has been renamed to regular bind(). There are now 3 bind methods to choose from, check documentation for more info.
 * presenterLifeCycleOwner field has been removed
+* onPresenterDestroyed() was previously not invoked on child presenters
+* onCleared has been made final, rely on #onPresenterDestroyed instead
 
 
 #####Dependency updates:
@@ -55,7 +62,6 @@ _2019-06_26_
 
 * More useful bind method provided which takes a lifecycleOwner and a lambda for states
 * Add coroutine scopes as extension property to presenters (https://github.com/vicidroiddev/amalia/issues/12)
-* BasePresenter.onCleared has been made final, rely on #onPresenterDestroyed
 
 
 ## Amalia 0.3.3
