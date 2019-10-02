@@ -2,6 +2,7 @@ package com.vicidroid.amalia
 
 import android.app.Application
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentActivity
@@ -24,6 +25,7 @@ import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
@@ -284,15 +286,14 @@ class BasePresenterTest : TestCase() {
         verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
     }
 
-//    // This fails because the activity is mocked and won't actually go through the regular handle lifecycle events.
-//    // IN the end onCleared is not called on the viewmodel
 //    @Test
-//    fun `destroys presenter lifecycleowner after using presenter provider`() {
-//        val controller = Robolectric.buildActivity(FragmentActivity::class.java).setup() ?
-//        val presenter = spy(activity.presenterProvider { (FakePresenter()) }.value)
-//        presenter.bind(viewDelegate)
-//        lifecycle.currentState = Lifecycle.State.DESTROYED
-//        verify(presenter).onPresenterDestroyed()
+//    fun `calls onPresenterDestroyed when lifecycle activity is destroyed`() {
+//        val controller = Robolectric.buildActivity(FragmentActivity::class.java).setup()
+//        val activity = controller.get()
+//        val parentPresenter = spy(activity.presenterProvider { FakeParentPresenter() }.value)
+//
+//        controller.destroy()
+//        verify(parentPresenter).onPresenterDestroyed()
 //    }
 
     @Test
@@ -309,6 +310,22 @@ class BasePresenterTest : TestCase() {
         Assert.assertEquals(childPresenter.viewLifecycleOwner, viewDelegate.viewDelegateLifecycleOwner)
         Assert.assertEquals(childPresenter.applicationContext, activity.application)
     }
+
+//    @Test
+//    fun `child presenter should receive onPresenterDestroyed if parent fires onPresenterDestroyed`() {
+//        val parentPresenter by activity.presenterProvider {
+//            FakeParentPresenter()
+//        }
+//
+//        parentPresenter.bind(viewDelegate)
+//
+//        val spyPresenter = spy(parentPresenter)
+//
+//        val childPresenter = spy(spyPresenter.childPresenterProvider { FakePresenter() }.value)
+//
+//        spyPresenter.onPresenterDestroyedInternal()
+//        verify(childPresenter).onPresenterDestroyedInternal()
+//    }
 
     @Test
     fun `presenter injects save state handle`() {
