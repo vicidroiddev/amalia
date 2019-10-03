@@ -2,7 +2,6 @@ package com.vicidroid.amalia
 
 import android.app.Application
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentActivity
@@ -286,15 +285,15 @@ class BasePresenterTest : TestCase() {
         verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
     }
 
-//    @Test
-//    fun `calls onPresenterDestroyed when lifecycle activity is destroyed`() {
-//        val controller = Robolectric.buildActivity(FragmentActivity::class.java).setup()
-//        val activity = controller.get()
-//        val parentPresenter = spy(activity.presenterProvider { FakeParentPresenter() }.value)
-//
-//        controller.destroy()
-//        verify(parentPresenter).onPresenterDestroyed()
-//    }
+    @Test
+    fun `calls onPresenterDestroyed when lifecycle activity is destroyed`() {
+        val controller = Robolectric.buildActivity(FragmentActivity::class.java).setup()
+        val activity = controller.get()
+        val parentPresenter = activity.presenterProvider { spy(FakeParentPresenter()) }.value
+
+        controller.destroy()
+        verify(parentPresenter).onPresenterDestroyed()
+    }
 
     @Test
     fun `child presenter provider leverages parent fields`() {
@@ -311,21 +310,16 @@ class BasePresenterTest : TestCase() {
         Assert.assertEquals(childPresenter.applicationContext, activity.application)
     }
 
-//    @Test
-//    fun `child presenter should receive onPresenterDestroyed if parent fires onPresenterDestroyed`() {
-//        val parentPresenter by activity.presenterProvider {
-//            FakeParentPresenter()
-//        }
-//
-//        parentPresenter.bind(viewDelegate)
-//
-//        val spyPresenter = spy(parentPresenter)
-//
-//        val childPresenter = spy(spyPresenter.childPresenterProvider { FakePresenter() }.value)
-//
-//        spyPresenter.onPresenterDestroyedInternal()
-//        verify(childPresenter).onPresenterDestroyedInternal()
-//    }
+    @Test
+    fun `child presenter should receive onPresenterDestroyed if parent fires onPresenterDestroyed`() {
+        val parentPresenter = activity.presenterProvider { FakeParentPresenter() }.value.also { it.bind(viewDelegate) }
+        val spyChild = parentPresenter.childPresenterProvider { spy(FakePresenter()) }.value
+
+        Assert.assertEquals(parentPresenter.childPresenters, listOf(spyChild))
+
+        parentPresenter.onPresenterDestroyedInternal()
+        verify(spyChild, times(1)).onPresenterDestroyedInternal()
+    }
 
     @Test
     fun `presenter injects save state handle`() {
