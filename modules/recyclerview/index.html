@@ -377,9 +377,66 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        RecyclerView Delegate
+      </label>
+    
     <a href="./" title="RecyclerView Delegate" class="md-nav__link md-nav__link--active">
       RecyclerView Delegate
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#adding-gradle-dependency" title="Adding gradle dependency" class="md-nav__link">
+    Adding gradle dependency
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-create-your-own-recyclerviewdelegate" title="1. Create your own RecyclerViewDelegate" class="md-nav__link">
+    1. Create your own RecyclerViewDelegate
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-create-a-recycler-item-to-bind-data-to-view" title="2. Create a recycler item to bind data to view" class="md-nav__link">
+    2. Create a recycler item to bind data to view
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-emit-recycler-items-with-a-presenter" title="3. Emit recycler items with a presenter" class="md-nav__link">
+    3. Emit recycler items with a presenter
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-dont-forget-to-bind-the-presenter-and-delegate" title="4. Don't forget to bind the presenter and delegate!" class="md-nav__link">
+    4. Don't forget to bind the presenter and delegate!
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -418,6 +475,50 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#adding-gradle-dependency" title="Adding gradle dependency" class="md-nav__link">
+    Adding gradle dependency
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-create-your-own-recyclerviewdelegate" title="1. Create your own RecyclerViewDelegate" class="md-nav__link">
+    1. Create your own RecyclerViewDelegate
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-create-a-recycler-item-to-bind-data-to-view" title="2. Create a recycler item to bind data to view" class="md-nav__link">
+    2. Create a recycler item to bind data to view
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-emit-recycler-items-with-a-presenter" title="3. Emit recycler items with a presenter" class="md-nav__link">
+    3. Emit recycler items with a presenter
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-dont-forget-to-bind-the-presenter-and-delegate" title="4. Don't forget to bind the presenter and delegate!" class="md-nav__link">
+    4. Don't forget to bind the presenter and delegate!
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -432,11 +533,81 @@
                 
                 
                 <h1 id="recyclerview-backed-delegates">RecyclerView Backed Delegates<a class="headerlink" href="#recyclerview-backed-delegates" title="Permanent link">&para;</a></h1>
+<p>This module gives plug and play support for simple and complex lists.</p>
+<p>You can build complex dashboards where each item in the RecyclerView is backed by a different presenter. If each card needs to own it's own logic for when to display - NO problem.</p>
+<p>You can also create simple lists that are composed of different view items, such as cards, headers, etc...</p>
+<p>Out of the box you will get:</p>
 <ul>
-<li>Coming soon. Will be tackled with <a href="https://github.com/vicidroiddev/amalia/issues/19">https://github.com/vicidroiddev/amalia/issues/19</a></li>
-<li>This should allow for complicated use cases where a recyclerview is backed by several presenters
-(Something like a dashboard view with multiple card types)</li>
+<li>Async diff support (send a bunch of items via pushState, only the items that changed will be processed)</li>
+<li>A wrapper around RecyclerView that allows you to focus on your own display logic</li>
 </ul>
+<h2 id="adding-gradle-dependency">Adding gradle dependency<a class="headerlink" href="#adding-gradle-dependency" title="Permanent link">&para;</a></h2>
+<p>Add the amalia dependency in your app level build.gradle file.</p>
+<p><div class="codehilite"><pre><span></span><span class="n">implementation</span> <span class="s1">&#39;com.github.vicidroiddev.amalia:amalia-recyclerview:{latest_version}@aar&#39;</span>
+</pre></div>
+<a href="https://jitpack.io/#vicidroiddev/amalia"><img alt="Jitpack" src="https://jitpack.io/v/vicidroiddev/amalia.svg" /></a></p>
+<h2 id="1-create-your-own-recyclerviewdelegate">1. Create your own <code class="codehilite"><span class="n">RecyclerViewDelegate</span></code><a class="headerlink" href="#1-create-your-own-recyclerviewdelegate" title="Permanent link">&para;</a></h2>
+<p>This is the view layer. You likely won't have much code to put in here.
+You can customize some options such as spacing or layout managers for the recyclerview if needed.
+See the constructor for additional options.</p>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyLongListViewDelegate</span><span class="p">(</span><span class="n">lifecycleOwner</span><span class="p">:</span> <span class="n">LifecycleOwner</span><span class="p">,</span> <span class="n">view</span><span class="p">:</span> <span class="n">View</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">RecyclerViewDelegate</span><span class="p">&lt;</span><span class="n">DiscoverTvItem</span><span class="p">,</span> <span class="n">DiscoverTvItem</span><span class="p">.</span><span class="n">ViewHolder</span><span class="p">&gt;(</span>
+        <span class="n">lifecycleOwner</span><span class="p">,</span>
+        <span class="n">view</span><span class="p">,</span>
+        <span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">the_recyclerview_id</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2 id="2-create-a-recycler-item-to-bind-data-to-view">2. Create a recycler item to bind data to view<a class="headerlink" href="#2-create-a-recycler-item-to-bind-data-to-view" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyRecyclerViewItem</span><span class="p">(</span><span class="k">val</span> <span class="py">myItem</span><span class="p">:</span> <span class="n">MyItem</span><span class="p">)</span> <span class="p">:</span> <span class="n">BaseRecyclerItem</span><span class="p">&lt;</span><span class="n">DiscoverTvItem</span><span class="p">.</span><span class="n">ViewHolder</span><span class="p">&gt;(</span><span class="n">discoverResult</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Pass a layout represented by the given item to display - CardView for example</span>
+    <span class="k">override</span> <span class="k">val</span> <span class="py">layoutRes</span> <span class="p">=</span> <span class="n">R</span><span class="p">.</span><span class="n">layout</span><span class="p">.</span><span class="n">my_list_item_layout</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">createViewHolder</span><span class="p">(</span><span class="n">itemView</span><span class="p">:</span> <span class="n">View</span><span class="p">)</span> <span class="p">=</span> <span class="n">MyViewHolder</span><span class="p">(</span><span class="n">itemView</span><span class="p">)</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">bind</span><span class="p">(</span><span class="n">viewHolder</span><span class="p">:</span> <span class="n">ViewHolder</span><span class="p">,</span> <span class="n">payloads</span><span class="p">:</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ChangePayload</span><span class="p">&lt;</span><span class="n">DiffItem</span><span class="p">&gt;&gt;)</span> <span class="p">{</span>
+        <span class="n">with</span><span class="p">(</span><span class="n">viewHolder</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// bind myItem to the view here</span>
+            <span class="n">name</span><span class="p">.</span><span class="n">text</span> <span class="p">=</span> <span class="n">myItem</span><span class="p">.</span><span class="n">name</span>
+
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">class</span> <span class="nc">MyViewHolder</span><span class="p">(</span><span class="n">itemView</span><span class="p">:</span> <span class="n">View</span><span class="p">)</span> <span class="p">:</span> <span class="n">BaseRecyclerViewHolder</span><span class="p">(</span><span class="n">itemView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">val</span> <span class="py">name</span><span class="p">:</span> <span class="n">TextView</span> <span class="p">=</span> <span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">my_name</span><span class="p">)</span>
+
+        <span class="n">init</span> <span class="p">{</span>
+            <span class="c1">// Set onclick listeners here or any other view listeners</span>
+
+            <span class="c1">// Push events here to be processed by your presenter</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2 id="3-emit-recycler-items-with-a-presenter">3. Emit recycler items with a presenter<a class="headerlink" href="#3-emit-recycler-items-with-a-presenter" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyLongListPresenter</span><span class="p">(</span><span class="k">private</span> <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">MyRepository</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">BasePresenter</span><span class="p">&lt;</span><span class="n">RecyclerViewState</span><span class="p">&lt;</span><span class="n">MyRecyclerViewItem</span><span class="p">&gt;,</span> <span class="n">ViewEvent</span><span class="p">&gt;(),</span>
+    <span class="n">Refreshable</span> <span class="p">{</span>
+
+    <span class="k">private</span> <span class="k">var</span> <span class="py">results</span><span class="p">:</span> <span class="n">MutableList</span><span class="p">&lt;</span><span class="n">DiscoverResult</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">mutableListOf</span><span class="p">()</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">loadInitialState</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">mainScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span>
+            <span class="c1">// Make a suspending call that could be expensive, get a long list of items from a db for example.</span>
+            <span class="k">val</span> <span class="py">items</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">fetchItems</span><span class="p">()</span>
+
+            <span class="c1">// Convert that data item (regular POJO class) to a RecyclerItem</span>
+            <span class="k">val</span> <span class="py">viewItems</span> <span class="p">=</span> <span class="n">items</span><span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">myItem</span> <span class="p">-&gt;</span> <span class="n">MyRecyclerViewItem</span><span class="p">(</span><span class="n">myItem</span><span class="p">)</span> <span class="p">}</span>
+
+            <span class="n">pushState</span><span class="p">(</span><span class="n">RecyclerViewState</span><span class="p">.</span><span class="n">ListLoaded</span><span class="p">(</span><span class="n">viewItems</span><span class="p">))</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2 id="4-dont-forget-to-bind-the-presenter-and-delegate">4. Don't forget to bind the presenter and delegate!<a class="headerlink" href="#4-dont-forget-to-bind-the-presenter-and-delegate" title="Permanent link">&para;</a></h2>
+<p>See getting started section for how to perform binding.</p>
                 
                   
                 
