@@ -27,6 +27,7 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.io.Closeable
 
 
 @RunWith(RobolectricTestRunner::class)
@@ -319,6 +320,23 @@ class BasePresenterTest : TestCase() {
 
         parentPresenter.onPresenterDestroyedInternal()
         verify(spyChild, times(1)).onPresenterDestroyedInternal()
+    }
+
+    @Test
+    fun `presenter calls close on closeable object cache when presenter is destroyed`() {
+        val closeableObj = spy(object : Closeable {
+            var closed = false
+            override fun close() {
+                closed = true
+            }
+        })
+
+        presenter.closeableObjects["my_key"] = closeableObj
+
+        presenter.onPresenterDestroyedInternal()
+
+        verify(closeableObj).close()
+        Assert.assertTrue(closeableObj.closed)
     }
 
     @Test
