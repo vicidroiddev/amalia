@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = "com.github.vicidroiddev"
+
+android {
+    compileSdkVersion toolchainVersions.compileSdk
+    toolchainVersions.buildTools
+
+    defaultConfig {
+        minSdkVersion toolchainVersions.minSdk
+        targetSdkVersion toolchainVersions.targetSdk
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    // Target Java 8 to use androidx.lifecycle.DefaultLifecycleObserver
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation deps.kotlinStdlib
+
+    implementation androidXDeps.appcompat
+    implementation androidXDeps.annotation
+    implementation androidXDeps.recyclerview
+    implementation (project(path: ':amalia-core')) {
+        transitive=true
+    }
+
+}

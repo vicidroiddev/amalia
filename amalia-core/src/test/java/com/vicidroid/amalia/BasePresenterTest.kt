@@ -24,8 +24,10 @@ import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.io.Closeable
 
 
 @RunWith(RobolectricTestRunner::class)
@@ -96,15 +98,17 @@ class BasePresenterTest : TestCase() {
     }
 
     @Test
-    fun `presenter is viewdelegate lifecycle aware upon creation`() {
-        bindPresenter()
+    fun `presenter is lifecycle aware upon creation`() {
+        val presenter = spy(activity.presenterProvider { (FakePresenter()) }.value)
+        presenter.bind(viewDelegate)
+
         assertNotNull(presenter.viewLifecycleOwner)
         verify(lifecycle).addObserver(presenter.viewLifecycleObserver)
         verify(presenter).onViewAttached(lifecycleOwner)
     }
 
     @Test
-    fun `presenter is viewdelegate lifecycle aware upon destruction`() {
+    fun `presenter is lifecycle aware upon destruction`() {
         bindPresenter()
         lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
 
@@ -118,7 +122,7 @@ class BasePresenterTest : TestCase() {
     fun `presenter is lifecycle aware when using bind without view delegate`() {
         val presenter = spy(FakePresenter())
         lifecycle.currentState = Lifecycle.State.CREATED
-        presenter.bindViewLifecycleOwner(lifecycleOwner)
+        presenter.bind(lifecycleOwner)
 
         verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
         verify(presenter).onViewAttached(lifecycleOwner)
@@ -131,30 +135,14 @@ class BasePresenterTest : TestCase() {
     }
 
     @Test
-    fun `throws exception when bind is performed with view delegate`() {
-        val presenter = spy(FakePresenter())
-        presenter.bind(viewDelegate)
-
-        var thrownException: Exception? = null
-
-        try {
-            presenter.bind(viewDelegate)
-        } catch (e: Exception) {
-            thrownException = e
-        } finally {
-            assertEquals(thrownException!!.message, "Second call to bind() is suspicious.")
-        }
-    }
-
-    @Test
     fun `throws exception when bind is performed twice with lifecycle owner`() {
         val presenter = spy(FakePresenter())
-        presenter.bindViewLifecycleOwner(lifecycleOwner)
+        presenter.bind(lifecycleOwner)
 
         var thrownException: Exception? = null
 
         try {
-            presenter.bindViewLifecycleOwner(lifecycleOwner)
+            presenter.bind(lifecycleOwner)
         } catch (e: Exception) {
             thrownException = e
         } finally {
@@ -215,7 +203,6 @@ class BasePresenterTest : TestCase() {
 
     @Test
     fun `ensure order of initialization prior to loadInitialState`() {
-
         val hooks: ((FakePresenterWithUri) -> Unit) = {
             it.currentUri = Uri.EMPTY
         }
@@ -229,36 +216,50 @@ class BasePresenterTest : TestCase() {
         val inorder = inOrder(mockedHooks, presenter)
 
         inorder.verify(mockedHooks).invoke(presenter)
-        inorder.verify(presenter).initializePresenter(any(), any())
+        inorder.verify(presenter).initializePresenter(eq(application), any() )
         inorder.verify(presenter).loadInitialState()
     }
 
     @Test
     fun `applies hooks to shared base presenter`() {
-        val currentUri = Uri.Builder()
-            .scheme("appName")
-            .authority("com.vicidroiddev.amalia")
-            .appendPath("person")
-            .appendPath("1")
-            .appendPath("module")
-            .appendPath("profile")
-            .build()
+        val currentUri = buildUri()
 
-        val hooks: ((FakePresenterWithUri) -> Unit)? = {
+        val hooks: ((FakePresenterWithUri) -> Unit) = {
             it.currentUri = currentUri
         }
 
         val mockedHooks = spy(hooks)
-
-        lifecycle.currentState = Lifecycle.State.CREATED
 
         val presenterThatAccessesUriEarly = spy(FakePresenterWithUri())
 
         activity.presenterProvider(mockedHooks) { presenterThatAccessesUriEarly }.value
 
         verify(presenterThatAccessesUriEarly).loadInitialState()
-        verify(mockedHooks)!!.invoke(presenterThatAccessesUriEarly)
+        verify(mockedHooks).invoke(presenterThatAccessesUriEarly)
         assertEquals(presenterThatAccessesUriEarly.currentUri, currentUri)
+    }
+
+    @Test
+    fun `applies hooks to child presenter`() {
+        val currentUri = buildUri()
+
+        val hooks: ((SharedBasePresenter) -> Unit) = {
+            it.currentUri = currentUri
+        }
+
+        val mockedHooks = spy(hooks)
+
+        val presenterThatAccessesUriEarly = spy(FakePresenterWithUri())
+        activity.presenterProvider(mockedHooks) { presenterThatAccessesUriEarly }.value
+
+        presenterThatAccessesUriEarly.bind(viewDelegate)
+
+        val childPresenterThatAccessesUriEarly = spy(ChildFakePresenterWithUri())
+        presenterThatAccessesUriEarly.childPresenterProvider(mockedHooks) { childPresenterThatAccessesUriEarly }.value
+
+        verify(childPresenterThatAccessesUriEarly).loadInitialState()
+        verify(mockedHooks).invoke(childPresenterThatAccessesUriEarly)
+        assertEquals(childPresenterThatAccessesUriEarly.currentUri, currentUri)
     }
 
     @Test
@@ -267,20 +268,17 @@ class BasePresenterTest : TestCase() {
         presenter.bind(viewDelegate)
         verify(presenter).onBindViewDelegate(viewDelegate)
         verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
-        assertNotNull(presenter.presenterLifecycleOwner)
     }
 
-//    // This fails because the activity is mocked and won't actually go through the regular handle lifecycle events.
-//    // IN the end onCleared is not called on the viewmodel
-//    @Test
-//    fun `destroys presenter lifecycleowner after using presenter provider`() {
-//        val controller = Robolectric.buildActivity(FragmentActivity::class.java).setup() ?
-//        val presenter = spy(activity.presenterProvider { (FakePresenter()) }.value)
-//        presenter.bind(viewDelegate)
-//        lifecycle.currentState = Lifecycle.State.DESTROYED
-//        verify(presenter).onPresenterDestroyed()
-//        assertNull(presenter.presenterLifecycleOwner)
-//    }
+    @Test
+    fun `calls onPresenterDestroyed when lifecycle activity is destroyed`() {
+        val controller = Robolectric.buildActivity(FragmentActivity::class.java).setup()
+        val activity = controller.get()
+        val parentPresenter = activity.presenterProvider { spy(FakeParentPresenter()) }.value
+
+        controller.destroy()
+        verify(parentPresenter).onPresenterDestroyed()
+    }
 
     @Test
     fun `child presenter provider leverages parent fields`() {
@@ -295,6 +293,34 @@ class BasePresenterTest : TestCase() {
 
         Assert.assertEquals(childPresenter.viewLifecycleOwner, viewDelegate.viewDelegateLifecycleOwner)
         Assert.assertEquals(childPresenter.applicationContext, activity.application)
+    }
+
+    @Test
+    fun `child presenter should receive onPresenterDestroyed if parent fires onPresenterDestroyed`() {
+        val parentPresenter = activity.presenterProvider { FakeParentPresenter() }.value.also { it.bind(viewDelegate) }
+        val spyChild = parentPresenter.childPresenterProvider { spy(FakePresenter()) }.value
+
+        Assert.assertEquals(parentPresenter.childPresenters, listOf(spyChild))
+
+        parentPresenter.onPresenterDestroyedInternal()
+        verify(spyChild, times(1)).onPresenterDestroyedInternal()
+    }
+
+    @Test
+    fun `presenter calls close on closeable object cache when presenter is destroyed`() {
+        val closeableObj = spy(object : Closeable {
+            var closed = false
+            override fun close() {
+                closed = true
+            }
+        })
+
+        presenter.closeableObjects["my_key"] = closeableObj
+
+        presenter.onPresenterDestroyedInternal()
+
+        verify(closeableObj).close()
+        Assert.assertTrue(closeableObj.closed)
     }
 
     @Test
@@ -352,6 +378,15 @@ class BasePresenterTest : TestCase() {
         override fun onViewEvent(event: ViewEvent) {}
     }
 
+    class ChildFakePresenterWithUri : SharedBasePresenter() {
+        override fun loadInitialState() {
+            //Access currentUri
+            this.currentUri
+        }
+
+        override fun onViewEvent(event: ViewEvent) {}
+    }
+
     class FakeParentPresenter : BasePresenter<ViewState, ViewEvent>() {
         override fun loadInitialState() {
         }
@@ -368,5 +403,16 @@ class BasePresenterTest : TestCase() {
     class FakeViewDelegate(lifecycleOwner: LifecycleOwner, rootView: View) :
         BaseViewDelegate<ViewState, ViewEvent>(lifecycleOwner, rootView) {
         override fun renderViewState(state: ViewState) {}
+    }
+
+    private fun buildUri(): Uri {
+        return Uri.Builder()
+            .scheme("appName")
+            .authority("com.vicidroiddev.amalia")
+            .appendPath("person")
+            .appendPath("1")
+            .appendPath("module")
+            .appendPath("profile")
+            .build()
     }
 }

@@ -47,12 +47,13 @@ inline fun <reified P : BasePresenter<*, *>> LifecycleOwner.presenterProvider(
  * It would be ideal to leverage this in [#onBindViewDelegate(...)]
  */
 inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterProvider(
+    noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) = lazy {
     viewLifecycleOwner ?: error("The parent presenter must be bound to a view delegate.")
-    presenterLifecycleOwner ?: error("The parent presenter must have been initialized.")
     presenterCreator().also { childPresenter ->
-        childPresenter.presenterLifecycleOwner = presenterLifecycleOwner
+        this.childPresenters += childPresenter
+        hooks?.invoke(childPresenter)
         childPresenter.initializePresenter(applicationContext, savedStateHandle)
     }
 }
@@ -90,8 +91,6 @@ inline fun <reified P : BasePresenter<*, *>> presenterProvider(
         is FragmentActivity -> ViewModelProviders.of(lifecycleOwner, savedStateFactory)[P::class.java]
         is Fragment -> ViewModelProviders.of(lifecycleOwner, savedStateFactory)[P::class.java]
         else -> error("Unsupported lifecycle owner detected.")
-    }.also { p ->
-        p.presenterLifecycleOwner = lifecycleOwner
     }
 }
 

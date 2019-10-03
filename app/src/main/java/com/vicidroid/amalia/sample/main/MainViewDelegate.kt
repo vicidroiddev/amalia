@@ -11,6 +11,7 @@ import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.main.dashboard.DashboardViewDelegate
 import com.vicidroid.amalia.sample.main.home.HomeViewDelegate
 import com.vicidroid.amalia.sample.main.discover.DiscoverViewDelegate
+import com.vicidroid.amalia.sample.test.TestRecyclerViewDelegate
 import com.vicidroid.amalia.sample.utils.inflate
 import com.vicidroid.amalia.ui.BaseViewDelegate
 
@@ -55,10 +56,20 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         )
     }
 
-    val navigationIdMap = SparseArray<BaseViewDelegate<*, *>>(3).apply {
+    val testRecyclerViewDelegate by viewDelegateProvider {
+        TestRecyclerViewDelegate(
+            viewLifeCycleOwner,
+            context.inflate(
+                R.layout.main_test_recyclerview_page
+            )
+        )
+    }
+
+    val navigationIdMap = SparseArray<BaseViewDelegate<*, *>>(4).apply {
         append(R.id.navigation_home, homeViewDelegate)
         append(R.id.navigation_dashboard, dashboardViewDelegate)
         append(R.id.navigation_discover, discoverViewDelegate)
+        append(R.id.navigation_test_recyclerview, testRecyclerViewDelegate)
     }
 
     init {

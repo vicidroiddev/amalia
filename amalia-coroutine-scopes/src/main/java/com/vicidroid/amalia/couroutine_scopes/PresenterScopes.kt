@@ -15,20 +15,20 @@ private const val DEFAULT_SCOPE_KEY = "com.vicidroid.amalia.core.PresenterScopes
  */
 val BasePresenter<*, *>.mainScope: CoroutineScope
     get() {
-        return (this as ViewModel).scopeFor(Dispatchers.Main)
+        return scopeFor(Dispatchers.Main)
     }
 
 val BasePresenter<*, *>.ioScope: CoroutineScope
     get() {
-        return (this as ViewModel).scopeFor(Dispatchers.IO)
+        return scopeFor(Dispatchers.IO)
     }
 
 val BasePresenter<*, *>.defaultScope: CoroutineScope
     get() {
-        return (this as ViewModel).scopeFor(Dispatchers.Default)
+        return scopeFor(Dispatchers.Default)
     }
 
-private fun ViewModel.scopeFor(dispatcher: CoroutineDispatcher): CoroutineScope {
+private fun BasePresenter<*, *>.scopeFor(dispatcher: CoroutineDispatcher): CoroutineScope {
     val key = when (dispatcher) {
         Dispatchers.Main -> MAIN_SCOPE_KEY
         Dispatchers.IO -> IO_SCOPE_KEY
@@ -36,10 +36,9 @@ private fun ViewModel.scopeFor(dispatcher: CoroutineDispatcher): CoroutineScope 
         else -> error("Unknown dispatcher provided")
     }
 
-    return this.getTag(key) ?: this.setTagIfAbsent(
-        key,
+    return this.closeableObjects.getOrPut(key) {
         CloseableCoroutineScope(SupervisorJob() + dispatcher)
-    )
+    } as CoroutineScope
 }
 
 /**

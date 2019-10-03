@@ -9,14 +9,16 @@ import androidx.lifecycle.*
 import com.vicidroid.amalia.core.persistance.PersistableState
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
 import com.vicidroid.amalia.ext.debugLog
+import com.vicidroid.amalia.ext.presenterDebugLog
 import com.vicidroid.amalia.ui.ViewDelegate
 import com.vicidroid.amalia.ui.ViewEventProvider
+import java.io.Closeable
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Backed by Android's ViewModel in order to easily survive configuration changes.
  */
-abstract class BasePresenter<S : ViewState, E : ViewEvent>
-    : ViewModel(),
+abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
     DefaultLifecycleObserver,
     PersistableState {
 
@@ -33,6 +35,14 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     private var viewStatePropagationPaused: Boolean = false
 
     /**
+     * A key value cache containing objects implementing [Closeable]
+     * Upon presenter destruction, close will be called on each value in this map.
+     * This is useful for say coroutine scopes which should cancel when going to another screen.
+     * It may be used for any other background tasks that you wish to cancel.
+     */
+    val closeableObjects = ConcurrentHashMap<String, Closeable>()
+
+    /**
      * The lifecycle owner belonging to the view delegate.
      * Note: This may differ from the lifecycle owner that is used to retain this presenter
      * - especially for fragments where the viewLifecycleOwner should be used.
@@ -43,14 +53,21 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
             value?.let { onBindViewLifecycleOwner(it) }
         }
 
-    var presenterLifecycleOwner: LifecycleOwner? = null
-
-    lateinit var viewLifecycleObserver: DefaultLifecycleObserver
+    internal lateinit var viewLifecycleObserver: DefaultLifecycleObserver
 
     fun stateLiveData(): LiveData<S> = viewStateLiveData
 
     val isStatePresent: Boolean
         get() = viewStateLiveData.value != null
+
+
+    /**
+     * Tracks child presenter invoked via [childPresenterProvider]
+     * Child presenters are just objects that live in a parent presenter.
+     * As such they are not added to the internal ViewModelStore (it's not necessary)
+     * We should propagate [onPresenterDestroyedInternal] to these childPresenters.
+     */
+    val childPresenters: MutableList<BasePresenter<*, *>> = mutableListOf()
 
     /**
      * Propagate states sent by this presenter to another observer.
@@ -62,12 +79,16 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
         stateLiveData().observe(viewLifecycleOwner!!, Observer { observer(it) })
     }
 
-    //TODO Consider making this a protectedmethod if legacy code can implement ViewDelegate nicely
-    @Deprecated(
-        message = "[bindViewLifecycleOwner] will be made protected soon. Instead implement [ViewDelegate] interface",
-        replaceWith = ReplaceWith("bind(lifecycleOwner, stateObserver)")
-    )
-    fun bindViewLifecycleOwner(viewLifecycleOwner: LifecycleOwner) {
+    /**
+     * Binds the presenter with a required [viewLifecycleOwner]
+     * This is used internally.
+     * It may be useful for legacy code where you want to move some code
+     * to a presenter but most of the logic is already in a fragment or activity.
+     *
+     * In most cases [bind(viewDelegate)] or [bind(viewLifecycleOwner)] is preferred.
+     */
+    fun bind(viewLifecycleOwner: LifecycleOwner) {
+        presenterDebugLog(TAG_INSTANCE, "bind(viewLifecycleOwner)")
         this.viewLifecycleOwner?.let { error("Second call to bind() is suspicious.") }
         this.viewLifecycleOwner = viewLifecycleOwner
 
@@ -82,12 +103,13 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     }
 
     /**
-     * Binds the presenter with a required [lifecycleOwner] and a [stateObserver]
+     * Binds the presenter with a required [viewLifecycleOwner] and a [stateObserver]
      * States will be propagated to the [stateObserver]
      * In most cases [bind(viewDelegate)] is preferred.
      */
-    fun bind(lifecycleOwner: LifecycleOwner, stateObserver: (S) -> Unit) {
-        bindViewLifecycleOwner(lifecycleOwner)
+    fun bind(viewLifecycleOwner: LifecycleOwner, stateObserver: (S) -> Unit) {
+        presenterDebugLog(TAG_INSTANCE, "bind(viewLifecycleOwner, stateObserver)")
+        bind(viewLifecycleOwner)
         propagateStatesTo(stateObserver)
     }
 
@@ -97,7 +119,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * • state propagation from presenter to delegate
      */
     fun bind(viewDelegate: ViewDelegate<S, E>) {
-        bindViewLifecycleOwner(viewDelegate.viewDelegateLifecycleOwner)
+        presenterDebugLog(TAG_INSTANCE, "bind(viewDelegate)")
+        bind(viewDelegate.viewDelegateLifecycleOwner)
 
         // Observe events sent via an event provider
         if (viewDelegate is ViewEventProvider<*>) {
@@ -138,6 +161,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     fun pushState(state: S, ignoreDuplicateState: Boolean = false) {
         if (ignoreDuplicateState && stateLiveData().value?.javaClass == state.javaClass) return
 
+        presenterDebugLog(TAG_INSTANCE, "Pushing state: $state")
+
         persistViewStateIfPossible(state)
 
         when (Looper.myLooper() == Looper.getMainLooper()) {
@@ -159,7 +184,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
     private fun persistViewStateIfPossible(state: S) {
         if (state is Parcelable) {
-            debugLog(TAG_INSTANCE, "Persisting: $state")
+            presenterDebugLog(TAG_INSTANCE, "Persisting: $state")
             persistViewState(TAG_INSTANCE, state)
         }
     }
@@ -188,18 +213,6 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
             onViewAttached(owner)
         }
 
-        override fun onResume(owner: LifecycleOwner) {
-        }
-
-        override fun onPause(owner: LifecycleOwner) {
-        }
-
-        override fun onStart(owner: LifecycleOwner) {
-        }
-
-        override fun onStop(owner: LifecycleOwner) {
-        }
-
         override fun onDestroy(owner: LifecycleOwner) {
             // When the view delegate's lifecycle owner indicates destruction, let's ensure we avoid any leaking.
             viewLifecycleOwner = null
@@ -220,10 +233,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
      * [viewDelegate] represents the view delegate that is bound to this presenter.
      */
     open fun onBindViewDelegate(viewDelegate: ViewDelegate<S, E>) {
-
     }
 
-    //TODO remove this in favour of [ViewDelegate]
     open fun onBindViewLifecycleOwner(owner: LifecycleOwner) {
     }
 
@@ -245,7 +256,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
     open fun loadInitialState() {}
 
     /**
-     * An explicit wrapper around viewmodels onCleared indication.
+     * An explicit wrapper around viewmodel's onCleared indication.
      * While presenters will survive configuration changes, they will be removed according to
      * to the lifecycle owner's ON_DESTROY event emitted by the instance of the activity or fragment.
      * Note this does not follow the viewlifecycleowner used for fragments.
@@ -258,11 +269,29 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
 
     }
 
-    @CallSuper
-    override fun onCleared() {
-        presenterLifecycleOwner = null
+    internal fun onPresenterDestroyedInternal() {
+        debugLog(TAG_INSTANCE, "onPresenterDestroyed()")
         onPresenterDestroyed()
+        clearCloseable()
+        childPresenters.forEach { it.onPresenterDestroyedInternal() }
     }
+
+    /**
+     * Note that viewmodel's onCleared is independent of configuration changes.
+     */
+    @CallSuper
+    final override fun onCleared() {
+        onPresenterDestroyedInternal()
+    }
+
+    /**
+     * Calls [Closeable.close] on cached objects that may need to clean up resources when the presenter is destroyed
+     */
+    private fun clearCloseable() {
+        closeableObjects.values.forEach { it.close() }
+        closeableObjects.clear()
+    }
+
     //endregion
 
     //region PERSISTABLE STATE
@@ -286,7 +315,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
         this.savedStateHandle = handle
 
         consumePersistedOrNull<S?>(viewStateKey(TAG_INSTANCE))?.let { state ->
-            debugLog(TAG_INSTANCE, "Pushing restored state: $state")
+            presenterDebugLog(TAG_INSTANCE, "View state is being restored: $state")
             pushState(state)
             onViewStateRestored(state)
         } ?: loadInitialState()
@@ -301,8 +330,4 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent>
         savedStateHandle[key] = value
     }
     //endregion
-
-    companion object {
-        val TAG: String = BasePresenter::class.java.simpleName
-    }
 }

@@ -22,12 +22,18 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     val rootView: View,
     injectLayoutId: Int? = null,
     rootViewAnchorId: Int = R.id.amalia_stub
-) : LifecycleOwner, ViewDelegateLifecycleCallbacks, ViewDelegate<S, E>, ViewEventProvider<E> {
+) : ViewDelegateLifecycleCallbacks, ViewDelegate<S, E>, ViewEventProvider<E> {
 
     constructor(components: DelegateComponents) : this(
         components.viewLifecycleOwner,
         components.rootView
     )
+
+    /**
+     * Exposes the lifecycle from the [viewDelegateLifecycleOwner]
+     */
+    val lifecycle: Lifecycle
+        get() = viewDelegateLifecycleOwner.lifecycle
 
     private lateinit var viewAttachStateChangeListener: View.OnAttachStateChangeListener
 
@@ -66,7 +72,13 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
             viewAttachStateChangeListener = createAttachStateChangeListener()
             rootView.addOnAttachStateChangeListener(viewAttachStateChangeListener)
             // Invoke the callbacks on this view delegate if there is an attached root.
-            rootView.parent?.let { viewAttachStateChangeListener.onViewAttachedToWindow(rootView) }
+            rootView.parent?.let {
+                rootView.post {
+                    viewAttachStateChangeListener.onViewAttachedToWindow(
+                        rootView
+                    )
+                }
+            }
         }
     }
 
@@ -112,11 +124,6 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     override fun propagateEventsTo(observer: (E) -> Unit) {
         eventLiveData.observe(viewDelegateLifecycleOwner, Observer { observer(it) })
     }
-
-    /**
-     * Exposes the lifecycle from the [viewDelegateLifecycleOwner]
-     */
-    override fun getLifecycle() = viewDelegateLifecycleOwner.lifecycle
 
     /**
      * Sends event from some interaction or UI change to an active subscriber (Presenter)
