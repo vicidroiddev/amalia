@@ -135,22 +135,6 @@ class BasePresenterTest : TestCase() {
     }
 
     @Test
-    fun `throws exception when bind is performed with view delegate`() {
-        val presenter = spy(FakePresenter())
-        presenter.bind(viewDelegate)
-
-        var thrownException: Exception? = null
-
-        try {
-            presenter.bind(viewDelegate)
-        } catch (e: Exception) {
-            thrownException = e
-        } finally {
-            assertEquals(thrownException!!.message, "Second call to bind() is suspicious.")
-        }
-    }
-
-    @Test
     fun `throws exception when bind is performed twice with lifecycle owner`() {
         val presenter = spy(FakePresenter())
         presenter.bind(lifecycleOwner)
