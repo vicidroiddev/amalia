@@ -2,12 +2,12 @@
 
 ## Amalia 0.4.0
 
-_2019-XX_XX_
+_2019-10_02_
 
 #####New module:
 
 * RecyclerView support
-    * Can support support numerous presenters that support a different recycler item
+    * Can support numerous presenters that rely on different recycler item
 
 #####Library changes:
 
