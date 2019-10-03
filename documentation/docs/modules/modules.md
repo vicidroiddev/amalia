@@ -16,7 +16,7 @@ implementation ("com.github.vicidroiddev.amalia:amalia-core:{latest_version}@aar
 implementation 'com.github.vicidroiddev.amalia:amalia-coroutine-scopes:{latest_version}@aar'
 ```
 
-###RecyclerView Helper (Coming soon)
+###RecyclerView Helper (0.4.0+)
 
 ```groovy
 implementation 'com.github.vicidroiddev.amalia:amalia-recyclerview:{latest_version}@aar'

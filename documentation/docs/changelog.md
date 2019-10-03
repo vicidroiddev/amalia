@@ -7,7 +7,7 @@ _2019-10_02_
 #####New module:
 
 * RecyclerView support
-    * Can support numerous presenters that rely on different recycler item
+    * Can support numerous presenters that rely on different recycler items
 
 #####Library changes:
 
