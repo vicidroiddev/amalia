@@ -293,9 +293,38 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        View Delegate
+      </label>
+    
     <a href="./" title="View Delegate" class="md-nav__link md-nav__link--active">
       View Delegate
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-apply-important-fields-to-all-events" title="How do I apply important fields to all events?" class="md-nav__link">
+    How do I apply important fields to all events?
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -418,6 +447,22 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-apply-important-fields-to-all-events" title="How do I apply important fields to all events?" class="md-nav__link">
+    How do I apply important fields to all events?
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -441,6 +486,29 @@
 <li>Should contain your various view listeners (<code class="codehilite"><span class="n">onClick</span></code>,  <code class="codehilite"><span class="n">onCheckChanged</span></code>  etc..)</li>
 <li>Should leverage  <code class="codehilite"><span class="n">pushEvent</span><span class="p">(...)</span></code>  to expose a meaningful  <code class="codehilite"><span class="n">ViewEvent</span></code></li>
 </ul>
+<h2 id="how-do-i-apply-important-fields-to-all-events">How do I apply important fields to all events?<a class="headerlink" href="#how-do-i-apply-important-fields-to-all-events" title="Permanent link">&para;</a></h2>
+<p>You likely have a base class for your own <code class="codehilite"><span class="n">MyAppBaseViewDelegate</span></code>.
+In there you can override <code class="codehilite"><span class="n">onInterceptEventChain</span><span class="p">()</span></code>.</p>
+<div class="codehilite"><pre><span></span><span class="c1">// Create your base view event. All of your view events should extend from this event</span>
+<span class="k">open</span> <span class="k">class</span> <span class="nc">BaseDefaultViewEvent</span> <span class="p">:</span> <span class="n">ViewEvent</span> <span class="p">{</span>
+    <span class="k">lateinit</span> <span class="k">var</span> <span class="py">importantSharedField</span><span class="p">:</span> <span class="n">String</span>
+<span class="p">}</span>
+
+<span class="c1">// Create your own variant of a BaseMyAppViewDelegate</span>
+<span class="c1">// Note that the event extends from `BaseDefaultViewEvent`</span>
+<span class="k">abstract</span> <span class="k">class</span> <span class="nc">MyAppBaseViewDelegate</span><span class="p">&lt;</span><span class="n">S</span> <span class="p">:</span> <span class="n">ViewState</span><span class="p">,</span> <span class="n">E</span> <span class="p">:</span> <span class="n">BaseDefaultViewEvent</span><span class="p">&gt;(</span>
+    <span class="n">view</span><span class="p">:</span> <span class="n">View</span><span class="p">,</span>
+    <span class="n">lifecycleOwner</span><span class="p">:</span> <span class="n">LifecycleOwner</span>
+<span class="p">)</span> <span class="p">:</span> <span class="n">BaseViewDelegate</span><span class="p">&lt;</span><span class="n">S</span><span class="p">,</span><span class="n">E</span><span class="p">&gt;(</span><span class="n">lifecycleOwner</span><span class="p">,</span> <span class="n">view</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// Override this method and inject any fields you defined</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onInterceptEventChain</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">E</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">event</span><span class="p">.</span><span class="n">importantSharedField</span> <span class="p">=</span> <span class="n">provideImportantField</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="k">abstract</span> <span class="k">fun</span> <span class="nf">provideImportantField</span><span class="p">()</span> <span class="p">:</span> <span class="n">String</span>
+<span class="p">}</span>
+</pre></div>
                 
                   
                 
