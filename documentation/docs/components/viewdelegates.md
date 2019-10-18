@@ -7,3 +7,32 @@
 -   Should contain your  `findViewById`  calls
 -   Should contain your various view listeners (`onClick`,  `onCheckChanged`  etc..)
 -   Should leverage  `pushEvent(...)`  to expose a meaningful  `ViewEvent`
+
+
+## How do I apply important fields to all events?
+
+You likely have a base class for your own `MyAppBaseViewDelegate`.
+In there you can override `onInterceptEventChain()`.
+
+
+```kotlin
+// Create your base view event. All of your view events should extend from this event
+open class BaseDefaultViewEvent : ViewEvent {
+    lateinit var importantSharedField: String
+}
+
+// Create your own variant of a BaseMyAppViewDelegate
+// Note that the event extends from `BaseDefaultViewEvent`
+abstract class MyAppBaseViewDelegate<S : ViewState, E : BaseDefaultViewEvent>(
+    view: View,
+    lifecycleOwner: LifecycleOwner
+) : BaseViewDelegate<S,E>(lifecycleOwner, view) {
+
+    // Override this method and inject any fields you defined
+    override fun onInterceptEventChain(event: E) {
+        event.importantSharedField = provideImportantField()
+    }
+
+    abstract fun provideImportantField() : String
+}
+```

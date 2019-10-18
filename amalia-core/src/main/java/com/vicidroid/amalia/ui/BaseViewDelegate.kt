@@ -126,9 +126,18 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     }
 
     /**
+     * Allows subclasses to intercept events that are sent.
+     * This may be useful to inject important fields into some base event that is widely used in your app.
+     */
+    open fun onInterceptEventChain(event : E) {
+
+    }
+
+    /**
      * Sends event from some interaction or UI change to an active subscriber (Presenter)
      */
     fun pushEvent(event: E) {
+        onInterceptEventChain(event)
         eventLiveData.value = event
     }
 

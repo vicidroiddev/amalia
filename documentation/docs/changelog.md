@@ -1,5 +1,14 @@
 #Changelog - Amalia
 
+## Amalia 0.4.1
+
+_2019-10_18_
+
+#####Library changes:
+
+* ViewDelegates can now intercept view events to easily apply lateinit fields residing in some BaseEvent
+
+
 ## Amalia 0.4.0
 
 _2019-10_02_
