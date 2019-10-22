@@ -16,7 +16,13 @@ import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
 import com.vicidroid.amalia.core.viewdiff.ViewDiffProvider
 import com.vicidroid.amalia.ext.DEBUG_LOGGING
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     override val viewDelegateLifecycleOwner: LifecycleOwner,
     val rootView: View,
@@ -28,6 +34,8 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
         components.viewLifecycleOwner,
         components.rootView
     )
+
+    private val mainScope: CoroutineScope = CoroutineScope(Dispatchers.Main.immediate)
 
     /**
      * Exposes the lifecycle from the [viewDelegateLifecycleOwner]
@@ -138,7 +146,25 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
      */
     fun pushEvent(event: E) {
         onInterceptEventChain(event)
-        eventLiveData.value = event
+
+        // Questionable if we should tie this to the event class type or just do a real equals on the event
+        val debounceDelay =
+            if (event is ClickViewEvent && eventLiveData.value?.javaClass == event.javaClass) 3000L else 0L
+
+        // Questionable if we should always delay.
+        // What if we have a delete button on each list item.
+        // Should we really delay this for each button press.
+        mainScope.launch {
+            flow<E> {
+                if (debounceDelay > 0) delay(debounceDelay)
+                this.emit(event)
+            }
+                .collect {
+                    Log.v("ViewDelegate", "Actually sending event now.")
+                    eventLiveData.value = event
+                }
+        }
+//        eventLiveData.value = event
     }
 
     fun toast(id: Int) {
@@ -196,6 +222,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
             }
 
             override fun onViewDetachedFromWindow(v: View) {
+                mainScope.cancel()
                 lifecycle.removeObserver(lifecycleObserver)
                 onViewDetached()
             }
