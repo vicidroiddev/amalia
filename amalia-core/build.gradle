@@ -53,6 +53,7 @@ androidExtensions {
 
 dependencies {
     implementation deps.kotlinStdlib
+    implementation deps.coroutines
 
     testImplementation deps.junit
     testImplementation deps.mjaarmanMockito
