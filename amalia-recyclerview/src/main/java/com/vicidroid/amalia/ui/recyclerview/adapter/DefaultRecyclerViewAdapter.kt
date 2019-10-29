@@ -11,7 +11,6 @@ import com.vicidroid.amalia.ext.recyclerViewDebugLog
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewHolderInteractionEvent
 import com.vicidroid.amalia.ui.recyclerview.diff.ChangePayload
 import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
-import com.vicidroid.amalia.ui.recyclerview.diff.RecyclerItemDiffCallback
 
 open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
     override val lifecycleOwner: LifecycleOwner,
@@ -22,14 +21,8 @@ open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerVie
     val viewHolderEventStore = ViewEventStore<RecyclerViewHolderInteractionEvent>()
     private val asyncListDiffer = AsyncListDiffer(this, asyncDiffCallback)
 
-    /**
-     * A list of [RecyclerItem] which wraps the data and allows bind and unbind calls.
-     * Only used if [USE_ASYNC_LIST_DIFFER] is false
-     */
-    private var items: List<I> = mutableListOf()
-
-    val adapterItems: List<I>
-        get() = if (USE_ASYNC_LIST_DIFFER) asyncListDiffer.currentList else items
+    val adapterItems: List<AbstractRecyclerItem>
+        get() = asyncListDiffer.currentList
 
     /**
      * Match view types to a given view item for easy creation of the [RecyclerView.ViewHolder].
@@ -94,27 +87,9 @@ open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerVie
 
     override fun getItemViewType(position: Int) = adapterItems[position].viewType
 
-    private fun calculateDiff(oldItems: List<I>, newItems: List<I>) =
-        DiffUtil.calculateDiff(
-            RecyclerItemDiffCallback(
-                oldItems,
-                newItems
-            )
-        )
-
     fun update(newItems: List<I>) {
         recyclerViewDebugLog("update(): newItems.size() = ${newItems.size}")
 
-        if (!USE_ASYNC_LIST_DIFFER) {
-            val diff = calculateDiff(adapterItems, newItems)
-            items = newItems
-
-            diff.dispatchUpdatesTo(this)
-            //TODO page registry so we can automatically add viewtypes for flows in a unique way.
-            // This will solve the problem of having two pages with the same layout but represented by different viewholders.
-        } else {
-            updateAsync(newItems)
-        }
 
         cacheViewTypeToItem(newItems)
     }
@@ -130,9 +105,5 @@ open class DefaultRecyclerViewAdapter<I : RecyclerItem<VH>, VH : BaseRecyclerVie
 
         viewTypeToItemCache.clear()
         items.distinctBy { it.viewType }.forEach { i -> viewTypeToItemCache.append(i.viewType, i) }
-    }
-
-    companion object {
-        const val USE_ASYNC_LIST_DIFFER = true
     }
 }
