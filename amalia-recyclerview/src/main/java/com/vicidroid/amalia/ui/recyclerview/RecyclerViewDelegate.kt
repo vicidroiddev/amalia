@@ -15,7 +15,7 @@ import com.vicidroid.amalia.ui.recyclerview.adapter.DefaultRecyclerViewAdapter
 import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
 import com.vicidroid.amalia.ui.recyclerview.diff.AsyncRecyclerItemDiffCallback
 
-open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolder>(
+open class RecyclerViewDelegate(
     viewLifeCycleOwner: LifecycleOwner,
     rootView: View,
     @IdRes recyclerViewId: Int = R.id.amalia_recycled_list,
@@ -25,10 +25,10 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
         rootView.context,
         spaceSeparationInDp
     ),
-    asyncDiffCallback: DiffUtil.ItemCallback<I> = AsyncRecyclerItemDiffCallback(),
+    asyncDiffCallback: DiffUtil.ItemCallback<RecyclerItem> = AsyncRecyclerItemDiffCallback(),
     recyclerViewHasFixedSize: Boolean = true
 ) :
-    BaseViewDelegate<RecyclerViewState<I>, ViewEvent>(
+    BaseViewDelegate<RecyclerViewState<RecyclerItem>, ViewEvent>(
         viewLifeCycleOwner,
         rootView
     ) {
@@ -63,7 +63,7 @@ open class RecyclerViewDelegate<I : RecyclerItem<VH>, VH : BaseRecyclerViewHolde
     open fun onInterceptEventChain(event: RecyclerViewHolderInteractionEvent) {
     }
 
-    override fun renderViewState(state: RecyclerViewState<I>) {
+    override fun renderViewState(state: RecyclerViewState<RecyclerItem>) {
         when (state) {
             is RecyclerViewState.ListLoaded -> adapter.update(state.items)
         }

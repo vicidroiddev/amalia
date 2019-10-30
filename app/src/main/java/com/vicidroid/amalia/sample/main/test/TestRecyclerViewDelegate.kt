@@ -10,7 +10,7 @@ import com.vicidroid.amalia.ui.recyclerview.RecyclerViewDelegate
 class TestRecyclerViewDelegate(
     viewLifeCycleOwner: LifecycleOwner,
     rootView: View
-) : RecyclerViewDelegate<TestRecyclerItem, TestRecyclerItem.TestViewHolder>(
+) : RecyclerViewDelegate(
     viewLifeCycleOwner,
     rootView,
     R.id.main_test_recyclerview_list_root,

@@ -9,10 +9,11 @@ import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverRepository
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverResult
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewState
+import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
 import kotlinx.coroutines.launch
 
 class DiscoverPresenter(private val repository: DiscoverRepository) :
-    BasePresenter<RecyclerViewState<DiscoverTvItem>, ViewEvent>(),
+    BasePresenter<RecyclerViewState<RecyclerItem>, ViewEvent>(),
     Refreshable {
 
     private var results: MutableList<DiscoverResult> = mutableListOf()
@@ -26,7 +27,13 @@ class DiscoverPresenter(private val repository: DiscoverRepository) :
 
             pushState(
                 RecyclerViewState.ListLoaded(
-                    results.map { DiscoverTvItem(it) })
+                    results.mapIndexed { index, discoverResult ->
+                            listOf(
+                                DiscoverTvItemHeader(discoverResult.firstAirDate),
+                                DiscoverTvItem(discoverResult)
+                            )
+                    }.flatten()
+                )
             )
         }
     }

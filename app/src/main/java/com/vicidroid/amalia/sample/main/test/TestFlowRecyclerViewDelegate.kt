@@ -16,7 +16,7 @@ class TestFlowRecyclerViewDelegate(
     activity: FragmentActivity,
     rootView: View,
     @IdRes recyclerViewId: Int
-) : RecyclerViewDelegate<TestRecyclerItem, TestRecyclerItem.TestViewHolder>(
+) : RecyclerViewDelegate(
     activity,
     rootView,
     recyclerViewId,

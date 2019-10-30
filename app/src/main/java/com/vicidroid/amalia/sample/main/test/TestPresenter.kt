@@ -5,9 +5,10 @@ import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
 import com.vicidroid.amalia.sample.main.test.TestRecyclerItem
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewState
+import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
 
 
-class TestPresenter : BasePresenter<RecyclerViewState<TestRecyclerItem>, ViewEvent>(), Refreshable {
+class TestPresenter : BasePresenter<RecyclerViewState<RecyclerItem>, ViewEvent>(), Refreshable {
 
     var data = mutableListOf<TestRecyclerItem>()
 

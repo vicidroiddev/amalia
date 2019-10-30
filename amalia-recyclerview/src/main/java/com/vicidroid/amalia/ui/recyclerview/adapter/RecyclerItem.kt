@@ -7,18 +7,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.ui.recyclerview.diff.ChangePayload
 import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
 
-interface RecyclerItem<VH : RecyclerView.ViewHolder> {
+interface RecyclerItem {
     /**
      * Called by adapter via [RecyclerView.Adapter.onBindViewHolder]
      * [payloads] denotes the change payload when items are the same but contents differ somewhat
      */
-    fun bind(viewHolder: VH, payloads: List<ChangePayload<DiffItem>>)
+    fun prepareBind(viewHolder: BaseRecyclerViewHolder, payloads: List<ChangePayload<DiffItem>>)
 
     /**
      * Called by adapter via [RecyclerView.Adapter.onViewRecycled]
      * Ensure editable data is saved prior to recycling for EditTexts or Checkboxes.
      */
-    fun unbind(viewHolder: VH) {}
+    fun prepareUnbind(viewHolder: BaseRecyclerViewHolder)
 
     /**
      * Called by adapter via [RecyclerView.Adapter.getItemId]
@@ -29,9 +29,8 @@ interface RecyclerItem<VH : RecyclerView.ViewHolder> {
      */
     val uniqueItemId: Long
 
-
     /**
-     * Return the item you wish to perform a diff on using [RecyclerItemDiffCallback] or [AsyncRecyclerItemDiffCallback]
+     * Return the item you wish to perform a diff on using or [AsyncRecyclerItemDiffCallback]
      */
     val diffItem: DiffItem
 
@@ -39,16 +38,14 @@ interface RecyclerItem<VH : RecyclerView.ViewHolder> {
      * By default the view type for a recycler view item can be tied to the inflated layout.
      * This may be overridden if different view types are required for the same layout id.
      */
-    //TODO: For flows, we should automatically set ids pages on the actual item
     val viewType: Int
         get() = layoutRes
 
     val layoutRes: Int
 
-    fun createViewHolder(itemView: View): VH
+    fun createViewHolder(itemView: View): BaseRecyclerViewHolder
 
     fun inflateView(parent: ViewGroup) =
         LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
-
 }
 

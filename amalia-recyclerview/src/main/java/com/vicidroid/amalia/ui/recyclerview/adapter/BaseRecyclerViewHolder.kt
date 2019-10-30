@@ -13,10 +13,10 @@ import com.vicidroid.amalia.ui.recyclerview.RecyclerViewHolderInteractionEvent
 abstract class BaseRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     internal lateinit var eventStore: ViewEventStore<RecyclerViewHolderInteractionEvent>
     lateinit var adapter: RecyclerViewAdapter
-    var adapterItem: RecyclerItem<*>? = null
+    var adapterItem: RecyclerItem? = null
 
     fun provideExtras(
-        adapterItem: RecyclerItem<*>,
+        adapterItem: RecyclerItem,
         adapter: RecyclerViewAdapter,
         eventStore: ViewEventStore<RecyclerViewHolderInteractionEvent>
     ) {
