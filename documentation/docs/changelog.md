@@ -1,5 +1,13 @@
 #Changelog - Amalia
 
+## Amalia 0.5.0-EAP-XX
+
+_20XX-XX_XX_
+
+#####Library changes:
+
+* Fixed bug in PresenterProvider when used for multiple presenters in Java.
+
 ## Amalia 0.4.1
 
 _2019-10_18_
