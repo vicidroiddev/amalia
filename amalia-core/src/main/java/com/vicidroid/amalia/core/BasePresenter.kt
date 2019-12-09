@@ -138,6 +138,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
                 viewDelegate.viewDelegateLifecycleOwner,
                 Observer { state -> viewDelegate.renderViewState(state) })
 
+        viewDelegate.onBindViewDelegate()
         onBindViewDelegate(viewDelegate)
     }
 

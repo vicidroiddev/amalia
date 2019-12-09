@@ -22,7 +22,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     val rootView: View,
     injectLayoutId: Int? = null,
     rootViewAnchorId: Int = R.id.amalia_stub
-) : ViewDelegateLifecycleCallbacks, ViewDelegate<S, E>, ViewEventProvider<E> {
+) : ViewDelegate<S, E>, ViewEventProvider<E> {
 
     constructor(components: DelegateComponents) : this(
         components.viewLifecycleOwner,

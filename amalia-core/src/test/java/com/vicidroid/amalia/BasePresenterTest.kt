@@ -202,6 +202,12 @@ class BasePresenterTest : TestCase() {
     }
 
     @Test
+    fun `viewdelegate receives bind callback`() {
+        bindPresenter()
+        verify(viewDelegate).onBindViewDelegate()
+    }
+
+    @Test
     fun `ensure order of initialization prior to loadInitialState`() {
         val hooks: ((FakePresenterWithUri) -> Unit) = {
             it.currentUri = Uri.EMPTY

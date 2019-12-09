@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
 
-interface ViewDelegate<S : ViewState, E : ViewEvent> {
+interface ViewDelegate<S : ViewState, E : ViewEvent> : ViewDelegateLifecycleCallbacks  {
 
     val viewDelegateLifecycleOwner: LifecycleOwner
 
