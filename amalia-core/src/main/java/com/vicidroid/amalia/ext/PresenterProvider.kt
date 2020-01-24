@@ -113,9 +113,9 @@ val LifecycleOwner.savedStateRegistryOwner: SavedStateRegistryOwner
  * Moreover, this will support constructor arguments in presenters.
  */
 
-class PresenterProvider {
+class PresenterProvider<P : BasePresenter<*, *>> {
     @Suppress("UNCHECKED_CAST")
-    fun <P : BasePresenter<*, *>> provide(fragment: Fragment, presenterCreator: () -> BasePresenter<*, *>): P {
+    fun provide(fragment: Fragment, presenterCreator: () -> BasePresenter<*, *>): P {
         return fragment.presenterProvider { presenterCreator() }.value as P
     }
 }
