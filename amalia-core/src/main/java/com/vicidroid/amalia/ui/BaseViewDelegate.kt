@@ -22,7 +22,9 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     val rootView: View,
     injectLayoutId: Int? = null,
     rootViewAnchorId: Int = R.id.amalia_stub
-) : ViewDelegate<S, E>, ViewEventProvider<E> {
+) : ViewDelegate<S, E>, ViewEventProvider<E>,
+    ViewDelegateLifecycleCallbacks,
+    ViewDelegateInteractions {
 
     constructor(components: DelegateComponents) : this(
         components.viewLifecycleOwner,
@@ -53,7 +55,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
 
     private var hostActivity: AppCompatActivity? = null
 
-    val context: Context = rootView.context
+    override val context: Context = rootView.context
 
     /**
      * The parent view delegate is accessible from a child when using [com.vicidroid.amalia.ext.viewDelegateProvider]
@@ -129,7 +131,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
      * Allows subclasses to intercept events that are sent.
      * This may be useful to inject important fields into some base event that is widely used in your app.
      */
-    open fun onInterceptEventChain(event : E) {
+    open fun onInterceptEventChain(event: E) {
 
     }
 
@@ -164,6 +166,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     }
 
     private fun onDestroyInternal() {
+        if (DEBUG_LOGGING) Log.v(this.javaClass.simpleName, "onViewDetached")
         onViewDetached()
         lifecycle.removeObserver(lifecycleObserver)
         rootView.removeOnAttachStateChangeListener(viewAttachStateChangeListener)
@@ -185,7 +188,6 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
      * Recall that activities may not go through destruction when backgrounded.
      */
     override fun onViewDetached() {
-        if (DEBUG_LOGGING) Log.v(this.javaClass.simpleName, "onViewDetached")
     }
 
     private fun createAttachStateChangeListener(): View.OnAttachStateChangeListener =
