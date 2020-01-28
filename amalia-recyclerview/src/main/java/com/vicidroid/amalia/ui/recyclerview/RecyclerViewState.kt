@@ -1,7 +1,8 @@
 package com.vicidroid.amalia.ui.recyclerview
 
 import com.vicidroid.amalia.core.ViewState
+import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
 
-abstract class RecyclerViewState<T> : ViewState {
-    data class ListLoaded<T>(val items: List<T>) : RecyclerViewState<T>()
+abstract class RecyclerViewState : ViewState {
+    data class ListLoaded(val items: List<RecyclerItem>) : RecyclerViewState()
 }

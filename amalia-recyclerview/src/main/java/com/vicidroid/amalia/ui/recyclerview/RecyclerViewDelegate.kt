@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.R
 import com.vicidroid.amalia.core.ViewEvent
+import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
 import com.vicidroid.amalia.ui.BaseViewDelegate
 import com.vicidroid.amalia.ui.recyclerview.adapter.BaseRecyclerViewHolder
@@ -28,7 +29,7 @@ open class RecyclerViewDelegate(
     asyncDiffCallback: DiffUtil.ItemCallback<RecyclerItem> = AsyncRecyclerItemDiffCallback(),
     recyclerViewHasFixedSize: Boolean = true
 ) :
-    BaseViewDelegate<RecyclerViewState<RecyclerItem>, ViewEvent>(
+    BaseViewDelegate<ViewState, ViewEvent>(
         viewLifeCycleOwner,
         rootView
     ) {
@@ -63,7 +64,7 @@ open class RecyclerViewDelegate(
     open fun onInterceptEventChain(event: RecyclerViewHolderInteractionEvent) {
     }
 
-    override fun renderViewState(state: RecyclerViewState<RecyclerItem>) {
+    override fun renderViewState(state: ViewState) {
         when (state) {
             is RecyclerViewState.ListLoaded -> adapter.update(state.items)
         }

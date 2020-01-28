@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.lifecycle.mainScope
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.ViewEvent
+import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.ext.debugLog
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverRepository
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverResult
@@ -13,7 +14,7 @@ import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
 import kotlinx.coroutines.launch
 
 class DiscoverPresenter(private val repository: DiscoverRepository) :
-    BasePresenter<RecyclerViewState<RecyclerItem>, ViewEvent>(),
+    BasePresenter<ViewState, ViewEvent>(),
     Refreshable {
 
     private var results: MutableList<DiscoverResult> = mutableListOf()

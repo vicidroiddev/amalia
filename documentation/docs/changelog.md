@@ -7,7 +7,8 @@ _20XX-XX_XX_
 #####Library changes:
 
 * Fixed crash when leveraging PresenterProvider for multiple presenters from Java
-• Ensure presenter tells view delegate it has has been bound via onBindViewDelegate()
+* Ensure presenter tells view delegate it has has been bound via onBindViewDelegate()
+* Reduced restriction on ViewState for RecyclerViewDelegate
 
 
 ## Amalia 0.4.1

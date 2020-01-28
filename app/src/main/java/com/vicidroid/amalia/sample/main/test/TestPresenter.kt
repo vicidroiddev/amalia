@@ -2,14 +2,14 @@ package com.vicidroid.amalia.sample.test
 
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.ViewEvent
+import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
 import com.vicidroid.amalia.sample.main.test.TestRecyclerItem
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewState
 import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
 
 
-class TestPresenter : BasePresenter<RecyclerViewState<RecyclerItem>, ViewEvent>(), Refreshable {
-
+class TestPresenter : BasePresenter<ViewState, ViewEvent>(), Refreshable {
     var data = mutableListOf<TestRecyclerItem>()
 
     override fun loadInitialState() {
