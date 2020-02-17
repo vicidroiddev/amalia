@@ -4,12 +4,20 @@
 
 _20XX-XX_XX_
 
-#####Library changes:
+##### Library changes:
 
 * Fixed crash when leveraging PresenterProvider for multiple presenters from Java
 * Ensure presenter tells view delegate it has has been bound via onBindViewDelegate()
 * Reduced restriction on ViewState for RecyclerViewDelegate
 
+##### Dependency updates:
+
+* See commit for details:
+    - gradle plugin, gradle wrapper
+    - junit, kotlin, lifecycle
+    - appcompat, corektx, constraintlayout, recyclerview, savedstate
+    - mockito, roboelectric, coroutines
+    - material, retrofit, moshi, glide, leak canary
 
 ## Amalia 0.4.1
 

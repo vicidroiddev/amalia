@@ -1,6 +1,6 @@
 package com.vicidroid.amalia.ext
 
-import android.content.Context
+import android.app.Application
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -75,26 +75,26 @@ inline fun <reified P : BasePresenter<*, *>> presenterProvider(
     defaultArgs: Bundle? = null
 ) = lazy(LazyThreadSafetyMode.NONE) {
 
-    val savedStateFactory = object : AbstractSavedStateVMFactory(savedStateRegistryOwner, defaultArgs) {
+    val savedStateFactory = object : AbstractSavedStateViewModelFactory(savedStateRegistryOwner, defaultArgs) {
         @Suppress("UNCHECKED_CAST")
         override fun <VM : ViewModel?> create(key: String, modelClass: Class<VM>, handle: SavedStateHandle): VM {
             return (presenterCreator() as VM).also { presenter ->
                 (presenter as P).let {
                     externalHooks?.invoke(it)
-                    presenter.initializePresenter(lifecycleOwner.applicationContext, handle)
+                    presenter.initializePresenter(lifecycleOwner.application, handle)
                 }
             }
         }
     }
 
     when (lifecycleOwner) {
-        is FragmentActivity -> ViewModelProviders.of(lifecycleOwner, savedStateFactory)[P::class.java]
-        is Fragment -> ViewModelProviders.of(lifecycleOwner, savedStateFactory)[P::class.java]
+        is FragmentActivity -> ViewModelProvider(lifecycleOwner, savedStateFactory)[P::class.java]
+        is Fragment -> ViewModelProvider(lifecycleOwner, savedStateFactory)[P::class.java]
         else -> error("Unsupported lifecycle owner detected.")
     }
 }
 
-val LifecycleOwner.applicationContext: Context
+val LifecycleOwner.application: Application
     get() = when (this) {
         is FragmentActivity -> this.application
         is Fragment -> this.activity!!.application

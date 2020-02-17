@@ -74,17 +74,17 @@ dependencies {
     implementation androidXDeps.recyclerview
 
     // MATERIAL
-    implementation 'com.google.android.material:material:1.1.0-alpha07'
+    implementation 'com.google.android.material:material:1.2.0-alpha04'
 
     // TESTS
     testImplementation deps.junit
 
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.6.0'
-    implementation "com.squareup.moshi:moshi:1.8.0"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.8.0"
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.7.1'
+    implementation 'com.squareup.moshi:moshi:1.9.2'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.2'
 
-    implementation('com.github.bumptech.glide:glide:4.9.0') {
+    implementation('com.github.bumptech.glide:glide:4.11.0') {
         exclude group: "com.android.support"
     }
 
@@ -102,7 +102,7 @@ dependencies {
     implementation project(path: ':amalia-coroutine-scopes')
     implementation project(path: ':amalia-recyclerview')
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-3'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }
 
 apply plugin: 'kotlin-android-extensions'
