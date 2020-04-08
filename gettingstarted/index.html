@@ -565,7 +565,7 @@
 Before loading, you can push a state to represent <em>loading</em>.
 This can be rendered in the view event as a progress dialog or an empty state view.</p>
 <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DiscoverTvPresenter</span><span class="p">()</span> <span class="p">:</span>
-    <span class="n">BasePresenter</span><span class="p">&lt;</span><span class="n">DiscoverState</span><span class="p">,</span> <span class="n">DiscoverEvent</span><span class="p">&gt;()</span> <span class="p">{</span>
+    <span class="n">BasePresenter</span><span class="p">()</span> <span class="p">{</span>
 
     <span class="k">private</span> <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="n">DiscoverTvRepository</span><span class="p">()</span>
 
@@ -574,11 +574,11 @@ This can be rendered in the view event as a progress dialog or an empty state vi
         <span class="n">pushState</span><span class="p">(</span><span class="n">DiscoverState</span><span class="p">.</span><span class="n">Loaded</span><span class="p">(</span><span class="n">results</span><span class="p">))</span>
     <span class="p">}</span>
 
-    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onBindViewDelegate</span><span class="p">(</span><span class="n">viewDelegate</span><span class="p">:</span> <span class="n">ViewDelegate</span><span class="p">&lt;</span><span class="n">DiscoverState</span><span class="p">,</span> <span class="n">DiscoverEvent</span><span class="p">&gt;)</span> <span class="p">{</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onBindViewDelegate</span><span class="p">(</span><span class="n">viewDelegate</span><span class="p">:</span> <span class="n">ViewDelegate</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">Log</span><span class="p">.</span><span class="n">v</span><span class="p">(</span><span class="s">&quot;DiscoverPresenter&quot;</span><span class="p">,</span> <span class="s">&quot;View was bound to presenter&quot;</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onViewEvent</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">DiscoverEvent</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onViewEvent</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">ViewEvent</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">when</span> <span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">is</span> <span class="n">DiscoverEvent</span><span class="p">.</span><span class="n">MarkShowAsFavourite</span> <span class="p">-&gt;</span> <span class="p">{</span>
                 <span class="n">repository</span><span class="p">.</span><span class="n">saveFavouriteShow</span><span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="n">show</span><span class="p">)</span>

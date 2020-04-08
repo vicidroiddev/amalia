@@ -589,7 +589,7 @@ See the constructor for additional options.</p>
 
 <h2 id="3-emit-recycler-items-with-a-presenter">3. Emit recycler items with a presenter<a class="headerlink" href="#3-emit-recycler-items-with-a-presenter" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyLongListPresenter</span><span class="p">(</span><span class="k">private</span> <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">MyRepository</span><span class="p">)</span> <span class="p">:</span>
-    <span class="n">BasePresenter</span><span class="p">&lt;</span><span class="n">RecyclerViewState</span><span class="p">&lt;</span><span class="n">MyRecyclerViewItem</span><span class="p">&gt;,</span> <span class="n">ViewEvent</span><span class="p">&gt;(),</span>
+    <span class="n">BasePresenter</span><span class="p">(),</span>
     <span class="n">Refreshable</span> <span class="p">{</span>
 
     <span class="k">private</span> <span class="k">var</span> <span class="py">results</span><span class="p">:</span> <span class="n">MutableList</span><span class="p">&lt;</span><span class="n">DiscoverResult</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">mutableListOf</span><span class="p">()</span>

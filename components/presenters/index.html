@@ -509,14 +509,14 @@
 <li>Should perform all data loading/saving/refreshing (anything background heavy)</li>
 <li>Will survive configuration changes (member fields stay in tact)</li>
 <li>Should leverage  <code class="codehilite"><span class="n">pushState</span><span class="p">(...)</span></code>  to expose a meaningful  <code class="codehilite"><span class="n">ViewState</span></code>.</li>
-<li>Should inherit from  <code class="codehilite"><span class="n">BasePresenter</span><span class="o">&lt;</span><span class="n">ViewState</span><span class="p">,</span> <span class="n">ViewEvent</span><span class="o">&gt;</span></code></li>
+<li>Should inherit from  <code class="codehilite"><span class="n">BasePresenter</span></code></li>
 <li>Should override  <code class="codehilite"><span class="n">onViewEvent</span><span class="p">(...)</span></code>  to process incoming ViewEvents</li>
 <li>Should never contain views, or activity contexts that may leak</li>
 <li>Can leverage the application context field to get resources</li>
 <li>Can use savedStateHandle for process death restoration</li>
 </ul>
 <h2 id="is-there-a-callback-for-when-my-presenter-is-ready-to-go">Is there a callback for when my presenter is ready to go?<a class="headerlink" href="#is-there-a-callback-for-when-my-presenter-is-ready-to-go" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyPresenter</span> <span class="p">:</span> <span class="n">BasePresenter</span><span class="p">&lt;</span><span class="n">ViewState</span><span class="p">,</span> <span class="n">ViewEvent</span><span class="p">&gt;()</span> <span class="p">{</span>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyPresenter</span> <span class="p">:</span> <span class="n">BasePresenter</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">loadInitialState</span><span class="p">()</span> <span class="p">{</span>
         <span class="c1">// Can access applicationContext at this point</span>
         <span class="n">applicationContext</span><span class="p">.</span><span class="n">getString</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">string</span><span class="p">.</span><span class="n">somestring</span><span class="p">)</span>
@@ -527,7 +527,7 @@
 <h2 id="is-there-a-callback-for-when-my-presenter-is-destroyed">Is there a callback for when my presenter is destroyed?<a class="headerlink" href="#is-there-a-callback-for-when-my-presenter-is-destroyed" title="Permanent link">&para;</a></h2>
 <p><code class="codehilite"><span class="n">onPresenterDestroyed</span><span class="p">()</span></code> will be invoked when the presenter is about to die. This will also be called for child presenters.
 This method is not invoked on configuration changes.</p>
-<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyPresenter</span> <span class="p">:</span> <span class="n">BasePresenter</span><span class="p">&lt;</span><span class="n">ViewState</span><span class="p">,</span> <span class="n">ViewEvent</span><span class="p">&gt;()</span> <span class="p">{</span>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyPresenter</span> <span class="p">:</span> <span class="n">BasePresenter</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">onPresenterDestroyed</span><span class="p">()</span> <span class="p">{</span>
         <span class="c1">// Clean up time</span>
         <span class="c1">// Even better track your closeable objects, see below</span>
@@ -539,7 +539,7 @@ This method is not invoked on configuration changes.</p>
 <p>You may store your object in the presenter cache if it implements <code class="codehilite"><span class="n">Closeable</span></code>.
 That way you can be sure it is automatically cleaned up at the right time.</p>
 <p>Note: Amalia uses this mechanism for <code class="codehilite"><span class="n">amalia</span><span class="o">-</span><span class="n">coroutine</span><span class="o">-</span><span class="n">scopes</span></code> module.</p>
-<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyPresenter</span> <span class="p">:</span> <span class="n">BasePresenter</span><span class="p">&lt;</span><span class="n">ViewState</span><span class="p">,</span> <span class="n">ViewEvent</span><span class="p">&gt;()</span> <span class="p">{</span>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MyPresenter</span> <span class="p">:</span> <span class="n">BasePresenter</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">init</span> <span class="p">{</span>
         <span class="k">val</span> <span class="py">longRunningThing</span> <span class="p">=</span> <span class="n">LongRunningThing</span><span class="p">()</span>
         <span class="c1">// Objects will automatically have close() called when the presenter is destroyed.</span>

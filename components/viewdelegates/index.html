@@ -479,7 +479,7 @@
                 <h1 id="viewdelegates">ViewDelegates<a class="headerlink" href="#viewdelegates" title="Permanent link">&para;</a></h1>
 <ul>
 <li>Should perform all view related tasks and be fairly dumb (no business logic)</li>
-<li>Should inherit from  <code class="codehilite"><span class="n">BaseViewDelegate</span><span class="o">&lt;</span><span class="n">ViewState</span><span class="p">,</span> <span class="n">ViewEvent</span><span class="o">&gt;</span></code></li>
+<li>Should inherit from  <code class="codehilite"><span class="n">BaseViewDelegate</span></code></li>
 <li>Should override  <code class="codehilite"><span class="n">renderViewState</span><span class="p">(...)</span></code>  to process incoming ViewStates</li>
 <li>Can contain contexts, views or anything else that you would normally put in an Activity/Fragment</li>
 <li>Should contain your  <code class="codehilite"><span class="n">findViewById</span></code>  calls</li>
@@ -496,13 +496,13 @@ In there you can override <code class="codehilite"><span class="n">onInterceptEv
 
 <span class="c1">// Create your own variant of a BaseMyAppViewDelegate</span>
 <span class="c1">// Note that the event extends from `BaseDefaultViewEvent`</span>
-<span class="k">abstract</span> <span class="k">class</span> <span class="nc">MyAppBaseViewDelegate</span><span class="p">&lt;</span><span class="n">S</span> <span class="p">:</span> <span class="n">ViewState</span><span class="p">,</span> <span class="n">E</span> <span class="p">:</span> <span class="n">BaseDefaultViewEvent</span><span class="p">&gt;(</span>
+<span class="k">abstract</span> <span class="k">class</span> <span class="nc">MyAppBaseViewDelegate</span><span class="p">(</span>
     <span class="n">view</span><span class="p">:</span> <span class="n">View</span><span class="p">,</span>
     <span class="n">lifecycleOwner</span><span class="p">:</span> <span class="n">LifecycleOwner</span>
-<span class="p">)</span> <span class="p">:</span> <span class="n">BaseViewDelegate</span><span class="p">&lt;</span><span class="n">S</span><span class="p">,</span><span class="n">E</span><span class="p">&gt;(</span><span class="n">lifecycleOwner</span><span class="p">,</span> <span class="n">view</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">)</span> <span class="p">:</span> <span class="n">BaseViewDelegate</span><span class="p">(</span><span class="n">lifecycleOwner</span><span class="p">,</span> <span class="n">view</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="c1">// Override this method and inject any fields you defined</span>
-    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onInterceptEventChain</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">E</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onInterceptEventChain</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">ViewEvent</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">event</span><span class="p">.</span><span class="n">importantSharedField</span> <span class="p">=</span> <span class="n">provideImportantField</span><span class="p">()</span>
     <span class="p">}</span>
 
