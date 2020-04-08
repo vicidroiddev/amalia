@@ -1,14 +1,15 @@
 #Changelog - Amalia
 
-## Amalia 0.5.0-EAP-XX
+## Amalia 0.6.0
 
-_20XX-XX_XX_
+_2020-04_08_
 
 ##### Library changes:
 
 * Fixed crash when leveraging PresenterProvider for multiple presenters from Java
 * Ensure presenter tells view delegate it has has been bound via onBindViewDelegate()
 * Reduced restriction on ViewState for RecyclerViewDelegate
+* Allow tracking of recycler view items via event propagation
 
 ##### Dependency updates:
 

@@ -2,7 +2,7 @@
 
 This module gives plug and play support for simple and complex lists.
 
-You can build complex dashboards where each item in the RecyclerView is backed by a different presenter. If each card needs to own it's own logic for when to display - NO problem.
+You can build complex dashboards where each item in the RecyclerView is backed by a different presenter. If each card needs to own its own logic for when to display - NO problem.
 
 You can also create simple lists that are composed of different view items, such as cards, headers, etc...
 
@@ -10,6 +10,7 @@ Out of the box you will get:
 
  * Async diff support (send a bunch of items via pushState, only the items that changed will be processed)
  * A wrapper around RecyclerView that allows you to focus on your own display logic
+ * Optional tracking of items seen via event propagation to your presenter
 
 ##Adding gradle dependency
 Add the amalia dependency in your app level build.gradle file.
@@ -33,7 +34,8 @@ class MyLongListViewDelegate(lifecycleOwner: LifecycleOwner, view: View) :
     RecyclerViewDelegate<DiscoverTvItem, DiscoverTvItem.ViewHolder>(
         lifecycleOwner,
         view,
-        R.id.the_recyclerview_id) {
+        R.id.the_recyclerview_id,
+        trackItemsSeen = true /* optional */) {
 }
 ```
 

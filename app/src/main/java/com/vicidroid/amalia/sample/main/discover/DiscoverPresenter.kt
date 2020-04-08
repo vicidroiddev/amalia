@@ -9,8 +9,8 @@ import com.vicidroid.amalia.ext.debugLog
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverRepository
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverResult
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
+import com.vicidroid.amalia.ui.recyclerview.RecyclerViewEvent
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewState
-import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
 import kotlinx.coroutines.launch
 
 class DiscoverPresenter(private val repository: DiscoverRepository) :
@@ -52,6 +52,15 @@ class DiscoverPresenter(private val repository: DiscoverRepository) :
                     RecyclerViewState.ListLoaded(
                         results.map { DiscoverTvItem(it) })
                 )
+            }
+
+            is RecyclerViewEvent.NewVisibleItemsDetected -> {
+                event.visibleItems
+                    .mapNotNull { item -> item as? DiscoverResult }
+                    .forEach { discoverResult ->
+                        debugLog(TAG_INSTANCE, "Track: Seen discover result: ${discoverResult.name} ")
+                }
+
             }
         }
 

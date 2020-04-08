@@ -9,5 +9,6 @@ class DiscoverViewDelegate(lifecycleOwner: LifecycleOwner, view: View) :
     RecyclerViewDelegate(
         lifecycleOwner,
         view,
-        R.id.main_discover_page_list_root) {
+        R.id.main_discover_page_list_root,
+        trackItemsSeen = true) {
 }

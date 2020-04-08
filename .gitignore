@@ -110,3 +110,4 @@ lint/tmp/
 /amalia-core/.project
 /amalia-core/.gitignore
 /amalia-core/.classpath
+buildSrc
