@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Backed by Android's ViewModel in order to easily survive configuration changes.
  */
-abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
+abstract class BasePresenter : ViewModel(),
     DefaultLifecycleObserver,
     PersistableState {
 
@@ -26,9 +26,9 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
 
     lateinit var applicationContext: Context
 
-    private val viewStateLiveData = MutableLiveData<S>()
+    private val viewStateLiveData = MutableLiveData<ViewState>()
 
-    private val viewEventPropagatorLiveData = MutableLiveData<E>()
+    private val viewEventPropagatorLiveData = MutableLiveData<ViewEvent>()
 
     override lateinit var savedStateHandle: SavedStateHandle
 
@@ -55,7 +55,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
 
     internal lateinit var viewLifecycleObserver: DefaultLifecycleObserver
 
-    fun stateLiveData(): LiveData<S> = viewStateLiveData
+    fun stateLiveData(): LiveData<ViewState> = viewStateLiveData
 
     val isStatePresent: Boolean
         get() = viewStateLiveData.value != null
@@ -67,13 +67,13 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
      * As such they are not added to the internal ViewModelStore (it's not necessary)
      * We should propagate [onPresenterDestroyedInternal] to these childPresenters.
      */
-    val childPresenters: MutableList<BasePresenter<*, *>> = mutableListOf()
+    val childPresenters: MutableList<BasePresenter> = mutableListOf()
 
     /**
      * Propagate states sent by this presenter to another observer.
      * This may be of use when adding amalia to legacy code or in a parent child presenter hierarchy.
      */
-    fun propagateStatesTo(observer: (S) -> Unit) {
+    fun propagateStatesTo(observer: (ViewState) -> Unit) {
         viewLifecycleOwner
             ?: error("You must call bind() prior to propagating states as the view lifecycle owner is required.")
         stateLiveData().observe(viewLifecycleOwner!!, Observer { observer(it) })
@@ -107,7 +107,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
      * States will be propagated to the [stateObserver]
      * In most cases [bind(viewDelegate)] is preferred.
      */
-    fun bind(viewLifecycleOwner: LifecycleOwner, stateObserver: (S) -> Unit) {
+    fun bind(viewLifecycleOwner: LifecycleOwner, stateObserver: (ViewState) -> Unit) {
         presenterDebugLog(TAG_INSTANCE, "bind(viewLifecycleOwner, stateObserver)")
         bind(viewLifecycleOwner)
         propagateStatesTo(stateObserver)
@@ -118,16 +118,13 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
      * • event propagation from delegate to presenter
      * • state propagation from presenter to delegate
      */
-    fun bind(viewDelegate: ViewDelegate<S, E>) {
+    fun bind(viewDelegate: ViewDelegate) {
         presenterDebugLog(TAG_INSTANCE, "bind(viewDelegate)")
         bind(viewDelegate.viewDelegateLifecycleOwner)
 
         // Observe events sent via an event provider
-        if (viewDelegate is ViewEventProvider<*>) {
-            viewDelegate.propagateEventsTo { event ->
-                @Suppress("UNCHECKED_CAST")
-                processViewEvent(event as E)
-            }
+        if (viewDelegate is ViewEventProvider) {
+            viewDelegate.propagateEventsTo { event -> processViewEvent(event) }
         }
         // Observe states sent from this presenter and propagate them to the delegate.
         // Propagation will only occur if the delegate's lifecycle owner indicates a good state.
@@ -145,7 +142,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
     /**
      * Delegate view events to additional presenters.
      */
-    fun viewEventDelegator(presenter: BasePresenter<*, E>) {
+    fun viewEventDelegator(presenter: BasePresenter) {
         viewEventPropagatorLiveData.observe(
             viewLifecycleOwner!!,
             Observer { presenter.onViewEvent(it) })
@@ -159,7 +156,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
      * If you wish to persist a view state through process death ensure it is parceable.
      * Leverage [onViewStateRestored] to access the same view state if needed.
      */
-    fun pushState(state: S, ignoreDuplicateState: Boolean = false) {
+    fun pushState(state: ViewState, ignoreDuplicateState: Boolean = false) {
         if (ignoreDuplicateState && stateLiveData().value?.javaClass == state.javaClass) return
 
         presenterDebugLog(TAG_INSTANCE, "Pushing state: $state")
@@ -173,8 +170,8 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
     }
 
     @MainThread
-    fun updateViewStateSilently(stateUpdater: (oldState: S) -> S) {
-        val newState: S = stateLiveData().value?.let { stateUpdater(it) } ?: return
+    fun updateViewStateSilently(stateUpdater: (oldState: ViewState) -> ViewState) {
+        val newState: ViewState = stateLiveData().value?.let { stateUpdater(it) } ?: return
 
         persistViewStateIfPossible(newState)
 
@@ -183,14 +180,14 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
         viewStatePropagationPaused = false
     }
 
-    private fun persistViewStateIfPossible(state: S) {
+    private fun persistViewStateIfPossible(state: ViewState) {
         if (state is Parcelable) {
             presenterDebugLog(TAG_INSTANCE, "Persisting: $state")
             persistViewState(TAG_INSTANCE, state)
         }
     }
 
-    private fun processViewEvent(event: E) {
+    private fun processViewEvent(event: ViewEvent) {
         onViewEvent(event)
         viewEventPropagatorLiveData.value = event
     }
@@ -199,7 +196,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
      * Process an [event] from the view delegate, and perform any business logic necessary.
      * For view changes, propagate a new state via [pushState].
      */
-    open fun onViewEvent(event: E) {}
+    open fun onViewEvent(event: ViewEvent) {}
 
     /**
      * Allow view state to be updated without notifying observers
@@ -233,7 +230,7 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
      * Override [onBindViewDelegate] in your parent presenter and call [bind] on your child presenters
      * [viewDelegate] represents the view delegate that is bound to this presenter.
      */
-    open fun onBindViewDelegate(viewDelegate: ViewDelegate<S, E>) {
+    open fun onBindViewDelegate(viewDelegate: ViewDelegate) {
     }
 
     open fun onBindViewLifecycleOwner(owner: LifecycleOwner) {
@@ -308,14 +305,14 @@ abstract class BasePresenter<S : ViewState, E : ViewEvent> : ViewModel(),
      * This method prevents the need to have a savedState handle in every presenter constructor.
      * As such remember that you cannot access the handle in the constructor.
      */
-    open fun onViewStateRestored(restoredViewState: S) {
+    open fun onViewStateRestored(restoredViewState: ViewState) {
     }
 
     fun initializePresenter(appContext: Context, handle: SavedStateHandle) {
         this.applicationContext = appContext
         this.savedStateHandle = handle
 
-        consumePersistedOrNull<S?>(viewStateKey(TAG_INSTANCE))?.let { state ->
+        consumePersistedOrNull<ViewState?>(viewStateKey(TAG_INSTANCE))?.let { state ->
             presenterDebugLog(TAG_INSTANCE, "View state is being restored: $state")
             pushState(state)
             onViewStateRestored(state)

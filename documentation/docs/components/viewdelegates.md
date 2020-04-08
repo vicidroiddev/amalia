@@ -1,7 +1,7 @@
 # ViewDelegates
 
 -   Should perform all view related tasks and be fairly dumb (no business logic)
--   Should inherit from  `BaseViewDelegate<ViewState, ViewEvent>`
+-   Should inherit from  `BaseViewDelegate`
 -   Should override  `renderViewState(...)`  to process incoming ViewStates
 -   Can contain contexts, views or anything else that you would normally put in an Activity/Fragment
 -   Should contain your  `findViewById`  calls
@@ -23,13 +23,13 @@ open class BaseDefaultViewEvent : ViewEvent {
 
 // Create your own variant of a BaseMyAppViewDelegate
 // Note that the event extends from `BaseDefaultViewEvent`
-abstract class MyAppBaseViewDelegate<S : ViewState, E : BaseDefaultViewEvent>(
+abstract class MyAppBaseViewDelegate(
     view: View,
     lifecycleOwner: LifecycleOwner
-) : BaseViewDelegate<S,E>(lifecycleOwner, view) {
+) : BaseViewDelegate(lifecycleOwner, view) {
 
     // Override this method and inject any fields you defined
-    override fun onInterceptEventChain(event: E) {
+    override fun onInterceptEventChain(event: ViewEvent) {
         event.importantSharedField = provideImportantField()
     }
 

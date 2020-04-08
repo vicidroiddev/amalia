@@ -12,17 +12,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.vicidroid.amalia.R
 import com.vicidroid.amalia.core.ViewEvent
-import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
 import com.vicidroid.amalia.core.viewdiff.ViewDiffProvider
 import com.vicidroid.amalia.ext.DEBUG_LOGGING
 
-abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
+abstract class BaseViewDelegate(
     override val viewDelegateLifecycleOwner: LifecycleOwner,
     val rootView: View,
     injectLayoutId: Int? = null,
     rootViewAnchorId: Int = R.id.amalia_stub
-) : ViewDelegate<S, E>, ViewEventProvider<E>,
+) : ViewDelegate, ViewEventProvider,
     ViewDelegateLifecycleCallbacks,
     ViewDelegateInteractions {
 
@@ -60,7 +59,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     /**
      * The parent view delegate is accessible from a child when using [com.vicidroid.amalia.ext.viewDelegateProvider]
      */
-    var parent: BaseViewDelegate<*, *>? = null
+    var parent: BaseViewDelegate? = null
 
     init {
         injectLayoutId?.let { layoutId ->
@@ -87,7 +86,7 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
     /**
      * Emits view events that should be processed by #onEvent from a presenter.
      */
-    private val eventLiveData = MutableLiveData<E>()
+    private val eventLiveData = MutableLiveData<ViewEvent>()
 
     /**
      * Emits view diffs generally upon app going to background.
@@ -123,22 +122,22 @@ abstract class BaseViewDelegate<S : ViewState, E : ViewEvent>(
      * Exposes view event live data that the view delegate can leverage to reflect UI changes.
      * Allows view delegates to know about events that are sent.
      */
-    override fun propagateEventsTo(observer: (E) -> Unit) {
-        eventLiveData.observe(viewDelegateLifecycleOwner, Observer { observer(it) })
+    override fun propagateEventsTo(observer: (ViewEvent) -> Unit) {
+        eventLiveData.observe(viewDelegateLifecycleOwner, Observer<ViewEvent> { observer(it) })
     }
 
     /**
      * Allows subclasses to intercept events that are sent.
      * This may be useful to inject important fields into some base event that is widely used in your app.
      */
-    open fun onInterceptEventChain(event: E) {
+    open fun onInterceptEventChain(event: ViewEvent) {
 
     }
 
     /**
      * Sends event from some interaction or UI change to an active subscriber (Presenter)
      */
-    fun pushEvent(event: E) {
+    fun pushEvent(event: ViewEvent) {
         onInterceptEventChain(event)
         eventLiveData.value = event
     }

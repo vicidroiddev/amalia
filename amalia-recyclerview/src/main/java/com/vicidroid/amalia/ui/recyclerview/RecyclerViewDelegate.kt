@@ -7,11 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.R
-import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
 import com.vicidroid.amalia.ui.BaseViewDelegate
-import com.vicidroid.amalia.ui.recyclerview.adapter.BaseRecyclerViewHolder
 import com.vicidroid.amalia.ui.recyclerview.adapter.DefaultRecyclerViewAdapter
 import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
 import com.vicidroid.amalia.ui.recyclerview.diff.AsyncRecyclerItemDiffCallback
@@ -30,7 +28,7 @@ open class RecyclerViewDelegate(
     recyclerViewHasFixedSize: Boolean = true,
     trackItemsSeen: Boolean = false
 ) :
-    BaseViewDelegate<ViewState, ViewEvent>(
+    BaseViewDelegate(
         viewLifeCycleOwner,
         rootView
     ) {

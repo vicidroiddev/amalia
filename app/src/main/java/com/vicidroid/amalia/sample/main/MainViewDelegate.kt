@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.ext.viewDelegateProvider
 import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.main.dashboard.DashboardViewDelegate
@@ -16,7 +17,7 @@ import com.vicidroid.amalia.sample.utils.inflate
 import com.vicidroid.amalia.ui.BaseViewDelegate
 
 class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
-    BaseViewDelegate<MainState, MainEvent>(
+    BaseViewDelegate(
         viewLifeCycleOwner,
         rootView
     ) {
@@ -65,7 +66,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         )
     }
 
-    val navigationIdMap = SparseArray<BaseViewDelegate<*, *>>(4).apply {
+    val navigationIdMap = SparseArray<BaseViewDelegate>(4).apply {
         append(R.id.navigation_home, homeViewDelegate)
         append(R.id.navigation_dashboard, dashboardViewDelegate)
         append(R.id.navigation_discover, discoverViewDelegate)
@@ -76,7 +77,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
 
-    override fun renderViewState(state: MainState) {
+    override fun renderViewState(state: ViewState) {
         when (state) {
             is MainState.BottomNavigationItemSelected -> renderBottomNavigationItem(state.navigationId)
         }
@@ -87,7 +88,7 @@ class MainViewDelegate(viewLifeCycleOwner: LifecycleOwner, rootView: View) :
         navigationIdMap[navigationId].showDelegate()
     }
 
-    private fun BaseViewDelegate<*, *>.showDelegate() {
+    private fun BaseViewDelegate.showDelegate() {
         TransitionManager.beginDelayedTransition(anchor)
         anchor.removeAllViews()
         anchor.addView(this.rootView)

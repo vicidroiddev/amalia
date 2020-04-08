@@ -1,11 +1,12 @@
 package com.vicidroid.amalia.sample.main.dashboard
 
 import com.vicidroid.amalia.core.BasePresenter
+import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.sample.examples.ui.examplefragment1.ExampleFragmentActivity1
 import com.vicidroid.amalia.sample.utils.startActivityClazz
 import com.vicidroid.amalia.ui.ViewDelegate
 
-class DashboardPresenter : BasePresenter<DashboardState, DashboardEvent>(),
+class DashboardPresenter : BasePresenter(),
     Refreshable {
 
     val imageUrl =
@@ -15,7 +16,7 @@ class DashboardPresenter : BasePresenter<DashboardState, DashboardEvent>(),
         calculateTimestamp()
     }
 
-    override fun onViewEvent(event: DashboardEvent) {
+    override fun onViewEvent(event: ViewEvent) {
         when (event) {
             is DashboardEvent.OpenFragmentExample -> {
                 event.hostActivity.startActivityClazz(ExampleFragmentActivity1::class.java)

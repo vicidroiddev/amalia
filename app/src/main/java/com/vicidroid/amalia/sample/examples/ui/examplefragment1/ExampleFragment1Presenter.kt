@@ -4,7 +4,7 @@ import android.util.Log
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
 
-class ExampleFragment1Presenter : BasePresenter<ExampleFragment1ViewState, ExampleFragment1ViewEvent>() {
+class ExampleFragment1Presenter : BasePresenter() {
 
     override fun loadInitialState() {
         Log.v(TAG_INSTANCE, "loadInitialState()")

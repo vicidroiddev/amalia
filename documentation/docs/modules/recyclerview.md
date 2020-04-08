@@ -70,7 +70,7 @@ class MyRecyclerViewItem(val myItem: MyItem) : BaseRecyclerItem<DiscoverTvItem.V
 ##3. Emit recycler items with a presenter
 ```kotlin
 class MyLongListPresenter(private val repository: MyRepository) :
-    BasePresenter<RecyclerViewState<MyRecyclerViewItem>, ViewEvent>(),
+    BasePresenter(),
     Refreshable {
 
     private var results: MutableList<DiscoverResult> = mutableListOf()

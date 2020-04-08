@@ -17,25 +17,25 @@ import com.vicidroid.amalia.core.BasePresenter
  * Instead of manually passing this uri to each presenter via a constructor, you could apply it automatically via
  * your own presenterProvider with default [hooks]
  */
-inline fun <reified P : BasePresenter<*, *>> Fragment.presenterProvider(
+inline fun <reified P : BasePresenter> Fragment.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) =
     presenterProvider(this, this, presenterCreator, hooks)
 
-inline fun <reified P : BasePresenter<*, *>> FragmentActivity.presenterProvider(
+inline fun <reified P : BasePresenter> FragmentActivity.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) =
     presenterProvider(this, this, presenterCreator, hooks)
 
-inline fun <reified P : BasePresenter<*, *>> AppCompatActivity.presenterProvider(
+inline fun <reified P : BasePresenter> AppCompatActivity.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) =
     presenterProvider(this, this, presenterCreator, hooks)
 
-inline fun <reified P : BasePresenter<*, *>> LifecycleOwner.presenterProvider(
+inline fun <reified P : BasePresenter> LifecycleOwner.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) =
@@ -46,7 +46,7 @@ inline fun <reified P : BasePresenter<*, *>> LifecycleOwner.presenterProvider(
  * The parent presenter must be bound to a view delegate.
  * It would be ideal to leverage this in [#onBindViewDelegate(...)]
  */
-inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterProvider(
+inline fun <reified P : BasePresenter> BasePresenter.childPresenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) = lazy {
@@ -67,7 +67,7 @@ inline fun <reified P : BasePresenter<*, *>> BasePresenter<*, *>.childPresenterP
  * The behaviour is based on the lifecycle owner passed to the view delegate.
  * This is done to support the second fragment lifecycle [onDetach] [onAttach]
  */
-inline fun <reified P : BasePresenter<*, *>> presenterProvider(
+inline fun <reified P : BasePresenter> presenterProvider(
     lifecycleOwner: LifecycleOwner,
     savedStateRegistryOwner: SavedStateRegistryOwner,
     crossinline presenterCreator: () -> P,
@@ -113,9 +113,9 @@ val LifecycleOwner.savedStateRegistryOwner: SavedStateRegistryOwner
  * Moreover, this will support constructor arguments in presenters.
  */
 
-class PresenterProvider<P : BasePresenter<*, *>> {
+class PresenterProvider<P : BasePresenter> {
     @Suppress("UNCHECKED_CAST")
-    fun provide(fragment: Fragment, presenterCreator: () -> BasePresenter<*, *>): P {
+    fun provide(fragment: Fragment, presenterCreator: () -> BasePresenter): P {
         return fragment.presenterProvider { presenterCreator() }.value as P
     }
 }

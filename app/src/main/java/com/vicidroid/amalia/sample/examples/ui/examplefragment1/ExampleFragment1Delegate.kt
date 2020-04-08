@@ -8,12 +8,13 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.core.viewdiff.ViewDiffProvider
 import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.ui.BaseViewDelegate
 
 class ExampleFragment1Delegate(lifecycleOwner: LifecycleOwner, view: View) :
-    BaseViewDelegate<ExampleFragment1ViewState, ExampleFragment1ViewEvent>(lifecycleOwner, view), ViewDiffProvider {
+    BaseViewDelegate(lifecycleOwner, view), ViewDiffProvider {
 
     private val viewDiff = ExampleFragment1ViewDiff()
 
@@ -24,7 +25,7 @@ class ExampleFragment1Delegate(lifecycleOwner: LifecycleOwner, view: View) :
         addDynamicView()
     }
 
-    override fun renderViewState(state: ExampleFragment1ViewState) {
+    override fun renderViewState(state: ViewState) {
         Log.v(ExampleFragment1Delegate::class.java.simpleName, state.toString())
         when (state) {
             is ExampleFragment1ViewState.Loaded -> {

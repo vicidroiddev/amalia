@@ -13,22 +13,22 @@ private const val DEFAULT_SCOPE_KEY = "com.vicidroid.amalia.core.PresenterScopes
  * A coroutine scope which uses [Dispatchers.Main]
  * This coroutine job is automatically canceled when the presenter is destroyed
  */
-val BasePresenter<*, *>.mainScope: CoroutineScope
+val BasePresenter.mainScope: CoroutineScope
     get() {
         return scopeFor(Dispatchers.Main)
     }
 
-val BasePresenter<*, *>.ioScope: CoroutineScope
+val BasePresenter.ioScope: CoroutineScope
     get() {
         return scopeFor(Dispatchers.IO)
     }
 
-val BasePresenter<*, *>.defaultScope: CoroutineScope
+val BasePresenter.defaultScope: CoroutineScope
     get() {
         return scopeFor(Dispatchers.Default)
     }
 
-private fun BasePresenter<*, *>.scopeFor(dispatcher: CoroutineDispatcher): CoroutineScope {
+private fun BasePresenter.scopeFor(dispatcher: CoroutineDispatcher): CoroutineScope {
     val key = when (dispatcher) {
         Dispatchers.Main -> MAIN_SCOPE_KEY
         Dispatchers.IO -> IO_SCOPE_KEY

@@ -10,6 +10,7 @@ _2020-04_08_
 * Ensure presenter tells view delegate it has has been bound via onBindViewDelegate()
 * Reduced restriction on ViewState for RecyclerViewDelegate
 * Allow tracking of recycler view items via event propagation
+* Remove type signatures from presenters and view delegates to allow for better generic reuse
 
 ##### Dependency updates:
 

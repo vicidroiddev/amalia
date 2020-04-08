@@ -14,7 +14,7 @@ import com.vicidroid.amalia.ui.recyclerview.RecyclerViewState
 import kotlinx.coroutines.launch
 
 class DiscoverPresenter(private val repository: DiscoverRepository) :
-    BasePresenter<ViewState, ViewEvent>(),
+    BasePresenter(),
     Refreshable {
 
     private var results: MutableList<DiscoverResult> = mutableListOf()

@@ -11,12 +11,13 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.core.viewdiff.ViewDiffProvider
 import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.ui.BaseViewDelegate
 
 class HomeViewDelegate(lifecycleOwner: LifecycleOwner, view: View) :
-    BaseViewDelegate<HomeState, HomeEvent>(lifecycleOwner, view),
+    BaseViewDelegate(lifecycleOwner, view),
     ViewDiffProvider {
 
     val message: TextView = findViewById(R.id.message)
@@ -50,7 +51,7 @@ class HomeViewDelegate(lifecycleOwner: LifecycleOwner, view: View) :
         }
     }
 
-    override fun renderViewState(state: HomeState) {
+    override fun renderViewState(state: ViewState) {
         when (state) {
             is HomeState.Loaded -> {
                 message.text = state.data

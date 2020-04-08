@@ -51,7 +51,7 @@ This can be rendered in the view event as a progress dialog or an empty state vi
 
 ```kotlin
 class DiscoverTvPresenter() :
-    BasePresenter<DiscoverState, DiscoverEvent>() {
+    BasePresenter() {
 
     private val repository = DiscoverTvRepository()
 
@@ -60,11 +60,11 @@ class DiscoverTvPresenter() :
         pushState(DiscoverState.Loaded(results))
     }
 
-    override fun onBindViewDelegate(viewDelegate: ViewDelegate<DiscoverState, DiscoverEvent>) {
+    override fun onBindViewDelegate(viewDelegate: ViewDelegate) {
         Log.v("DiscoverPresenter", "View was bound to presenter")
     }
 
-    override fun onViewEvent(event: DiscoverEvent) {
+    override fun onViewEvent(event: ViewEvent) {
         when (event) {
             is DiscoverEvent.MarkShowAsFavourite -> {
                 repository.saveFavouriteShow(event.show)

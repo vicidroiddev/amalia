@@ -2,12 +2,13 @@ package com.vicidroid.amalia.sample.main.home
 
 import android.content.Intent
 import com.vicidroid.amalia.core.BasePresenter
+import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.sample.main.MainActivity
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
 import com.vicidroid.amalia.core.viewdiff.ViewDiff
 
 class HomePresenter
-    : BasePresenter<HomeState, HomeEvent>(),
+    : BasePresenter(),
     Refreshable {
 
     val imageUrl =
@@ -22,6 +23,8 @@ class HomePresenter
                             lastName = homeViewDiff.lastName,
                             middleName = homeViewDiff.middleName,
                             hasMiddleName = homeViewDiff.hasMiddleName)
+
+                        else -> error("Unknown state")
                     }
                 }
         }
@@ -31,7 +34,7 @@ class HomePresenter
         reloadData()
     }
 
-    override fun onViewEvent(event: HomeEvent) {
+    override fun onViewEvent(event: ViewEvent) {
         when (event) {
             is HomeEvent.RequestNavigate -> {
                 //Yep, just open the same activity, eventually we can try to get an OOM exception with very large bitmaps rendered

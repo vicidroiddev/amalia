@@ -9,7 +9,7 @@ import com.vicidroid.amalia.ui.recyclerview.RecyclerViewState
 import com.vicidroid.amalia.ui.recyclerview.adapter.RecyclerItem
 
 
-class TestPresenter : BasePresenter<ViewState, ViewEvent>(), Refreshable {
+class TestPresenter : BasePresenter(), Refreshable {
     var data = mutableListOf<TestRecyclerItem>()
 
     override fun loadInitialState() {

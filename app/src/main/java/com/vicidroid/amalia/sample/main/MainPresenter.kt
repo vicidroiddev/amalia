@@ -1,6 +1,8 @@
 package com.vicidroid.amalia.sample.main
 
 import com.vicidroid.amalia.core.BasePresenter
+import com.vicidroid.amalia.core.ViewEvent
+import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.ext.childPresenterProvider
 import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverRepository
@@ -11,14 +13,14 @@ import com.vicidroid.amalia.sample.test.TestPresenter
 import com.vicidroid.amalia.sample.utils.toastLong
 import com.vicidroid.amalia.ui.ViewDelegate
 
-class MainPresenter : BasePresenter<MainState, MainEvent>() {
+class MainPresenter : BasePresenter() {
 
     private val homePresenter by childPresenterProvider { HomePresenter() }
     private val dashboardPresenter by childPresenterProvider { DashboardPresenter() }
     private val discoverPresenter by childPresenterProvider { DiscoverPresenter(DiscoverRepository()) }
     private val testPresenter by childPresenterProvider { TestPresenter() }
 
-    override fun onViewStateRestored(restoredViewState: MainState) {
+    override fun onViewStateRestored(restoredViewState: ViewState) {
         // Just an example, we don't need to save this field since the view state is parceable, the selected tab is restored automatically :)
         applicationContext.toastLong("restored selectedBottomId: ${savedStateHandle.get<Int?>("selectedBottomId")}")
     }
@@ -27,7 +29,7 @@ class MainPresenter : BasePresenter<MainState, MainEvent>() {
         pushNavigationItem(R.id.navigation_discover)
     }
 
-    override fun onBindViewDelegate(viewDelegate: ViewDelegate<MainState, MainEvent>) {
+    override fun onBindViewDelegate(viewDelegate: ViewDelegate) {
         when (viewDelegate) {
             is MainViewDelegate -> {
                 homePresenter.bind(viewDelegate.homeViewDelegate)
@@ -38,7 +40,7 @@ class MainPresenter : BasePresenter<MainState, MainEvent>() {
         }
     }
 
-    override fun onViewEvent(event: MainEvent) {
+    override fun onViewEvent(event: ViewEvent) {
         when (event) {
             is MainEvent.BottomNavigationChanged -> {
                 when (event.toId) {

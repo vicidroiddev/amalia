@@ -67,10 +67,10 @@ class BasePresenterTest : TestCase() {
     private val viewEvent = FakeViewEvent()
     private val viewState = FakeViewState()
 
-    private lateinit var presenter: BasePresenter<ViewState, ViewEvent>
+    private lateinit var presenter: BasePresenter
     private lateinit var parentPresenter: FakeParentPresenter
 
-    lateinit var viewDelegate: BaseViewDelegate<ViewState, ViewEvent>
+    lateinit var viewDelegate: BaseViewDelegate
 
     @Before
     fun init() {
@@ -337,7 +337,7 @@ class BasePresenterTest : TestCase() {
 
     @Test
     fun `presenter binds to simple view delegate interface implementation`() {
-        val viewDelegateImpl = spy(object: ViewDelegate<ViewState, ViewEvent> {
+        val viewDelegateImpl = spy(object: ViewDelegate {
             override val viewDelegateLifecycleOwner = lifecycleOwner
             override fun renderViewState(state: ViewState) {
             }
@@ -364,7 +364,7 @@ class BasePresenterTest : TestCase() {
     }
 
     abstract class SharedBasePresenter
-        : BasePresenter<ViewState, ViewEvent>(), SharedImportantFields {
+        : BasePresenter(), SharedImportantFields {
         override lateinit var currentUri: Uri
     }
 
@@ -393,11 +393,11 @@ class BasePresenterTest : TestCase() {
         override fun onViewEvent(event: ViewEvent) {}
     }
 
-    class FakeParentPresenter : BasePresenter<ViewState, ViewEvent>() {
+    class FakeParentPresenter : BasePresenter() {
         override fun loadInitialState() {
         }
 
-        lateinit var childPresenter: BasePresenter<ViewState, ViewEvent>
+        lateinit var childPresenter: BasePresenter
 
         fun propagate() {
             childPresenter.propagateStatesTo(::onStatePropagated)
@@ -407,7 +407,7 @@ class BasePresenterTest : TestCase() {
     }
 
     class FakeViewDelegate(lifecycleOwner: LifecycleOwner, rootView: View) :
-        BaseViewDelegate<ViewState, ViewEvent>(lifecycleOwner, rootView) {
+        BaseViewDelegate(lifecycleOwner, rootView) {
         override fun renderViewState(state: ViewState) {}
     }
 

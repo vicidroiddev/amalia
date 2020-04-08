@@ -46,13 +46,13 @@ class BaseViewDelegateTest : TestCase() {
     @Test
     fun onInterceptEventChain() {
         val delegate =
-            spy(object : BaseViewDelegate<ViewState, DefaultViewEvent>(lifecycleOwner, view) {
+            spy(object : BaseViewDelegate(lifecycleOwner, view) {
                 override fun renderViewState(state: ViewState) {
 
                 }
 
-                override fun onInterceptEventChain(event: DefaultViewEvent) {
-                    event.source = "intercepted"
+                override fun onInterceptEventChain(event: ViewEvent) {
+                    (event as DefaultViewEvent).source = "intercepted"
                 }
             })
 

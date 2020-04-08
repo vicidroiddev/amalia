@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.vicidroid.amalia.ui
 
 import android.app.ProgressDialog

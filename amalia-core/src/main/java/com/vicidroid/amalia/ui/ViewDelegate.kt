@@ -1,10 +1,9 @@
 package com.vicidroid.amalia.ui
 
 import androidx.lifecycle.LifecycleOwner
-import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
 
-interface ViewDelegate<S : ViewState, E : ViewEvent> {
+interface ViewDelegate {
     val viewDelegateLifecycleOwner: LifecycleOwner
 
     fun onBindViewDelegate() {}
@@ -13,5 +12,5 @@ interface ViewDelegate<S : ViewState, E : ViewEvent> {
      * Render a view state that is provided by the Presenter.
      * The view delegate updates the UI accordingly.
      */
-    fun renderViewState(state: S)
+    fun renderViewState(state: ViewState)
 }

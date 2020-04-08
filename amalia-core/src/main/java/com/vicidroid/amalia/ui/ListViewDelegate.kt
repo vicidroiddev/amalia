@@ -17,7 +17,7 @@ abstract class ListViewDelegate<ITEM, V : ViewItem, S : ViewState, E : ViewEvent
     lifecycleOwner: LifecycleOwner,
     rootView: View,
     @IdRes listId: Int) :
-    BaseViewDelegate<S, E>(lifecycleOwner, rootView) {
+    BaseViewDelegate(lifecycleOwner, rootView) {
 
   var viewItems = mutableListOf<V>()
 
