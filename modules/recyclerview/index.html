@@ -534,12 +534,13 @@
                 
                 <h1 id="recyclerview-backed-delegates">RecyclerView Backed Delegates<a class="headerlink" href="#recyclerview-backed-delegates" title="Permanent link">&para;</a></h1>
 <p>This module gives plug and play support for simple and complex lists.</p>
-<p>You can build complex dashboards where each item in the RecyclerView is backed by a different presenter. If each card needs to own it's own logic for when to display - NO problem.</p>
+<p>You can build complex dashboards where each item in the RecyclerView is backed by a different presenter. If each card needs to own its own logic for when to display - NO problem.</p>
 <p>You can also create simple lists that are composed of different view items, such as cards, headers, etc...</p>
 <p>Out of the box you will get:</p>
 <ul>
 <li>Async diff support (send a bunch of items via pushState, only the items that changed will be processed)</li>
 <li>A wrapper around RecyclerView that allows you to focus on your own display logic</li>
+<li>Optional tracking of items seen via event propagation to your presenter</li>
 </ul>
 <h2 id="adding-gradle-dependency">Adding gradle dependency<a class="headerlink" href="#adding-gradle-dependency" title="Permanent link">&para;</a></h2>
 <p>Add the amalia dependency in your app level build.gradle file.</p>
@@ -554,7 +555,8 @@ See the constructor for additional options.</p>
     <span class="n">RecyclerViewDelegate</span><span class="p">&lt;</span><span class="n">DiscoverTvItem</span><span class="p">,</span> <span class="n">DiscoverTvItem</span><span class="p">.</span><span class="n">ViewHolder</span><span class="p">&gt;(</span>
         <span class="n">lifecycleOwner</span><span class="p">,</span>
         <span class="n">view</span><span class="p">,</span>
-        <span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">the_recyclerview_id</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">the_recyclerview_id</span><span class="p">,</span>
+        <span class="n">trackItemsSeen</span> <span class="p">=</span> <span class="k">true</span> <span class="cm">/* optional */</span><span class="p">)</span> <span class="p">{</span>
 <span class="p">}</span>
 </pre></div>
 
