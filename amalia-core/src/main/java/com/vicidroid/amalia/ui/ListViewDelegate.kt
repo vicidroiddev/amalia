@@ -13,7 +13,7 @@ import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
 
 
-abstract class ListViewDelegate<ITEM, V : ViewItem, S : ViewState, E : ViewEvent>(
+abstract class ListViewDelegate<ITEM, V : ViewItem>(
     lifecycleOwner: LifecycleOwner,
     rootView: View,
     @IdRes listId: Int) :
