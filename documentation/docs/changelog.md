@@ -1,6 +1,14 @@
 #Changelog - Amalia
 
-## Amalia 0.6.0
+## Amalia 0.6.2
+
+_2020-04_09_
+
+##### Library changes:
+
+* Remove state and event type signature from ListViewDelegate
+
+## Amalia 0.6.1
 
 _2020-04_08_
 
