@@ -14,13 +14,13 @@ import kotlinx.android.parcel.RawValue
  * [D] data entity that backs the view that backs the view
  * [VI] a view items that wraps all views and should ideally contain [D]
  */
-sealed class ListViewState<D, VI : ViewItem> : ViewState {
-  class Loading<D, VI : ViewItem> : ListViewState<D, VI>()
-  class Empty<D, VI : ViewItem> : ListViewState<D, VI>()
+sealed class ListViewState : ViewState {
+  class Loading : ListViewState()
+  class Empty : ListViewState()
   @Parcelize
-  class DataLoaded<D, VI : ViewItem>(val data: @RawValue MutableList<D>) : ListViewState<D, VI>(), Parcelable
-  class ItemAdded<D, VI : ViewItem>(val data: D) : ListViewState<D, VI>()
-  class ItemRemoved<D, VI : ViewItem>(val viewItem: VI) : ListViewState<D, VI>()
-  class ConfirmationRequired<D, VI : ViewItem> : ListViewState<D, VI>()
-  class NetworkRequired<D, VI : ViewItem> : ListViewState<D, VI>()
+  class DataLoaded(val data: @RawValue MutableList<Any>) : ListViewState(), Parcelable
+  class ItemAdded(val data: Any) : ListViewState()
+  class ItemRemoved(val viewItem: ViewItem) : ListViewState()
+  class ConfirmationRequired : ListViewState()
+  class NetworkRequired: ListViewState()
 }

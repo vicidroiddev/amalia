@@ -13,13 +13,13 @@ import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
 
 
-abstract class ListViewDelegate<ITEM, V : ViewItem>(
+abstract class ListViewDelegate(
     lifecycleOwner: LifecycleOwner,
     rootView: View,
     @IdRes listId: Int) :
     BaseViewDelegate(lifecycleOwner, rootView) {
 
-  var viewItems = mutableListOf<V>()
+  var viewItems = mutableListOf<ViewItem>()
 
   /**
    * Lazily find the viewgroup in case our layout is inflated into a ViewStub.
@@ -36,23 +36,23 @@ abstract class ListViewDelegate<ITEM, V : ViewItem>(
     }
   }
 
-  abstract fun createViewItem(item: ITEM): V
+  abstract fun createViewItem(item: Any): ViewItem
 
   open fun onViewItemAdded(viewItem: ViewItem) {}
 
-  open fun onViewItemRemoved(viewItem: V, index: Int) {}
+  open fun onViewItemRemoved(viewItem: ViewItem, index: Int) {}
 
-  protected fun addViewItem(item: ITEM) {
+  protected fun addViewItem(item: Any) {
     createViewItem(item).apply { addViewItem(this) }
   }
 
-  private fun addViewItem(viewItem: V) {
+  private fun addViewItem(viewItem: ViewItem) {
     viewItems.add(viewItem)
     listView.addView(viewItem.rootView)
     onViewItemAdded(viewItem)
   }
 
-  protected fun removeViewItem(viewItem: V) {
+  protected fun removeViewItem(viewItem: ViewItem) {
     TransitionManager.beginDelayedTransition(listView, Fade())
     viewItems.indexOf(viewItem).let { index ->
       viewItems.removeAt(index)
@@ -68,7 +68,7 @@ abstract class ListViewDelegate<ITEM, V : ViewItem>(
   }
 
   //TODO, diff util would be nice to prevent unnecessary re-inflation
-  protected open fun refreshViewItems(data: List<ITEM>) {
+  protected open fun refreshViewItems(data: List<Any>) {
     removeAll()
     data.forEach { addViewItem(it) }
   }
@@ -86,7 +86,7 @@ abstract class ListViewDelegate<ITEM, V : ViewItem>(
 
   open fun onNextViewFocus(currentView: TextView) {}
 
-  open fun onAutocompleteAction(v: V) {}
+  open fun onAutocompleteAction(v: ViewItem) {}
 
   fun updateDataFromView() {
     viewItems.forEach { it.updateDataFromView() }
