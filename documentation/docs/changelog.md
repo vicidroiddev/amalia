@@ -1,6 +1,6 @@
 #Changelog - Amalia
 
-## Amalia 0.6.2
+## Amalia 0.6.3
 
 _2020-04_09_
 
