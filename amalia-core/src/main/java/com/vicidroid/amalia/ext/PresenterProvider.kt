@@ -75,7 +75,7 @@ inline fun <reified P : BasePresenter> presenterProvider(
     defaultArgs: Bundle? = null
 ) = lazy(LazyThreadSafetyMode.NONE) {
 
-    val savedStateFactory = object : AbstractSavedStateViewModelFactory(savedStateRegistryOwner, defaultArgs) {
+    val savedStateFactory = object : AbstractSavedStateVMFactory(savedStateRegistryOwner, defaultArgs) {
         @Suppress("UNCHECKED_CAST")
         override fun <VM : ViewModel?> create(key: String, modelClass: Class<VM>, handle: SavedStateHandle): VM {
             return (presenterCreator() as VM).also { presenter ->
