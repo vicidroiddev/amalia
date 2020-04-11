@@ -67,9 +67,14 @@ dependencies {
     api androidXDeps.savedState
 }
 
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.sourceFiles
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
 }
 
 task javadoc(type: Javadoc) {
@@ -78,7 +83,7 @@ task javadoc(type: Javadoc) {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from javadoc.destinationDir
 }
 
@@ -87,6 +92,7 @@ task classesJar(type: Jar) {
 }
 
 artifacts {
+    archives androidSourcesJar
     archives classesJar
     archives javadocJar
     archives sourcesJar
