@@ -35,6 +35,12 @@ interface RecyclerItem {
     val diffItem: DiffItem
 
     /**
+     * Return the unique id backing this recycler item, derived from the provided [diffItem]
+     */
+    val diffId: String
+        get() = diffItem.diffId
+
+    /**
      * By default the view type for a recycler view item can be tied to the inflated layout.
      * This may be overridden if different view types are required for the same layout id.
      */

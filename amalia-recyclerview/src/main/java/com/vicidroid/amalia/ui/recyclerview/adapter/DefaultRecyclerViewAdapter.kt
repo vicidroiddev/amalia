@@ -1,6 +1,7 @@
 package com.vicidroid.amalia.ui.recyclerview.adapter
 
 import android.util.SparseArray
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -13,11 +14,13 @@ import com.vicidroid.amalia.ui.recyclerview.RecyclerViewEvent
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewHolderInteractionEvent
 import com.vicidroid.amalia.ui.recyclerview.diff.ChangePayload
 import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
+import com.vicidroid.amalia.ui.recyclerview.tracking.VisibilityTracker
 
 open class DefaultRecyclerViewAdapter(
     override val lifecycleOwner: LifecycleOwner,
     asyncDiffCallback: DiffUtil.ItemCallback<RecyclerItem>,
-    private val trackItemsSeen: Boolean) :
+    private val trackItemsSeen: Boolean,
+    private val visibilityThresholdPercentage: Int) :
     RecyclerView.Adapter<BaseRecyclerViewHolder>(), RecyclerViewAdapter {
 
     val viewHolderEventStore = ViewEventStore<RecyclerViewHolderInteractionEvent>()
@@ -47,28 +50,79 @@ open class DefaultRecyclerViewAdapter(
          */
         var scrollStateHasIdledAtLeastOnce = false
 
+        val visibilityTracker = VisibilityTracker()
+
+
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
             if (!scrollStateHasIdledAtLeastOnce) {
-                trackNewItemsSeen(recyclerView.layoutManager)
+                trackNewItemsSeen(recyclerView)
             }
         }
 
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
             when (newState) {
+                RecyclerView.SCROLL_STATE_DRAGGING -> {
+                    scrollStateHasIdledAtLeastOnce = true
+                    trackNewItemsSeen(recyclerView)
+                }
+
                 RecyclerView.SCROLL_STATE_IDLE -> {
                     scrollStateHasIdledAtLeastOnce = true
-                    trackNewItemsSeen(recyclerView.layoutManager)
+                    trackNewItemsSeen(recyclerView)
                 }
+
+                RecyclerView.SCROLL_STATE_SETTLING -> {
+                }
+            }
+        }
+
+        private fun trackNewItemsSeen(recyclerView: RecyclerView) {
+            val layoutManager: RecyclerView.LayoutManager? = recyclerView.layoutManager
+            if (layoutManager !is LinearLayoutManager) return
+
+            val itemPositionStart = layoutManager.findFirstVisibleItemPosition()
+            val itemPositionEnd = layoutManager.findLastVisibleItemPosition()
+
+            if (itemPositionStart == -1 || itemPositionEnd == -1) return
+
+            val newItemsSeen = mutableSetOf<DiffItem>()
+
+            for (i in itemPositionStart..itemPositionEnd) {
+                trackViewWithinThreshold(i, layoutManager.findViewByPosition(i), newItemsSeen)
+            }
+
+            newItemsSeen.forEach { itemsSeenRecently[it.diffId] = it }
+
+            //TODO buffer queue
+            if (newItemsSeen.isNotEmpty()) {
+                viewHolderEventStore.pushEvent(
+                    RecyclerViewHolderInteractionEvent(
+                        -1,
+                        RecyclerViewEvent.NewVisibleItemsDetected(newItemsSeen)
+                    )
+                )
+            }
+        }
+
+        private fun trackViewWithinThreshold(position: Int, candidate: View?, newItemsSeen: MutableSet<DiffItem>) {
+            if (candidate == null) return
+            if (visibilityTracker.visibleHeightPercentage(candidate) < visibilityThresholdPercentage) return
+
+            val item = adapterItems[position].diffItem
+
+            if (item.diffId !in itemsSeenRecently.keys) {
+//                recyclerViewDebugLog("Visible item ${adapterItems[position].javaClass} / ${item.diffId} at position $position")
+                newItemsSeen.add(item)
             }
         }
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        if(trackItemsSeen) {
+        if (trackItemsSeen) {
             recyclerView.addOnScrollListener(itemSeenScrollListener)
         }
     }
@@ -127,38 +181,6 @@ open class DefaultRecyclerViewAdapter(
         holder.adapterItem = null
 
         return super.onFailedToRecycleView(holder)
-    }
-
-    private fun trackNewItemsSeen(layoutManager: RecyclerView.LayoutManager?) {
-        if (layoutManager !is LinearLayoutManager) return
-
-        val itemPositionStart = layoutManager.findFirstCompletelyVisibleItemPosition()
-        val itemPositionEnd = layoutManager.findLastCompletelyVisibleItemPosition()
-
-        if (itemPositionStart == -1 || itemPositionEnd == -1) return
-
-        val newItemsSeen = mutableSetOf<DiffItem>()
-
-        for (i in itemPositionStart..itemPositionEnd) {
-            val item = adapterItems[i].diffItem
-
-            if (item.diffId !in itemsSeenRecently.keys) {
-                recyclerViewDebugLog("Visible item ${adapterItems[i].javaClass} / ${item.diffId} at position $i")
-                newItemsSeen.add(item)
-            }
-        }
-
-        newItemsSeen.forEach { itemsSeenRecently[it.diffId] = it }
-
-        //TODO buffer queue
-        if (newItemsSeen.isNotEmpty()) {
-            viewHolderEventStore.pushEvent(
-                RecyclerViewHolderInteractionEvent(
-                    -1,
-                    RecyclerViewEvent.NewVisibleItemsDetected(newItemsSeen)
-                )
-            )
-        }
     }
 
     override fun getItemCount() = adapterItems.size

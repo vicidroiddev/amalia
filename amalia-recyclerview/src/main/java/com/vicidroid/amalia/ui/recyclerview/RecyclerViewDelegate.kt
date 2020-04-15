@@ -26,7 +26,8 @@ open class RecyclerViewDelegate(
     ),
     asyncDiffCallback: DiffUtil.ItemCallback<RecyclerItem> = AsyncRecyclerItemDiffCallback(),
     recyclerViewHasFixedSize: Boolean = true,
-    trackItemsSeen: Boolean = false
+    trackItemsSeen: Boolean = false,
+    visibilityThresholdPercentage: Int = 80
 ) :
     BaseViewDelegate(
         viewLifeCycleOwner,
@@ -37,7 +38,8 @@ open class RecyclerViewDelegate(
     protected val adapter = DefaultRecyclerViewAdapter(
         viewLifeCycleOwner,
         asyncDiffCallback,
-        trackItemsSeen
+        trackItemsSeen,
+        visibilityThresholdPercentage
     )
 
     init {
