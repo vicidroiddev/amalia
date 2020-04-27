@@ -1,6 +1,15 @@
 #Changelog - Amalia
 
-## Amalia 0.6.3
+## Amalia 0.6.8
+
+_2020-XX_XX_
+
+##### Library changes:
+
+* Fix index out of bounds error on recycler view (https://github.com/vicidroiddev/amalia/issues/26)
+
+
+## Amalia 0.6.7
 
 _2020-04_09_
 
