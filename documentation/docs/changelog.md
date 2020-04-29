@@ -2,7 +2,7 @@
 
 ## Amalia 0.6.8
 
-_2020-XX_XX_
+_2020-04_29_
 
 ##### Library changes:
 
