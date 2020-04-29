@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.core.ViewEventStore
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
-import com.vicidroid.amalia.ui.recyclerview.RecyclerViewEvent
+import com.vicidroid.amalia.ui.recyclerview.AmaliaCommonEvent
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewHolderInteractionEvent
 import com.vicidroid.amalia.ui.recyclerview.diff.ChangePayload
 import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
@@ -101,7 +101,7 @@ open class DefaultRecyclerViewAdapter(
                 viewHolderEventStore.pushEvent(
                     RecyclerViewHolderInteractionEvent(
                         -1,
-                        RecyclerViewEvent.NewVisibleItemsDetected(newItemsSeen)
+                        AmaliaCommonEvent.NewVisibleItemsDetected(newItemsSeen)
                     )
                 )
             }

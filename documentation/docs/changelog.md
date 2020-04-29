@@ -1,5 +1,13 @@
 #Changelog - Amalia
 
+## Amalia 0.6.9
+
+_2020-04_29_
+
+##### Library changes:
+
+* Rename RecyclerViewEvent to AmaliaCommonEvent
+
 ## Amalia 0.6.8
 
 _2020-04_29_

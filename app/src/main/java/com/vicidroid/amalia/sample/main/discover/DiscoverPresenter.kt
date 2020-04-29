@@ -4,12 +4,11 @@ import android.widget.Toast
 import androidx.lifecycle.mainScope
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.ViewEvent
-import com.vicidroid.amalia.core.ViewState
 import com.vicidroid.amalia.ext.debugLog
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverRepository
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverResult
 import com.vicidroid.amalia.sample.main.dashboard.Refreshable
-import com.vicidroid.amalia.ui.recyclerview.RecyclerViewEvent
+import com.vicidroid.amalia.ui.recyclerview.AmaliaCommonEvent
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewState
 import kotlinx.coroutines.launch
 
@@ -54,7 +53,7 @@ class DiscoverPresenter(private val repository: DiscoverRepository) :
                 )
             }
 
-            is RecyclerViewEvent.NewVisibleItemsDetected -> {
+            is AmaliaCommonEvent.NewVisibleItemsDetected -> {
                 event.visibleItems
                     .mapNotNull { item -> item as? DiscoverResult }
                     .forEach { discoverResult ->
