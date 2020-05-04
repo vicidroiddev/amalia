@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.core.ViewEventStore
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
-import com.vicidroid.amalia.ui.recyclerview.RecyclerViewEvent
+import com.vicidroid.amalia.ui.recyclerview.AmaliaCommonEvent
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewHolderInteractionEvent
 import com.vicidroid.amalia.ui.recyclerview.diff.ChangePayload
 import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
@@ -101,7 +101,7 @@ open class DefaultRecyclerViewAdapter(
                 viewHolderEventStore.pushEvent(
                     RecyclerViewHolderInteractionEvent(
                         -1,
-                        RecyclerViewEvent.NewVisibleItemsDetected(newItemsSeen)
+                        AmaliaCommonEvent.NewVisibleItemsDetected(newItemsSeen)
                     )
                 )
             }
@@ -159,13 +159,14 @@ open class DefaultRecyclerViewAdapter(
     }
 
     /**
-     * It is possible for the position to be -1 if an item is removed.
+     * It is possible for [holder.adapterPosition] to be -1 if an item is removed.
+     * It is also possible for [holder.adapterPosition] to be larger than the max index of the current adapter items.
      * Otherwise, it is expected to have this called as the views go off screen
      */
     override fun onViewRecycled(holder: BaseRecyclerViewHolder) {
         recyclerViewDebugLog("onViewRecycled() / unbind(): adapterPosition=${holder.adapterPosition}")
 
-        if (holder.adapterPosition in 0..adapterItems.size) {
+        if (validRange(holder.adapterPosition)) {
             adapterItems[holder.adapterPosition].prepareUnbind(holder)
             holder.adapterItem = null
         }
@@ -174,7 +175,7 @@ open class DefaultRecyclerViewAdapter(
     override fun onFailedToRecycleView(holder: BaseRecyclerViewHolder): Boolean {
         recyclerViewDebugLog("onFailedToRecycleView() / prepareUnbind(): adapterPosition=${holder.adapterPosition}")
 
-        if (holder.adapterPosition in 0..adapterItems.size) {
+        if (validRange(holder.adapterPosition)) {
             adapterItems[holder.adapterPosition].prepareUnbind(holder)
         }
 
@@ -209,4 +210,7 @@ open class DefaultRecyclerViewAdapter(
         viewTypeToItemCache.clear()
         items.distinctBy { it.viewType }.forEach { i -> viewTypeToItemCache.append(i.viewType, i) }
     }
+
+    private fun validRange(position: Int) =
+        position >= 0 && position < adapterItems.size
 }
