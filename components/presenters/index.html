@@ -578,7 +578,7 @@ However, if conversion is not desired, it is possible to specify the reified typ
     <span class="k">private</span> <span class="n">Feature2Presenter</span> <span class="n">mFeature2Presenter</span><span class="p">;</span>
 
     <span class="n">@Override</span>
-    <span class="k">public</span> <span class="n">void</span> <span class="n">onCreate</span><span class="p">(</span><span class="k">final</span> <span class="n">View</span> <span class="n">view</span><span class="p">,</span> <span class="n">@Nullable</span> <span class="k">final</span> <span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">onCreate</span><span class="p">(</span><span class="n">@Nullable</span> <span class="k">final</span> <span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">super</span><span class="p">.</span><span class="n">onViewCreated</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">savedInstanceState</span><span class="p">);</span>
         <span class="n">mFeature1Presenter</span> <span class="p">=</span> <span class="n">provideFeature1Presenter</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
         <span class="n">mFeature2Presenter</span> <span class="p">=</span> <span class="n">provideFeature2Presenter</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
