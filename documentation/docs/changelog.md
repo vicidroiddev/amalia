@@ -1,5 +1,14 @@
 #Changelog - Amalia
 
+## Amalia 0.X.X
+
+_2020-XX_XX_
+
+##### Library changes:
+
+* Remove JavaPresenterProvider and update documentation for possible issues
+
+
 ## Amalia 0.6.9
 
 _2020-04_29_

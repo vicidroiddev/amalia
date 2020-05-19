@@ -107,15 +107,3 @@ val LifecycleOwner.savedStateRegistryOwner: SavedStateRegistryOwner
         is Fragment -> this
         else -> error("Unable to obtain SavedStateRegistryOwner under Lifecycle owner. Ensure activities inherit from ComponentActivity.")
     }
-
-/**
- * Workaround for reified types which allows the use of [presenterProvider] in Java.
- * Moreover, this will support constructor arguments in presenters.
- */
-
-class PresenterProvider<P : BasePresenter> {
-    @Suppress("UNCHECKED_CAST")
-    fun provide(fragment: Fragment, presenterCreator: () -> BasePresenter): P {
-        return fragment.presenterProvider { presenterCreator() }.value as P
-    }
-}
