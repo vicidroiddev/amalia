@@ -85,11 +85,13 @@ Use those package functions from your java fragment
 public class MyFragment extends Fragment
     private Feature1Presenter mFeature1Presenter;
     private Feature2Presenter mFeature2Presenter;
-    
-    @Override 
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mFeature1Presenter = provideFeature1Presenter(this);
         mFeature2Presenter = provideFeature2Presenter(this);
     }
+
+    // bind the presenters in onViewCreated
 ```
