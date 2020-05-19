@@ -55,3 +55,41 @@ class MyPresenter : BasePresenter() {
     }
 }
 ```
+
+## How do I use multiple presenters in Java?
+
+!!! warning
+    Java does not support Kotlin reified types. As such the following signature cannot be used reliabily from Java:
+
+    `fun <reified P : BasePresenter> Fragment.presenterProvider(.....)`
+
+    While it is possible to write a wrapper, a casting error will occur if more than one presenter is invoked in a given java class.
+
+To get around this problem you could convert your class to Kotlin to make use of reified types.
+However, if conversion is not desired, it is possible to specify the reified types in a wrapper function that returns an exact type.
+
+Create a Kotlin file with one or many package level functions
+
+```kotlin
+// MyProviders.kt
+fun provideFeature1Presenter(fragment: Fragment) : Feature1Presenter  =
+    fragment.presenterProviderExt { provideFeature1Presenter() }.value
+
+fun provideFeature2Presenter(fragment: Fragment) : Feature2Presenter =
+    fragment.presenterProviderExt { provideFeature2Presenter() }.value
+```
+
+Use those package functions from your java fragment
+
+```kotlin
+public class MyFragment extends Fragment
+    private Feature1Presenter mFeature1Presenter;
+    private Feature2Presenter mFeature2Presenter;
+    
+    @Override 
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mFeature1Presenter = provideFeature1Presenter(this);
+        mFeature2Presenter = provideFeature2Presenter(this);
+    }
+```
