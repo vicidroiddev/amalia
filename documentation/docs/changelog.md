@@ -1,12 +1,13 @@
 #Changelog - Amalia
 
-## Amalia 0.X.X
+## Amalia 0.7.0
 
-_2020-XX_XX_
+_2020-05_20_
 
 ##### Library changes:
 
 * Remove JavaPresenterProvider and update documentation for possible issues
+* Remove @Parcelable annotation on ListViewState - can cause crash depending on item passed in
 
 
 ## Amalia 0.6.9
