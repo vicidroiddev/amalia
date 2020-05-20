@@ -17,8 +17,7 @@ import kotlinx.android.parcel.RawValue
 sealed class ListViewState : ViewState {
   class Loading : ListViewState()
   class Empty : ListViewState()
-  @Parcelize
-  class DataLoaded(val data: @RawValue MutableList<Any>) : ListViewState(), Parcelable
+  class DataLoaded(val data: MutableList<Any>) : ListViewState()
   class ItemAdded(val data: Any) : ListViewState()
   class ItemRemoved(val viewItem: ViewItem) : ListViewState()
   class ConfirmationRequired : ListViewState()
