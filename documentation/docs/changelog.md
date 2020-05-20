@@ -6,7 +6,7 @@ _2020-05_20_
 
 ##### Library changes:
 
-* Remove JavaPresenterProvider and update documentation for possible issues
+* Replace JavaPresenterProvider with variant that requires casting and update documentation for possible issues
 * Remove @Parcelable annotation on ListViewState - can cause crash depending on item passed in
 
 

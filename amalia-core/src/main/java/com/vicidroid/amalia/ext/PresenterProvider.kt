@@ -107,3 +107,4 @@ val LifecycleOwner.savedStateRegistryOwner: SavedStateRegistryOwner
         is Fragment -> this
         else -> error("Unable to obtain SavedStateRegistryOwner under Lifecycle owner. Ensure activities inherit from ComponentActivity.")
     }
+

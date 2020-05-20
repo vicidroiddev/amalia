@@ -56,19 +56,41 @@ class MyPresenter : BasePresenter() {
 }
 ```
 
-## How do I use multiple presenters in Java?
+## How do I use presenter provider in Java?
 
 !!! warning
     Java does not support Kotlin reified types. As such the following signature cannot be used reliabily from Java:
 
     `fun <reified P : BasePresenter> Fragment.presenterProvider(.....)`
 
-    While it is possible to write a wrapper, a casting error will occur if more than one presenter is invoked in a given java class.
+    While it is possible to write a wrapper, ensure you do not retain the generic type `<T>`.
+    A casting error will occur if more than one presenter is invoked in a given java class.
+    The generic type `<T>` will be translated to the first presenter invoked due to the type erasure problem in Java.
 
-To get around this problem you could convert your class to Kotlin to make use of reified types.
-However, if conversion is not desired, it is possible to specify the reified types in a wrapper function that returns an exact type.
+    The optimal solution is to convert your Java code to Kotlin. The alternative will involve casting or creating wrappers.
 
-Create a Kotlin file with one or many package level functions
+### Alernatives:
+
+1. Leverage `JavaPresenterProvider` and cast your presenters to the appropriate type.
+
+```kotlin
+public class MyFragment extends Fragment
+    private Feature1Presenter mFeature1Presenter;
+    private Feature2Presenter mFeature2Presenter;
+
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mFeature1Presenter = ((Feature1Presenter) JavaPresenterProvider.provide(this, Feature1Presenter::new));
+        mFeature2Presenter = ((Feature2Presenter) JavaPresenterProvider.provide(this, Feature2Presenter::new));
+    }
+
+    // bind the presenters in onViewCreated
+}
+
+```
+
+2. Use package functions which specify the type.
 
 ```kotlin
 // MyProviders.kt
@@ -79,9 +101,10 @@ fun provideFeature2Presenter(fragment: Fragment) : Feature2Presenter =
     fragment.presenterProviderExt { provideFeature2Presenter() }.value
 ```
 
-Use those package functions from your java fragment
+
 
 ```kotlin
+// Use those package functions from your java fragment
 public class MyFragment extends Fragment
     private Feature1Presenter mFeature1Presenter;
     private Feature2Presenter mFeature2Presenter;
@@ -94,4 +117,5 @@ public class MyFragment extends Fragment
     }
 
     // bind the presenters in onViewCreated
+}
 ```
