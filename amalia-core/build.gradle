@@ -59,11 +59,12 @@ dependencies {
     testImplementation deps.roboelectric
     testImplementation archDeps.archCoreTesting
 
+    // 'api' mimics old 'compile' - resources are not available
     api archDeps.extensions
-    api archDeps.commonJava8
+    implementation archDeps.commonJava8
 
-    implementation androidXDeps.appcompat
-    implementation androidXDeps.annotation
+    api androidXDeps.appcompat
+    api androidXDeps.annotation
     api androidXDeps.savedState
 }
 
