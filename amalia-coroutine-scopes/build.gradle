@@ -37,10 +37,10 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.kotlinStdlib
-    implementation deps.coroutines
+    api deps.coroutines
 
-    implementation archDeps.viewmodel
-    implementation archDeps.commonJava8
+    api archDeps.viewmodel
+    api archDeps.commonJava8
 
     implementation project(path: ':amalia-core')
 }
