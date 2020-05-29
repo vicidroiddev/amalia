@@ -61,11 +61,11 @@ dependencies {
 
     // 'api' mimics old 'compile' - resources are not available
     api archDeps.extensions
-    implementation archDeps.commonJava8
+    api archDeps.commonJava8
 
     api androidXDeps.appcompat
     api androidXDeps.annotation
-    api androidXDeps.savedState
+    implementation androidXDeps.savedState
 }
 
 task androidSourcesJar(type: Jar) {
