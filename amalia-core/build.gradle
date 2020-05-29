@@ -65,7 +65,7 @@ dependencies {
 
     api androidXDeps.appcompat
     api androidXDeps.annotation
-    implementation androidXDeps.savedState
+    api androidXDeps.savedState
 }
 
 task androidSourcesJar(type: Jar) {
