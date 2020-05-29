@@ -1,8 +1,18 @@
 #Changelog - Amalia
 
+## Amalia 0.7.X
+
+_2020-XX_XX_
+
+##### Library changes:
+
+* Update Gradle wrapper to gradle-6.5-milestone-1-all.zip
+* Update Gradle plugin to 4.1.0-alpha10
+
+
 ## Amalia 0.7.0
 
-_2020-05_20_
+_2020-05_28_
 
 ##### Library changes:
 

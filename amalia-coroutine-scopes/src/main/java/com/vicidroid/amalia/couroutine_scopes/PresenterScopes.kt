@@ -1,4 +1,4 @@
-package androidx.lifecycle //we need to be in this package to access getTag in ViewModel
+package com.vicidroid.amalia.couroutine_scopes
 
 import com.vicidroid.amalia.core.BasePresenter
 import kotlinx.coroutines.*
@@ -16,6 +16,11 @@ private const val DEFAULT_SCOPE_KEY = "com.vicidroid.amalia.core.PresenterScopes
 val BasePresenter.mainScope: CoroutineScope
     get() {
         return scopeFor(Dispatchers.Main)
+    }
+
+val BasePresenter.immediate: CoroutineScope
+    get() {
+        return scopeFor(Dispatchers.Main.immediate)
     }
 
 val BasePresenter.ioScope: CoroutineScope
@@ -37,7 +42,7 @@ private fun BasePresenter.scopeFor(dispatcher: CoroutineDispatcher): CoroutineSc
     }
 
     return this.closeableObjects.getOrPut(key) {
-        CloseableCoroutineScope(SupervisorJob() + dispatcher)
+        AmaliaCloseableCoroutineScope(SupervisorJob() + dispatcher)
     } as CoroutineScope
 }
 
@@ -45,7 +50,7 @@ private fun BasePresenter.scopeFor(dispatcher: CoroutineDispatcher): CoroutineSc
  * A CoroutineScope that implements [java.io.Closable]
  * Viewmodels will go through the `mBagOfTags` and call close as long as the object implements [Closable]
  */
-private class CloseableCoroutineScope(
+private class AmaliaCloseableCoroutineScope(
     override val coroutineContext: CoroutineContext
 ) : Closeable,
     CoroutineScope {
