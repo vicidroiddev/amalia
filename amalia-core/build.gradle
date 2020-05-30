@@ -55,6 +55,7 @@ dependencies {
     implementation deps.kotlinStdlib
 
     testImplementation deps.junit
+    testImplementation androidXDeps.fragment
     testImplementation deps.mjaarmanMockito
     testImplementation deps.roboelectric
     testImplementation archDeps.archCoreTesting

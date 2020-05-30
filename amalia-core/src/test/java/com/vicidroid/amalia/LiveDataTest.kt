@@ -44,7 +44,7 @@ class LiveDataTest : TestCase() {
     val liveData = MutableLiveData<String>()
     val newValue = "Second"
 
-    lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
+    lifecycleRegistry.markState(Lifecycle.State.INITIALIZED)
 
     val observer = spy(Observer<String> {
       assertEquals(newValue, it)
@@ -54,6 +54,6 @@ class LiveDataTest : TestCase() {
 
     liveData.value = newValue
 
-    lifecycleRegistry.currentState = Lifecycle.State.STARTED
+    lifecycleRegistry.markState(Lifecycle.State.STARTED)
   }
 }

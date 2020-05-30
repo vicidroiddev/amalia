@@ -7,6 +7,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistry
+import androidx.savedstate.SavedStateRegistryOwner
 import com.nhaarman.mockitokotlin2.*
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.ViewEvent
@@ -85,7 +86,7 @@ class BasePresenterTest : TestCase() {
         whenever(view.context).thenReturn(activity)
 
         whenever(activity.lifecycle).thenReturn(lifecycle)
-        whenever(activity.savedStateRegistry).thenReturn(savedStateRegistry)
+        whenever((activity as SavedStateRegistryOwner).savedStateRegistry).thenReturn(savedStateRegistry)
         whenever(activity.application).thenReturn(application)
         whenever(activity.viewModelStore).thenReturn(viewModelStore)
         whenever(view.context).thenReturn(context)
@@ -121,7 +122,7 @@ class BasePresenterTest : TestCase() {
     @Test
     fun `presenter is lifecycle aware when using bind without view delegate`() {
         val presenter = spy(FakePresenter())
-        lifecycle.currentState = Lifecycle.State.CREATED
+        lifecycle.markState(Lifecycle.State.CREATED)
         presenter.bind(lifecycleOwner)
 
         verify(presenter).onBindViewLifecycleOwner(lifecycleOwner)
@@ -129,7 +130,7 @@ class BasePresenterTest : TestCase() {
         verify(lifecycle).addObserver(presenter.viewLifecycleObserver)
         assertNotNull(presenter.viewLifecycleOwner)
 
-        lifecycle.currentState = Lifecycle.State.DESTROYED
+        lifecycle.markState(Lifecycle.State.DESTROYED)
         verify(presenter).onViewDetached(lifecycleOwner)
         assertNull(presenter.viewLifecycleOwner)
     }
