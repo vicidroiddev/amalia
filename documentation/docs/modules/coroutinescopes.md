@@ -2,7 +2,7 @@
 
 All provided coroutine scope extensions are cancelled when the presenter goes through destruction, dictated by the `presenterProvider`.
 
-#####Available scopes in a presenter extending from`<BasePresenter`
+#####Available scopes in a presenter extending from `BasePresenter`
 
 ```kotlin
 mainScope.launch { //uses the coroutine Main dispatcher, preferred scope for presenters } 
