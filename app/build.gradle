@@ -74,13 +74,13 @@ dependencies {
     implementation androidXDeps.recyclerview
 
     // MATERIAL
-    implementation 'com.google.android.material:material:1.2.0-alpha04'
+    implementation 'com.google.android.material:material:1.2.0-beta01'
 
     // TESTS
     testImplementation deps.junit
 
-    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.7.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation 'com.squareup.moshi:moshi:1.9.2'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.2'
 
@@ -88,23 +88,29 @@ dependencies {
         exclude group: "com.android.support"
     }
 
+    // Adding navigation components
+//    implementation 'androidx.navigation:navigation-fragment:2.2.1'
+//    implementation 'androidx.navigation:navigation-ui:2.2.1'
+//    implementation 'androidx.navigation:navigation-fragment-ktx:2.2.1'
+//    implementation 'androidx.navigation:navigation-ui-ktx:2.2.1'
+
     // AMALIA LIB EXTERNAL
-    def amaliaVersion = "0.7.0-EAP-09"
+    def amaliaVersion = "0.7.2"
 
     // aar includes android resource files, jar does not.
     // We should explicitly ask for an aar by using @aar
     // Note: when using @aar syntax, gradle will drop transitive dependencies.
     // We must include transitive dependencies to support the android libraries amalia depends on.
-    implementation ("com.github.vicidroiddev.amalia:amalia-core:$amaliaVersion@aar") {
-        transitive = true
-    }
-    implementation ("com.github.vicidroiddev.amalia:amalia-coroutine-scopes:$amaliaVersion@aar")
-    implementation ("com.github.vicidroiddev.amalia:amalia-recyclerview:$amaliaVersion@aar")
+//    implementation ("com.github.vicidroiddev.amalia:amalia-core:$amaliaVersion@aar") {
+//        transitive = true
+//    }
+//    implementation ("com.github.vicidroiddev.amalia:amalia-coroutine-scopes:$amaliaVersion@aar")
+//    implementation ("com.github.vicidroiddev.amalia:amalia-recyclerview:$amaliaVersion@aar")
 
     // AMALIA LIB INTERNAL
-//    implementation project(path: ':amalia-core')
-//    implementation project(path: ':amalia-coroutine-scopes')
-//    implementation project(path: ':amalia-recyclerview')
+    implementation project(path: ':amalia-core')
+    implementation project(path: ':amalia-coroutine-scopes')
+    implementation project(path: ':amalia-recyclerview')
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }
