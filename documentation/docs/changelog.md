@@ -4,7 +4,7 @@
 
 _2020-XX-XX_
 
-##### Library changes:
+##### Library
 
 !!! bug "Crash with Navigation Fragment Components"
     `Caused by: java.lang.ClassNotFoundException: Didn't find class androidx.lifecycle.AbstractSavedStateVMFactory`
@@ -13,9 +13,14 @@ _2020-XX-XX_
     The problem is due to multiple versions of the savedState library. At some point the naming convention changed.
     To fix we update to saved state 2.2.0+ where the class is consistently `AbstractSavedStateViewModelFactory`
 
-##### Dependency updates:
+!!! info "Coroutine scope package change"
+    Changed package of scopes to `com.vicidroid.amalia.coroutine_scopes`
 
-!!! note ""
+    This fixes a clash with viewmodel libraries that contain the same class name `CloseableCoroutineScope`
+
+##### Dependencies
+
+!!! example "Dependency updates"
     Added `androidx.fragment:fragment:1.2.4` (ensures Fragment implements interface `SavedStateRegistryOwner`)
 
     Updated: `androidx.core:core-ktx:1.3.0`
@@ -40,7 +45,6 @@ _2020-05-29_
     Update: Gradle wrapper to gradle-6.5-milestone-1-all.zip
 
     Update: Gradle plugin to 4.1.0-alpha10
-
 
 ___
 ## Amalia 0.7.0
