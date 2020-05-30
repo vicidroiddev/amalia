@@ -61,12 +61,19 @@ dependencies {
 
     // 'api' mimics old 'compile' - resources are made publicly available
     // implementation hides the classes, also a build optimization for gradle.
-    implementation archDeps.extensions
-    implementation archDeps.commonJava8
 
+    // ViewModel and live data
+    implementation archDeps.extensions
+
+    // To support DefaultLifecycleObserver, api because presenters are exposed
+    api archDeps.commonJava8
+
+    // Extensions on Activities
     implementation androidXDeps.appcompat
     implementation androidXDeps.annotation
-    implementation androidXDeps.savedState
+
+    // Saved state support in presenters, api because saveStateHandle is exposed
+    api androidXDeps.savedState
 }
 
 task androidSourcesJar(type: Jar) {

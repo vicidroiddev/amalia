@@ -89,7 +89,7 @@ dependencies {
     }
 
     // AMALIA LIB EXTERNAL
-    def amaliaVersion = "0.7.0-EAP-03"
+    def amaliaVersion = "0.7.0-EAP-07"
 
     // aar includes android resource files, jar does not.
     // We should explicitly ask for an aar by using @aar
@@ -98,7 +98,7 @@ dependencies {
     implementation ("com.github.vicidroiddev.amalia:amalia-core:$amaliaVersion@aar") {
         transitive = true
     }
-    implementation "com.github.vicidroiddev.amalia:amalia-coroutine-scopes:$amaliaVersion@aar"
+    implementation ("com.github.vicidroiddev.amalia:amalia-coroutine-scopes:$amaliaVersion@aar")
     implementation ("com.github.vicidroiddev.amalia:amalia-recyclerview:$amaliaVersion@aar")
 
     // AMALIA LIB INTERNAL
