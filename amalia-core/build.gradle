@@ -62,8 +62,11 @@ dependencies {
     // 'api' mimics old 'compile' - resources are made publicly available
     // implementation hides the classes, also a build optimization for gradle.
 
-    // ViewModel and live data
-    implementation archDeps.extensions
+    // To support persistence of a presenter after config changes
+    implementation archDeps.viewmodel
+
+    // To support sending and receiving of events and states on the UI thread
+    implementation archDeps.livedata
 
     // To support DefaultLifecycleObserver, api because presenters are exposed
     api archDeps.commonJava8
@@ -73,7 +76,10 @@ dependencies {
     implementation androidXDeps.annotation
 
     // Saved state support in presenters, api because saveStateHandle is exposed
-    api androidXDeps.savedState
+    api archDeps.savedState
+
+    // To access saved state registry owner
+    androidXDeps.fragment
 }
 
 task androidSourcesJar(type: Jar) {

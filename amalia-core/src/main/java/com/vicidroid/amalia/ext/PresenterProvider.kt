@@ -75,7 +75,7 @@ inline fun <reified P : BasePresenter> presenterProvider(
     defaultArgs: Bundle? = null
 ) = lazy(LazyThreadSafetyMode.NONE) {
 
-    val savedStateFactory = object : AbstractSavedStateVMFactory(savedStateRegistryOwner, defaultArgs) {
+    val savedStateFactory = object : AbstractSavedStateViewModelFactory(savedStateRegistryOwner, defaultArgs) {
         @Suppress("UNCHECKED_CAST")
         override fun <VM : ViewModel?> create(key: String, modelClass: Class<VM>, handle: SavedStateHandle): VM {
             return (presenterCreator() as VM).also { presenter ->
@@ -97,7 +97,7 @@ inline fun <reified P : BasePresenter> presenterProvider(
 val LifecycleOwner.application: Application
     get() = when (this) {
         is FragmentActivity -> this.application
-        is Fragment -> this.activity!!.application
+        is Fragment -> this.requireActivity().application
         else -> error("Unable to obtain context due to unsupported lifecycle owner.")
     }
 
