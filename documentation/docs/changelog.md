@@ -1,8 +1,39 @@
 # Changelog - Amalia
 
+## Amalia 0.7.2
+
+_2020-05-30_
+
+##### Library
+
+!!! bug "Crash with Navigation Fragment Components"
+    `Caused by: java.lang.ClassNotFoundException: Didn't find class androidx.lifecycle.AbstractSavedStateVMFactory`
+
+    This occured when including navigation fragment components.
+    The problem is due to multiple versions of the savedState library. At some point the naming convention changed.
+    To fix we update to saved state 2.2.0+ where the class is consistently `AbstractSavedStateViewModelFactory`
+
+!!! info "Coroutine scope package change"
+    Changed package of scopes to `com.vicidroid.amalia.coroutine_scopes`
+
+    This fixes a clash with viewmodel libraries that contain the same class name `CloseableCoroutineScope`
+
+##### Dependencies
+
+!!! example "Dependency updates"
+    Added `androidx.fragment:fragment:1.2.4` (ensures Fragment implements interface `SavedStateRegistryOwner`)
+
+    Updated: `androidx.core:core-ktx:1.3.0`
+
+    Updated: `androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0`
+
+    Updated: `androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0`
+
+    Updated: `androidx.lifecycle:lifecycle-livedata-ktx:2.2.0`
+___
 ## Amalia 0.7.1
 
-_2020-05_29_
+_2020-05-29_
 
 ##### Library changes:
 
@@ -10,8 +41,11 @@ _2020-05_29_
 
 ##### Dependency updates:
 
-* Update Gradle wrapper to gradle-6.5-milestone-1-all.zip
-* Update Gradle plugin to 4.1.0-alpha10
+!!! note ""
+    Update: Gradle wrapper to gradle-6.5-milestone-1-all.zip
+
+    Update: Gradle plugin to 4.1.0-alpha10
+
 ___
 ## Amalia 0.7.0
 

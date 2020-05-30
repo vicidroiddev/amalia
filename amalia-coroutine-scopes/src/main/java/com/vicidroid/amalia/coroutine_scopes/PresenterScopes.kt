@@ -1,4 +1,4 @@
-package com.vicidroid.amalia.couroutine_scopes
+package com.vicidroid.amalia.coroutine_scopes
 
 import com.vicidroid.amalia.core.BasePresenter
 import kotlinx.coroutines.*
@@ -44,7 +44,9 @@ private fun BasePresenter.scopeFor(dispatcher: CoroutineDispatcher): CoroutineSc
     }
 
     return this.closeableObjects.getOrPut(key) {
-        AmaliaCloseableCoroutineScope(SupervisorJob() + dispatcher)
+        AmaliaCloseableCoroutineScope(
+            SupervisorJob() + dispatcher
+        )
     } as CoroutineScope
 }
 

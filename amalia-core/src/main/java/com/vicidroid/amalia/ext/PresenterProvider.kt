@@ -21,19 +21,19 @@ inline fun <reified P : BasePresenter> Fragment.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) =
-    presenterProvider(this, this, presenterCreator, hooks)
+    presenterProvider(this, this as SavedStateRegistryOwner, presenterCreator, hooks)
 
 inline fun <reified P : BasePresenter> FragmentActivity.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) =
-    presenterProvider(this, this, presenterCreator, hooks)
+    presenterProvider(this, this as SavedStateRegistryOwner, presenterCreator, hooks)
 
 inline fun <reified P : BasePresenter> AppCompatActivity.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
     crossinline presenterCreator: () -> P
 ) =
-    presenterProvider(this, this, presenterCreator, hooks)
+    presenterProvider(this, this as SavedStateRegistryOwner, presenterCreator, hooks)
 
 inline fun <reified P : BasePresenter> LifecycleOwner.presenterProvider(
     noinline hooks: ((P) -> Unit)? = null,
@@ -75,7 +75,7 @@ inline fun <reified P : BasePresenter> presenterProvider(
     defaultArgs: Bundle? = null
 ) = lazy(LazyThreadSafetyMode.NONE) {
 
-    val savedStateFactory = object : AbstractSavedStateVMFactory(savedStateRegistryOwner, defaultArgs) {
+    val savedStateFactory = object : AbstractSavedStateViewModelFactory(savedStateRegistryOwner, defaultArgs) {
         @Suppress("UNCHECKED_CAST")
         override fun <VM : ViewModel?> create(key: String, modelClass: Class<VM>, handle: SavedStateHandle): VM {
             return (presenterCreator() as VM).also { presenter ->
@@ -97,14 +97,14 @@ inline fun <reified P : BasePresenter> presenterProvider(
 val LifecycleOwner.application: Application
     get() = when (this) {
         is FragmentActivity -> this.application
-        is Fragment -> this.activity!!.application
+        is Fragment -> this.requireActivity().application
         else -> error("Unable to obtain context due to unsupported lifecycle owner.")
     }
 
 val LifecycleOwner.savedStateRegistryOwner: SavedStateRegistryOwner
     get() = when (this) {
-        is FragmentActivity -> this
-        is Fragment -> this
+        is FragmentActivity -> this as SavedStateRegistryOwner
+        is Fragment -> this as SavedStateRegistryOwner
         else -> error("Unable to obtain SavedStateRegistryOwner under Lifecycle owner. Ensure activities inherit from ComponentActivity.")
     }
 
