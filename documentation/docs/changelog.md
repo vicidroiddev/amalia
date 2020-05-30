@@ -1,8 +1,8 @@
 # Changelog - Amalia
 
-## Amalia 0.7.X
+## Amalia 0.7.1
 
-_2020-XX_XX_
+_2020-05_29_
 
 ##### Library changes:
 
