@@ -46,4 +46,6 @@ dependencies {
         transitive=true
     }
 
+    // We must expose sticky headers because we expose the adapter
+    api deps.stickyheaders
 }

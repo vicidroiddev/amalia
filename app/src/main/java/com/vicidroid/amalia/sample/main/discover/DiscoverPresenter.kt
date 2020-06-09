@@ -29,7 +29,7 @@ class DiscoverPresenter(private val repository: DiscoverRepository) :
                 RecyclerViewState.ListLoaded(
                     results.mapIndexed { index, discoverResult ->
                             listOf(
-                                DiscoverTvItemHeader(discoverResult.firstAirDate),
+//                                DiscoverTvItemHeader(discoverResult.firstAirDate),
                                 DiscoverTvItem(discoverResult)
                             )
                     }.flatten()
