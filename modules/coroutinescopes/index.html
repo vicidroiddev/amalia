@@ -252,6 +252,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../components/recyclerview/" title="RecyclerView Delegate" class="md-nav__link">
+      RecyclerView Delegate
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../components/viewdelegates/" title="View Delegate" class="md-nav__link">
       View Delegate
     </a>
@@ -367,8 +379,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#available-scopes-in-a-presenter-extending-frombasepresenter" class="md-nav__link">
-    Available scopes in a presenter extending from&lt;BasePresenter
+  <a href="#available-scopes-in-a-presenter-extending-from-basepresenter" class="md-nav__link">
+    Available scopes in a presenter extending from BasePresenter
   </a>
   
 </li>
@@ -449,8 +461,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#available-scopes-in-a-presenter-extending-frombasepresenter" class="md-nav__link">
-    Available scopes in a presenter extending from&lt;BasePresenter
+  <a href="#available-scopes-in-a-presenter-extending-from-basepresenter" class="md-nav__link">
+    Available scopes in a presenter extending from BasePresenter
   </a>
   
 </li>
@@ -491,7 +503,7 @@
                 
                 <h1 id="coroutine-scopes">Coroutine Scopes<a class="headerlink" href="#coroutine-scopes" title="Permanent link">&para;</a></h1>
 <p>All provided coroutine scope extensions are cancelled when the presenter goes through destruction, dictated by the <code>presenterProvider</code>.</p>
-<h5 id="available-scopes-in-a-presenter-extending-frombasepresenter">Available scopes in a presenter extending from<code>&lt;BasePresenter</code><a class="headerlink" href="#available-scopes-in-a-presenter-extending-frombasepresenter" title="Permanent link">&para;</a></h5>
+<h5 id="available-scopes-in-a-presenter-extending-from-basepresenter">Available scopes in a presenter extending from <code>BasePresenter</code><a class="headerlink" href="#available-scopes-in-a-presenter-extending-from-basepresenter" title="Permanent link">&para;</a></h5>
 <div class="highlight"><pre><span></span><code><span class="n">mainScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">//uses the coroutine Main dispatcher, preferred scope for presenters } </span>
 
 <span class="n">ioScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">//uses the coroutine IO dispatcher } </span>
