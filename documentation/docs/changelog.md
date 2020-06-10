@@ -1,5 +1,14 @@
 # Changelog - Amalia
 
+## Amalia 0.8.0
+
+_2020-05-30_
+
+##### Library changes:
+
+* Added sticky header support to recycler views. See docs under RecyclerView Delegate for more info.
+
+___
 ## Amalia 0.7.2
 
 _2020-05-30_
