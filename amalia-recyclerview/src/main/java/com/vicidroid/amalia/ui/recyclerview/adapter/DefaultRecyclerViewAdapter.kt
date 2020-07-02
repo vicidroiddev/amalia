@@ -1,6 +1,8 @@
 package com.vicidroid.amalia.ui.recyclerview.adapter
 
+import android.content.Context
 import android.util.SparseArray
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
@@ -8,6 +10,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
 import com.vicidroid.amalia.core.ViewEventStore
 import com.vicidroid.amalia.ext.recyclerViewDebugLog
 import com.vicidroid.amalia.ui.recyclerview.AmaliaCommonEvent
@@ -17,13 +20,19 @@ import com.vicidroid.amalia.ui.recyclerview.diff.DiffItem
 import com.vicidroid.amalia.ui.recyclerview.tracking.VisibilityTracker
 
 open class DefaultRecyclerViewAdapter(
-    override val lifecycleOwner: LifecycleOwner,
-    asyncDiffCallback: DiffUtil.ItemCallback<RecyclerItem>,
+    final override val context: Context,
+    final override val lifecycleOwner: LifecycleOwner,
+    private val asyncDiffCallback: DiffUtil.ItemCallback<RecyclerItem>,
     private val trackItemsSeen: Boolean,
-    private val visibilityThresholdPercentage: Int) :
-    RecyclerView.Adapter<BaseRecyclerViewHolder>(), RecyclerViewAdapter {
+    private val visibilityThresholdPercentage: Int
+) :
+    RecyclerView.Adapter<BaseRecyclerViewHolder>(),
+    RecyclerViewAdapter,
+    StickyRecyclerHeadersAdapter<BaseHeaderViewHolder> {
 
-    val viewHolderEventStore = ViewEventStore<RecyclerViewHolderInteractionEvent>()
+    internal val viewHolderEventStore = ViewEventStore<RecyclerViewHolderInteractionEvent>()
+
+    private val layoutInflater = LayoutInflater.from(context)!!
 
     val adapterItems: List<RecyclerItem>
         get() = asyncListDiffer.currentList
@@ -137,11 +146,26 @@ open class DefaultRecyclerViewAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseRecyclerViewHolder {
         recyclerViewDebugLog("onCreateViewHolder(): viewType=$viewType")
         return viewTypeToItemCache[viewType].let { item ->
-            val view = item.inflateView(parent)
+            val view = layoutInflater.inflate(item.layoutRes, parent, false)
 
             item.createViewHolder(view).also {
                 it.provideExtras(item, this, viewHolderEventStore)
             }
+        }
+    }
+
+    /**
+     * For sticky header support
+     */
+    override fun onCreateHeaderViewHolder(parent: ViewGroup, position: Int): BaseHeaderViewHolder {
+        recyclerViewDebugLog("onCreateHeaderViewHolder(): position=$position")
+
+        return adapterItems[position].let { item ->
+            if (item.headerLayoutRes == 0) error("Expected to have a valid headerLayoutRes.")
+
+            val view = layoutInflater.inflate(item.headerLayoutRes, parent, false)
+
+            item.createHeaderViewHolder(view)
         }
     }
 
@@ -156,6 +180,14 @@ open class DefaultRecyclerViewAdapter(
             item.prepareBind(holder, payloads as List<ChangePayload<DiffItem>>)
             holder.adapterItem = item
         }
+    }
+
+    /**
+     * For sticky header support
+     * Will direct the bind call to the view item
+     */
+    override fun onBindHeaderViewHolder(viewHolder: BaseHeaderViewHolder, position: Int) {
+        adapterItems[position].prepareBindHeader(viewHolder)
     }
 
     /**
@@ -187,6 +219,16 @@ open class DefaultRecyclerViewAdapter(
     override fun getItemCount() = adapterItems.size
 
     override fun getItemId(position: Int) = adapterItems[position].uniqueItemId
+
+    /**
+     * Provide the header id for this item if it belongs to a section.
+     * Otherwise return 0 for no section
+     */
+    override fun getHeaderId(position: Int): Long {
+        val id = adapterItems.getOrNull(position)?.headerId ?: 0
+        if (id < 0) error("sectionId must be positive. It was: $id.")
+        return id
+    }
 
     override fun getItemViewType(position: Int) = adapterItems[position].viewType
 

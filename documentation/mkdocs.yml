@@ -38,6 +38,7 @@ nav:
   - 'Getting Started': gettingstarted.md
   - 'Standard Components':
       - 'Presenters': components/presenters.md
+      - 'RecyclerView Delegate': components/recyclerview.md
       - 'View Delegate': components/viewdelegates.md
       - 'View State': components/viewstates.md
       - 'View Event': components/viewevents.md

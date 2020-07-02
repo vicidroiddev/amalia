@@ -1,16 +1,14 @@
 package com.vicidroid.amalia.ui.recyclerview.adapter
 
 import android.view.View
-import androidx.annotation.ColorRes
-import androidx.annotation.IdRes
-import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewEventStore
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewHolderInteractionEvent
 
-abstract class BaseRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+abstract class BaseRecyclerViewHolder(itemView: View, sticky: Boolean = false) :
+    RecyclerView.ViewHolder(itemView),
+    ViewHolderHelper {
     internal lateinit var eventStore: ViewEventStore<RecyclerViewHolderInteractionEvent>
     lateinit var adapter: RecyclerViewAdapter
     var adapterItem: RecyclerItem? = null
@@ -29,12 +27,6 @@ abstract class BaseRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view
     open fun onExtrasProvided() {
 
     }
-
-    fun getString(@StringRes stringRes: Int) = itemView.resources.getString(stringRes)
-
-    fun getColor(@ColorRes colorRes: Int) = ContextCompat.getColor(itemView.context, colorRes)
-
-    fun <T : View> findViewById(@IdRes id: Int): T = itemView.findViewById(id)
 
     fun pushEvent(event: ViewEvent) {
         val wrappedEvent = RecyclerViewHolderInteractionEvent(
