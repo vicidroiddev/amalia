@@ -130,10 +130,7 @@ abstract class BasePresenter : ViewModel(),
         // Propagation will only occur if the delegate's lifecycle owner indicates a good state.
         // Furthermore, the observer which holds on to a delegate will be removed according to the delegate's lifecycleowner
         // This will prevent leaks
-        stateLiveData()
-            .observe(
-                viewDelegate.viewDelegateLifecycleOwner,
-                Observer { state -> viewDelegate.renderViewState(state) })
+        propagateStatesTo { state ->  viewDelegate.renderViewState(state)}
 
         viewDelegate.onBindViewDelegate()
         onBindViewDelegate(viewDelegate)
