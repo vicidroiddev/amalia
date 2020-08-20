@@ -44,7 +44,6 @@ nav:
       - 'View Event': components/viewevents.md
   - 'Modules': 
       - 'Dependencies': modules/modules.md
-      - 'Coroutine Scopes': modules/coroutinescopes.md
       - 'RecyclerView Delegate': modules/recyclerview.md
   - 'Change Log': changelog.md
 
