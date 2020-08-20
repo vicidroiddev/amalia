@@ -63,6 +63,8 @@ dependencies {
     // 'api' mimics old 'compile' - resources are made publicly available
     // implementation hides the classes, also a build optimization for gradle.
 
+    implementation deps.coroutines
+
     // To support persistence of a presenter after config changes
     implementation archDeps.viewmodel
 

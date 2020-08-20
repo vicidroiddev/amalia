@@ -1,4 +1,4 @@
-package com.vicidroid.amalia.coroutine_scopes
+package com.vicidroid.amalia
 
 import com.vicidroid.amalia.core.BasePresenter
 import kotlinx.coroutines.*
