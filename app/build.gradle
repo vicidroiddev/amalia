@@ -104,12 +104,10 @@ dependencies {
 //    implementation ("com.github.vicidroiddev.amalia:amalia-core:$amaliaVersion@aar") {
 //        transitive = true
 //    }
-//    implementation ("com.github.vicidroiddev.amalia:amalia-coroutine-scopes:$amaliaVersion@aar")
 //    implementation ("com.github.vicidroiddev.amalia:amalia-recyclerview:$amaliaVersion@aar")
 
     // AMALIA LIB INTERNAL
     implementation project(path: ':amalia-core')
-    implementation project(path: ':amalia-coroutine-scopes')
     implementation project(path: ':amalia-recyclerview')
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
