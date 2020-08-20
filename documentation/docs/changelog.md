@@ -1,5 +1,21 @@
 # Changelog - Amalia
 
+## Amalia 0.9.0
+
+_2020-06-10_
+
+##### Library changes:
+
+* Removed coroutine scope package, it's now integrated in the core package.
+* Added ephemeral state support, can be used to push non-retained states.
+
+!!! info "Package removal"
+    `amalia-coroutine-scopes` gradle module is no longer available.
+
+    `mainScope` and other extension methods are still available as extension functions
+    on `BasePresenter`
+___
+
 ## Amalia 0.8.0
 
 _2020-05-30_
@@ -7,6 +23,15 @@ _2020-05-30_
 ##### Library changes:
 
 * Added sticky header support to recycler views. See docs under RecyclerView Delegate for more info.
+___
+
+## Amalia 0.8.0
+
+_2020-06-10_
+
+##### Library changes:
+
+* Added Sticky header support
 
 ___
 ## Amalia 0.7.2
