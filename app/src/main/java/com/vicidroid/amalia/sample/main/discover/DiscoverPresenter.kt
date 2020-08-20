@@ -3,7 +3,7 @@ package com.vicidroid.amalia.sample.main.discover
 import android.widget.Toast
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.ViewEvent
-import com.vicidroid.amalia.coroutine_scopes.mainScope
+import com.vicidroid.amalia.mainScope
 import com.vicidroid.amalia.ext.debugLog
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverRepository
 import com.vicidroid.amalia.sample.api.themoviedb.discover.DiscoverResult
