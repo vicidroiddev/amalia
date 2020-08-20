@@ -12,6 +12,8 @@ import com.vicidroid.amalia.ext.debugLog
 import com.vicidroid.amalia.ext.presenterDebugLog
 import com.vicidroid.amalia.ui.ViewDelegate
 import com.vicidroid.amalia.ui.ViewEventProvider
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import java.io.Closeable
 import java.util.concurrent.ConcurrentHashMap
 
@@ -27,6 +29,11 @@ abstract class BasePresenter : ViewModel(),
     lateinit var applicationContext: Context
 
     private val viewStateLiveData = MutableLiveData<ViewState>()
+
+    /**
+     * Short lived states that are not retained across config changes
+     */
+    private val ephemeralStateFlow = MutableStateFlow<EphemeralState?>(null)
 
     private val viewEventPropagatorLiveData = MutableLiveData<ViewEvent>()
 
@@ -54,6 +61,14 @@ abstract class BasePresenter : ViewModel(),
         }
 
     internal lateinit var viewLifecycleObserver: DefaultLifecycleObserver
+
+    /**
+     * A coroutine scope tied to the [ViewDelegate]
+     * Useful for scoping flows according to the lifecycle of a [ViewDelegate]
+     */
+    private lateinit var viewScope: CoroutineScope
+
+    fun ephemeralStateFlow(): StateFlow<EphemeralState?> = ephemeralStateFlow
 
     fun stateLiveData(): LiveData<ViewState> = viewStateLiveData
 
@@ -91,6 +106,7 @@ abstract class BasePresenter : ViewModel(),
         presenterDebugLog(TAG_INSTANCE, "bind(viewLifecycleOwner)")
         this.viewLifecycleOwner?.let { error("Second call to bind() is suspicious.") }
         this.viewLifecycleOwner = viewLifecycleOwner
+        this.viewScope = MainScope()
 
         // Keep track of the lifecycle owner belonging to the delegate.
         // This allows event delegation to other presenters in a heirachy.
@@ -130,7 +146,14 @@ abstract class BasePresenter : ViewModel(),
         // Propagation will only occur if the delegate's lifecycle owner indicates a good state.
         // Furthermore, the observer which holds on to a delegate will be removed according to the delegate's lifecycleowner
         // This will prevent leaks
-        propagateStatesTo { state ->  viewDelegate.renderViewState(state)}
+        propagateStatesTo { state -> viewDelegate.renderViewState(state) }
+
+        // Observe ephemeral states sent from this presenter.
+        // Propagation will only occur if the viewScope is valid, i.e. not cancelled
+        ephemeralStateFlow()
+            .filterNotNull()
+            .onEach { viewDelegate.renderEphemeralState(it) }
+            .launchIn(viewScope)
 
         viewDelegate.onBindViewDelegate()
         onBindViewDelegate(viewDelegate)
@@ -155,6 +178,7 @@ abstract class BasePresenter : ViewModel(),
      */
     fun pushState(state: ViewState, ignoreDuplicateState: Boolean = false) {
         if (ignoreDuplicateState && stateLiveData().value?.javaClass == state.javaClass) return
+        if (state is EphemeralState) error("Ephemeral states should not be retained, please use pushEphemeralState(...) instead.")
 
         presenterDebugLog(TAG_INSTANCE, "Pushing state: $state")
 
@@ -211,6 +235,7 @@ abstract class BasePresenter : ViewModel(),
         override fun onDestroy(owner: LifecycleOwner) {
             // When the view delegate's lifecycle owner indicates destruction, let's ensure we avoid any leaking.
             viewLifecycleOwner = null
+            resetEphemeralState()
 
             // https://github.com/googlecodelabs/android-lifecycles/issues/
             // According to the above we do not need to remove the observer manually.
@@ -323,6 +348,26 @@ abstract class BasePresenter : ViewModel(),
      */
     override fun <V> persist(key: String, value: V) {
         savedStateHandle[key] = value
+    }
+    //endregion
+
+    //region EPHEMERAL STATE
+    fun pushEphemeralState(state: EphemeralState) {
+        presenterDebugLog(TAG_INSTANCE, "Pushing ephemeral state: $state")
+        ephemeralStateFlow.value = state
+    }
+
+    /**
+     * Ensures collectors no longer receive new ephemeral states.
+     * Resets the ephemeral state back to null.
+     * Null values are not emmited by default.
+     */
+    private fun resetEphemeralState() {
+        // Prevent leaks, view should no longer collect from this state flow on the same scope
+        viewScope.cancel()
+
+        // Reset value to null, we don't emit null values.
+        ephemeralStateFlow.value = null
     }
     //endregion
 }
