@@ -21,6 +21,10 @@ class DashboardPresenter : BasePresenter(),
             is DashboardEvent.OpenFragmentExample -> {
                 event.hostActivity.startActivityClazz(ExampleFragmentActivity1::class.java)
             }
+
+            is DashboardEvent.RequestDialogViaEphemeralState -> {
+                pushEphemeralState(DashboardState.EphemeralStateToLoadDialog)
+            }
         }
     }
 
