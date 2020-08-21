@@ -11,7 +11,7 @@
         <meta name="description" content="State-machine-driven MVP library with unidirectional data flow via states and events">
       
       
-        <link rel="canonical" href="https://vicidroiddev.github.io/amalia/modules/coroutinescopes/">
+        <link rel="canonical" href="https://vicidroiddev.github.io/amalia/components/recyclerview/">
       
       
         <meta name="author" content="Vicidroiddev">
@@ -21,7 +21,7 @@
     
     
       
-        <title>Coroutine Scopes - Amalia Documentation</title>
+        <title>RecyclerView Delegate - Amalia Documentation</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#coroutine-scopes" class="md-skip">
+        <a href="#recyclerview-delegate" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +92,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Coroutine Scopes
+              RecyclerView Delegate
             
           </span>
         </div>
@@ -214,10 +214,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
     
     <label class="md-nav__link" for="nav-3">
       Standard Components
@@ -241,7 +243,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../components/presenters/" title="Presenters" class="md-nav__link">
+    <a href="../presenters/" title="Presenters" class="md-nav__link">
       Presenters
     </a>
   </li>
@@ -251,9 +253,63 @@
           
           
 
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        RecyclerView Delegate
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="RecyclerView Delegate" class="md-nav__link md-nav__link--active">
+      RecyclerView Delegate
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basic-setup-with-all-the-options" class="md-nav__link">
+    Basic setup with all the options
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
 
   <li class="md-nav__item">
-    <a href="../../components/viewdelegates/" title="View Delegate" class="md-nav__link">
+    <a href="../viewdelegates/" title="View Delegate" class="md-nav__link">
       View Delegate
     </a>
   </li>
@@ -265,7 +321,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../components/viewstates/" title="View State" class="md-nav__link">
+    <a href="../viewstates/" title="View State" class="md-nav__link">
       View State
     </a>
   </li>
@@ -277,7 +333,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../components/viewevents/" title="View Event" class="md-nav__link">
+    <a href="../viewevents/" title="View Event" class="md-nav__link">
       View Event
     </a>
   </li>
@@ -292,12 +348,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
     <label class="md-nav__link" for="nav-4">
       Modules
@@ -321,7 +375,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../modules/" title="Dependencies" class="md-nav__link">
+    <a href="../../modules/modules/" title="Dependencies" class="md-nav__link">
       Dependencies
     </a>
   </li>
@@ -331,77 +385,9 @@
           
           
 
-  
-
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Coroutine Scopes
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
-        </span>
-      </label>
-    
-    <a href="./" title="Coroutine Scopes" class="md-nav__link md-nav__link--active">
-      Coroutine Scopes
-    </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#available-scopes-in-a-presenter-extending-from-basepresenter" class="md-nav__link">
-    Available scopes in a presenter extending from BasePresenter
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-gradle-dependency" class="md-nav__link">
-    Adding gradle dependency
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-usage" class="md-nav__link">
-    Example usage:
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
-  </li>
-
-        
-          
-          
-          
-
 
   <li class="md-nav__item">
-    <a href="../recyclerview/" title="RecyclerView Delegate" class="md-nav__link">
+    <a href="../../modules/recyclerview/" title="RecyclerView Delegate" class="md-nav__link">
       RecyclerView Delegate
     </a>
   </li>
@@ -450,22 +436,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#available-scopes-in-a-presenter-extending-from-basepresenter" class="md-nav__link">
-    Available scopes in a presenter extending from BasePresenter
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-gradle-dependency" class="md-nav__link">
-    Adding gradle dependency
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-usage" class="md-nav__link">
-    Example usage:
+  <a href="#basic-setup-with-all-the-options" class="md-nav__link">
+    Basic setup with all the options
   </a>
   
 </li>
@@ -482,7 +454,7 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/vicidroiddev/amalia/edit/master/docs/modules/coroutinescopes.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/vicidroiddev/amalia/edit/master/docs/components/recyclerview.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
@@ -490,38 +462,18 @@
                   
                 
                 
-                <h1 id="coroutine-scopes">Coroutine Scopes<a class="headerlink" href="#coroutine-scopes" title="Permanent link">&para;</a></h1>
-<p>All provided coroutine scope extensions are cancelled when the presenter goes through destruction, dictated by the <code>presenterProvider</code>.</p>
-<h5 id="available-scopes-in-a-presenter-extending-from-basepresenter">Available scopes in a presenter extending from <code>BasePresenter</code><a class="headerlink" href="#available-scopes-in-a-presenter-extending-from-basepresenter" title="Permanent link">&para;</a></h5>
-<div class="highlight"><pre><span></span><code><span class="n">mainScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">//uses the coroutine Main dispatcher, preferred scope for presenters } </span>
-
-<span class="n">ioScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">//uses the coroutine IO dispatcher } </span>
-
-<span class="n">defaultScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">//uses the default coroutine dispatcher } </span>
-</code></pre></div>
-
-<h2 id="adding-gradle-dependency">Adding gradle dependency<a class="headerlink" href="#adding-gradle-dependency" title="Permanent link">&para;</a></h2>
-<p>Add the amalia dependency in your app level build.gradle file.</p>
-<p><div class="highlight"><pre><span></span><code><span class="n">implementation</span> <span class="s1">&#39;com.github.vicidroiddev.amalia:amalia-coroutine-scopes:{latest_version}@aar&#39;</span>
-</code></pre></div>
-<a href="https://jitpack.io/#vicidroiddev/amalia"><img alt="Jitpack" src="https://jitpack.io/v/vicidroiddev/amalia.svg" /></a></p>
-<h2 id="example-usage">Example usage:<a class="headerlink" href="#example-usage" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">DiscoverPresenter</span><span class="p">(</span><span class="k">private</span> <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">DiscoverRepository</span><span class="p">)</span> <span class="p">:</span>
-    <span class="n">BasePresenter</span><span class="p">()</span> <span class="p">{</span>
-
-    <span class="k">override</span> <span class="k">fun</span> <span class="nf">loadInitialState</span><span class="p">()</span> <span class="p">{</span>
-        <span class="c1">// mainScope is provided via amalia-coroutine-scopes dependency</span>
-        <span class="n">mainScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span>
-            <span class="c1">// discoverFromApi is a suspending function which runs on the io dispatcher</span>
-            <span class="c1">// if it takes a long time and the view is closed, we will automatically call cancel() on the scope.</span>
-            <span class="k">val</span> <span class="py">results</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">discoverFromApi</span><span class="p">()</span>
-
-            <span class="c1">//Okay main thread here, lets push the view state</span>
-            <span class="n">pushState</span><span class="p">(</span><span class="n">DiscoverState</span><span class="p">.</span><span class="n">Loaded</span><span class="p">(</span><span class="n">results</span><span class="p">))</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+                <h1 id="recyclerview-delegate">RecyclerView Delegate<a class="headerlink" href="#recyclerview-delegate" title="Permanent link">&para;</a></h1>
+<div class="admonition example">
+<p class="admonition-title">Features</p>
+<ul>
+<li>Async DiffUtil support</li>
+<li>Sticky headers</li>
+<li>Multiple view types</li>
+<li>Space decorators</li>
+<li>Notifications about items seen</li>
+</ul>
+</div>
+<h2 id="basic-setup-with-all-the-options">Basic setup with all the options<a class="headerlink" href="#basic-setup-with-all-the-options" title="Permanent link">&para;</a></h2>
                 
               
               
@@ -540,7 +492,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../modules/" title="Dependencies" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../presenters/" title="Presenters" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -549,19 +501,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Dependencies
+                Presenters
               </div>
             </div>
           </a>
         
         
-          <a href="../recyclerview/" title="RecyclerView Delegate" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../viewdelegates/" title="View Delegate" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                RecyclerView Delegate
+                View Delegate
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

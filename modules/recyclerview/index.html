@@ -253,6 +253,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../components/recyclerview/" title="RecyclerView Delegate" class="md-nav__link">
+      RecyclerView Delegate
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../components/viewdelegates/" title="View Delegate" class="md-nav__link">
       View Delegate
     </a>
@@ -331,18 +343,6 @@
           
           
 
-
-  <li class="md-nav__item">
-    <a href="../coroutinescopes/" title="Coroutine Scopes" class="md-nav__link">
-      Coroutine Scopes
-    </a>
-  </li>
-
-        
-          
-          
-          
-
   
 
 
@@ -387,29 +387,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    Basic usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#1-create-your-own-recyclerviewdelegate" class="md-nav__link">
     1. Create your own RecyclerViewDelegate
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#2-create-a-recycler-item-to-bind-data-to-view" class="md-nav__link">
     2. Create a recycler item to bind data to view
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#3-emit-recycler-items-with-a-presenter" class="md-nav__link">
     3. Emit recycler items with a presenter
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#4-dont-forget-to-bind-the-presenter-and-delegate" class="md-nav__link">
     4. Don't forget to bind the presenter and delegate!
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recyclerview-options" class="md-nav__link">
+    RecyclerView options
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sticky-header-support" class="md-nav__link">
+    Sticky header support
   </a>
   
 </li>
@@ -471,29 +498,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    Basic usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#1-create-your-own-recyclerviewdelegate" class="md-nav__link">
     1. Create your own RecyclerViewDelegate
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#2-create-a-recycler-item-to-bind-data-to-view" class="md-nav__link">
     2. Create a recycler item to bind data to view
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#3-emit-recycler-items-with-a-presenter" class="md-nav__link">
     3. Emit recycler items with a presenter
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#4-dont-forget-to-bind-the-presenter-and-delegate" class="md-nav__link">
     4. Don't forget to bind the presenter and delegate!
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recyclerview-options" class="md-nav__link">
+    RecyclerView options
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sticky-header-support" class="md-nav__link">
+    Sticky header support
   </a>
   
 </li>
@@ -533,7 +587,8 @@
 <p><div class="highlight"><pre><span></span><code><span class="n">implementation</span> <span class="s1">&#39;com.github.vicidroiddev.amalia:amalia-recyclerview:{latest_version}@aar&#39;</span>
 </code></pre></div>
 <a href="https://jitpack.io/#vicidroiddev/amalia"><img alt="Jitpack" src="https://jitpack.io/v/vicidroiddev/amalia.svg" /></a></p>
-<h2 id="1-create-your-own-recyclerviewdelegate">1. Create your own <code>RecyclerViewDelegate</code><a class="headerlink" href="#1-create-your-own-recyclerviewdelegate" title="Permanent link">&para;</a></h2>
+<h2 id="basic-usage">Basic usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
+<h4 id="1-create-your-own-recyclerviewdelegate">1. Create your own RecyclerViewDelegate<a class="headerlink" href="#1-create-your-own-recyclerviewdelegate" title="Permanent link">&para;</a></h4>
 <p>This is the view layer. You likely won't have much code to put in here.
 You can customize some options such as spacing or layout managers for the recyclerview if needed.
 See the constructor for additional options.</p>
@@ -546,7 +601,7 @@ See the constructor for additional options.</p>
 <span class="p">}</span>
 </code></pre></div>
 
-<h2 id="2-create-a-recycler-item-to-bind-data-to-view">2. Create a recycler item to bind data to view<a class="headerlink" href="#2-create-a-recycler-item-to-bind-data-to-view" title="Permanent link">&para;</a></h2>
+<h4 id="2-create-a-recycler-item-to-bind-data-to-view">2. Create a recycler item to bind data to view<a class="headerlink" href="#2-create-a-recycler-item-to-bind-data-to-view" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">MyRecyclerViewItem</span><span class="p">(</span><span class="k">val</span> <span class="py">myItem</span><span class="p">:</span> <span class="n">MyItem</span><span class="p">)</span> <span class="p">:</span> <span class="n">BaseRecyclerItem</span><span class="p">&lt;</span><span class="n">DiscoverTvItem</span><span class="p">.</span><span class="n">ViewHolder</span><span class="p">&gt;(</span><span class="n">discoverResult</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// Pass a layout represented by the given item to display - CardView for example</span>
     <span class="k">override</span> <span class="k">val</span> <span class="py">layoutRes</span> <span class="p">=</span> <span class="n">R</span><span class="p">.</span><span class="n">layout</span><span class="p">.</span><span class="n">my_list_item_layout</span>
@@ -573,7 +628,7 @@ See the constructor for additional options.</p>
 <span class="p">}</span>
 </code></pre></div>
 
-<h2 id="3-emit-recycler-items-with-a-presenter">3. Emit recycler items with a presenter<a class="headerlink" href="#3-emit-recycler-items-with-a-presenter" title="Permanent link">&para;</a></h2>
+<h4 id="3-emit-recycler-items-with-a-presenter">3. Emit recycler items with a presenter<a class="headerlink" href="#3-emit-recycler-items-with-a-presenter" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">MyLongListPresenter</span><span class="p">(</span><span class="k">private</span> <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">MyRepository</span><span class="p">)</span> <span class="p">:</span>
     <span class="n">BasePresenter</span><span class="p">(),</span>
     <span class="n">Refreshable</span> <span class="p">{</span>
@@ -594,8 +649,84 @@ See the constructor for additional options.</p>
 <span class="p">}</span>
 </code></pre></div>
 
-<h2 id="4-dont-forget-to-bind-the-presenter-and-delegate">4. Don't forget to bind the presenter and delegate!<a class="headerlink" href="#4-dont-forget-to-bind-the-presenter-and-delegate" title="Permanent link">&para;</a></h2>
+<h4 id="4-dont-forget-to-bind-the-presenter-and-delegate">4. Don't forget to bind the presenter and delegate!<a class="headerlink" href="#4-dont-forget-to-bind-the-presenter-and-delegate" title="Permanent link">&para;</a></h4>
 <p>See getting started section for how to perform binding.</p>
+<h2 id="recyclerview-options">RecyclerView options<a class="headerlink" href="#recyclerview-options" title="Permanent link">&para;</a></h2>
+<p>Create a subclass of <code>RecyclerViewDelegate</code> and pass your desired params.
+Most arguments are optional. The bare minimum is <code>viewLifecycleOwner</code>, <code>rootView</code>, and <code>recyclerViewId</code>.
+These arguments are subject to change.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">MyListViewDelegate</span><span class="p">(</span><span class="n">lifecycleOwner</span><span class="p">:</span> <span class="n">LifecycleOwner</span><span class="p">,</span> <span class="n">view</span><span class="p">:</span> <span class="n">View</span><span class="p">)</span> <span class="p">:</span> <span class="n">RecyclerViewDelegate</span><span class="p">(</span>
+        <span class="c1">// Provide a lifecycle owner to ensure events can be sent to your presenter</span>
+        <span class="n">viewLifeCycleOwner</span> <span class="p">=</span> <span class="n">lifecycleOwner</span><span class="p">,</span>
+
+        <span class="c1">// Provide the parent view</span>
+        <span class="n">rootView</span> <span class="p">=</span> <span class="n">view</span><span class="p">,</span>
+
+        <span class="c1">// Provide the id of the recyclerview in your layout</span>
+        <span class="n">recyclerViewId</span> <span class="p">=</span> <span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">main_discover_page_list_root</span><span class="p">,</span>
+
+        <span class="c1">// Optional: Pass a layout manager, by default a vertical linear layout manager is used</span>
+        <span class="n">layoutManager</span> <span class="p">=</span> <span class="n">LinearLayoutManager</span><span class="p">(</span><span class="n">rootView</span><span class="p">.</span><span class="n">context</span><span class="p">),</span>
+
+        <span class="c1">// Optional: Pass the spacing to be used between items in dp</span>
+        <span class="n">spaceSeparationInDp</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
+
+        <span class="c1">// Optional: Pass the divider decoration to use. A space offset decorator is provided by default</span>
+        <span class="n">defaultDividerDecoration</span> <span class="p">=</span>  <span class="n">SpaceItemOffsetDecoration</span><span class="p">(</span><span class="n">rootView</span><span class="p">.</span><span class="n">context</span><span class="p">,</span> <span class="n">spaceSeparationInDp</span><span class="p">),</span>
+
+        <span class="c1">// Optional: Provide a DiffItem callback, by default one is provided for items that implement `DiffItem`</span>
+        <span class="n">asyncDiffCallback</span> <span class="p">=</span> <span class="n">AsyncRecyclerItemDiffCallback</span><span class="p">(),</span>
+
+        <span class="c1">// Optional: Provide a different setting in case your recyclerview is not a fixed size</span>
+        <span class="n">recyclerViewHasFixedSize</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span>
+
+        <span class="c1">// Optional: Pass true to get ViewEvents notifying you of Items that were seen.</span>
+        <span class="n">trackItemsSeen</span> <span class="p">=</span> <span class="k">false</span><span class="p">,</span>
+
+        <span class="c1">// Optional: Pass the percent threshold 1-100 for when an item is considered visible.</span>
+        <span class="n">visibilityThresholdPercentage</span> <span class="p">=</span> <span class="m">80</span><span class="p">,</span>
+
+        <span class="c1">// Optional: Pass true if you wish to use sticky headers.</span>
+        <span class="n">useStickyHeaders</span> <span class="p">=</span> <span class="k">false</span>
+    <span class="p">)</span>
+</code></pre></div>
+
+<h2 id="sticky-header-support">Sticky header support<a class="headerlink" href="#sticky-header-support" title="Permanent link">&para;</a></h2>
+<p>A basic example for supporting headers involves passing <code>useStickyHeaders = true</code> to your view delegate.</p>
+<div class="highlight"><pre><span></span><code><span class="n">MyListDelegate</span><span class="p">(</span><span class="n">lifecycleOwner</span><span class="p">:</span> <span class="n">LifecycleOwner</span><span class="p">,</span> <span class="n">view</span><span class="p">:</span> <span class="n">View</span><span class="p">)</span> <span class="p">:</span> <span class="n">RecyclerViewDelegate</span><span class="p">(</span>
+            <span class="p">...,</span> <span class="c1">// required params</span>
+            <span class="n">useStickyHeaders</span> <span class="p">=</span> <span class="k">true</span> <span class="c1">// required for sticky support</span>
+</code></pre></div>
+
+<p>In addition, we need to define the header layout and what section each item belongs to.
+Similiar to how your RecyclerItem provides the necessary view for each item, it can also provide details
+for the header section it belongs to.</p>
+<p>You will need to provide the header layout and an identifier which tells the system
+when a new header should be drawn for the next view item. View items using the same header id will have the same sticky header while scrolling.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">DiscoverTvItem</span><span class="p">(</span><span class="k">val</span> <span class="py">discoverResult</span><span class="p">:</span> <span class="n">DiscoverResult</span><span class="p">)</span>
+    <span class="p">:</span> <span class="n">BaseRecyclerItem</span><span class="p">&lt;</span><span class="n">DiscoverTvItem</span><span class="p">.</span><span class="n">ViewHolder</span><span class="p">&gt;(</span><span class="n">discoverResult</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// Provide the layout that represents the sticky header</span>
+    <span class="k">override</span> <span class="k">val</span> <span class="py">headerLayoutRes</span> <span class="p">=</span> <span class="n">R</span><span class="p">.</span><span class="n">layout</span><span class="p">.</span><span class="n">list_item_discover_tv_header_not_rounded</span>
+
+    <span class="c1">// Provide a positive long to denote the header id this item belongs to.</span>
+    <span class="c1">// For example if you have a contact list, return a representation of each letter as your id.</span>
+    <span class="k">override</span> <span class="k">val</span> <span class="py">headerId</span><span class="p">:</span> <span class="n">Long</span> <span class="p">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">discoverResult</span><span class="p">.</span><span class="n">firstAirDate</span><span class="p">.</span><span class="n">hashCode</span><span class="p">().</span><span class="n">toLong</span><span class="p">())</span>
+
+    <span class="c1">// Return an instance of your own viewholder class which can hold on to your header view</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">createHeaderViewHolder</span><span class="p">(</span><span class="n">itemView</span><span class="p">:</span> <span class="n">View</span><span class="p">)</span> <span class="p">=</span> <span class="n">MyHeaderViewHolder</span><span class="p">(</span><span class="n">itemView</span><span class="p">)</span>
+
+    <span class="c1">// Ensure that you keep your header up to date</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">bindHeader</span><span class="p">(</span><span class="n">viewHolder</span><span class="p">:</span> <span class="n">BaseHeaderViewHolder</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">(</span><span class="n">viewHolder</span> <span class="k">as</span> <span class="n">MyHeaderViewHolder</span><span class="p">).</span><span class="n">title</span><span class="p">.</span><span class="n">text</span> <span class="p">=</span> <span class="n">discoverResult</span><span class="p">.</span><span class="n">firstAirDate</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Cache your child views. In our case we want to set the title for our header.</span>
+    <span class="k">class</span> <span class="nc">MyHeaderViewHolder</span><span class="p">(</span><span class="n">itemView</span><span class="p">:</span> <span class="n">View</span><span class="p">)</span> <span class="p">:</span> <span class="n">BaseHeaderViewHolder</span><span class="p">(</span><span class="n">itemView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">val</span> <span class="py">title</span> <span class="p">=</span> <span class="n">findViewById</span><span class="p">&lt;</span><span class="n">TextView</span><span class="p">&gt;(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">list_item_discover_tv_header_title</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
                 
               
               
@@ -614,7 +745,7 @@ See the constructor for additional options.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../coroutinescopes/" title="Coroutine Scopes" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../modules/" title="Dependencies" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -623,7 +754,7 @@ See the constructor for additional options.</p>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Coroutine Scopes
+                Dependencies
               </div>
             </div>
           </a>
