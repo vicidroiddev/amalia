@@ -66,7 +66,7 @@ abstract class BasePresenter : ViewModel(),
      * A coroutine scope tied to the [ViewDelegate]
      * Useful for scoping flows according to the lifecycle of a [ViewDelegate]
      */
-    private lateinit var viewScope: CoroutineScope
+    lateinit var viewScope: CoroutineScope
 
     fun ephemeralStateFlow(): StateFlow<EphemeralState?> = ephemeralStateFlow
 
@@ -88,10 +88,16 @@ abstract class BasePresenter : ViewModel(),
      * Propagate states sent by this presenter to another observer.
      * This may be of use when adding amalia to legacy code or in a parent child presenter hierarchy.
      */
-    fun propagateStatesTo(observer: (ViewState) -> Unit) {
+    inline fun propagateStatesTo(crossinline observer: (ViewState) -> Unit) {
         viewLifecycleOwner
             ?: error("You must call bind() prior to propagating states as the view lifecycle owner is required.")
+
         stateLiveData().observe(viewLifecycleOwner!!, Observer { observer(it) })
+
+        ephemeralStateFlow()
+            .filterNotNull()
+            .onEach { observer.invoke(it) }
+            .launchIn(this.viewScope)
     }
 
     /**
@@ -142,18 +148,17 @@ abstract class BasePresenter : ViewModel(),
         if (viewDelegate is ViewEventProvider) {
             viewDelegate.propagateEventsTo { event -> processViewEvent(event) }
         }
+
+
         // Observe states sent from this presenter and propagate them to the delegate.
         // Propagation will only occur if the delegate's lifecycle owner indicates a good state.
         // Furthermore, the observer which holds on to a delegate will be removed according to the delegate's lifecycleowner
         // This will prevent leaks
+        // Ephemeral states sent from this presenter will be propagated via a Kotlin state flow
+        // Propagation will only occur if the viewScope is valid, i.e. not cancelled
         propagateStatesTo { state -> viewDelegate.renderViewState(state) }
 
-        // Observe ephemeral states sent from this presenter.
-        // Propagation will only occur if the viewScope is valid, i.e. not cancelled
-        ephemeralStateFlow()
-            .filterNotNull()
-            .onEach { viewDelegate.renderEphemeralState(it) }
-            .launchIn(viewScope)
+
 
         viewDelegate.onBindViewDelegate()
         onBindViewDelegate(viewDelegate)
@@ -178,15 +183,18 @@ abstract class BasePresenter : ViewModel(),
      */
     fun pushState(state: ViewState, ignoreDuplicateState: Boolean = false) {
         if (ignoreDuplicateState && stateLiveData().value?.javaClass == state.javaClass) return
-        if (state is EphemeralState) error("Ephemeral states should not be retained, please use pushEphemeralState(...) instead.")
+        if (state is EphemeralState) {
+            pushEphemeralState(state)
+        } else {
 
-        presenterDebugLog(TAG_INSTANCE, "Pushing state: $state")
+            presenterDebugLog(TAG_INSTANCE, "Pushing state: $state")
 
-        persistViewStateIfPossible(state)
+            persistViewStateIfPossible(state)
 
-        when (Looper.myLooper() == Looper.getMainLooper()) {
-            true -> viewStateLiveData.value = state
-            false -> viewStateLiveData.postValue(state)
+            when (Looper.myLooper() == Looper.getMainLooper()) {
+                true -> viewStateLiveData.value = state
+                false -> viewStateLiveData.postValue(state)
+            }
         }
     }
 
@@ -352,7 +360,7 @@ abstract class BasePresenter : ViewModel(),
     //endregion
 
     //region EPHEMERAL STATE
-    fun pushEphemeralState(state: EphemeralState) {
+    private fun pushEphemeralState(state: EphemeralState) {
         presenterDebugLog(TAG_INSTANCE, "Pushing ephemeral state: $state")
         ephemeralStateFlow.value = state
     }

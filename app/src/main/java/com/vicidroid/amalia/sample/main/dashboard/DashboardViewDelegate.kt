@@ -43,15 +43,7 @@ class DashboardViewDelegate(lifecycleOwner: LifecycleOwner, view: View) :
                     .centerCrop()
                     .into(image)
             }
-        }
-    }
 
-    override fun onViewDetached() {
-        dialog?.cancel()
-    }
-
-    override fun renderEphemeralState(state: EphemeralState) {
-        when (state) {
             is DashboardState.EphemeralStateToLoadDialog -> {
                 dialog = MaterialAlertDialogBuilder(context)
                     .setTitle("Ephemeral Dialog")
@@ -61,6 +53,10 @@ class DashboardViewDelegate(lifecycleOwner: LifecycleOwner, view: View) :
 
             }
         }
+    }
+
+    override fun onViewDetached() {
+        dialog?.cancel()
     }
 }
 

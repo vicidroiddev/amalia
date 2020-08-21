@@ -23,7 +23,7 @@ class DashboardPresenter : BasePresenter(),
             }
 
             is DashboardEvent.RequestDialogViaEphemeralState -> {
-                pushEphemeralState(DashboardState.EphemeralStateToLoadDialog)
+                pushState(DashboardState.EphemeralStateToLoadDialog)
             }
         }
     }

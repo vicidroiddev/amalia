@@ -6,8 +6,8 @@ import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewEventStore
 import com.vicidroid.amalia.ui.recyclerview.RecyclerViewHolderInteractionEvent
 
-abstract class BaseRecyclerViewHolder(itemView: View, sticky: Boolean = false) :
-    RecyclerView.ViewHolder(itemView),
+abstract class BaseRecyclerViewHolder(override val parentView: View, sticky: Boolean = false) :
+    RecyclerView.ViewHolder(parentView),
     ViewHolderHelper {
     internal lateinit var eventStore: ViewEventStore<RecyclerViewHolderInteractionEvent>
     lateinit var adapter: RecyclerViewAdapter
