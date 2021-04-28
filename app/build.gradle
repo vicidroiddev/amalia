@@ -19,7 +19,7 @@ ext.themoviedbToken = devPropertiesToken != null ? devPropertiesToken : System.g
 
 android {
     compileSdkVersion toolchainVersions.compileSdk
-    buildToolsVersion toolchainVersions.buildTools
+//    buildToolsVersion toolchainVersions.buildTools
 
     defaultConfig {
         applicationId "com.vicidroid.amalia.sample"

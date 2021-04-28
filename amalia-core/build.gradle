@@ -15,7 +15,7 @@ buildscript {
 
 android {
     compileSdkVersion toolchainVersions.compileSdk
-    buildToolsVersion toolchainVersions.buildTools
+//    buildToolsVersion toolchainVersions.buildTools
 
     defaultConfig {
         minSdkVersion toolchainVersions.minSdk
