@@ -20,7 +20,7 @@ buildscript {
     ]
 
     ext.archDeps = [
-            'archCoreTesting': "android.arch.core:core-testing:${versions.lifecycle}",
+            'archCoreTesting': "android.arch.core:core-testing:1.1.1",
             'commonJava8'    : "android.arch.lifecycle:common-java8:1.1.1",
             'livedata'       : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}",
             'viewmodel'      : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}",
