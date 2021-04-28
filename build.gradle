@@ -38,7 +38,7 @@ buildscript {
     ]
 
     ext.toolchainDeps = [
-            'gradlePlugin'      : "com.android.tools.build:gradle:4.1.0-beta01",
+            'gradlePlugin'      : "com.android.tools.build:gradle:4.2.0-alpha16",
             'kotlinPlugin'      : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
             'jitpackMavenPlugin': "com.github.dcendents:android-maven-gradle-plugin:2.1"
     ]
