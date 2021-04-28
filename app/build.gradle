@@ -95,20 +95,20 @@ dependencies {
 //    implementation 'androidx.navigation:navigation-ui-ktx:2.2.1'
 
     // AMALIA LIB EXTERNAL
-    def amaliaVersion = "0.7.2"
+    def amaliaVersion = "0.9.0-EAP-02"
 
     // aar includes android resource files, jar does not.
     // We should explicitly ask for an aar by using @aar
     // Note: when using @aar syntax, gradle will drop transitive dependencies.
     // We must include transitive dependencies to support the android libraries amalia depends on.
-//    implementation ("com.github.vicidroiddev.amalia:amalia-core:$amaliaVersion@aar") {
-//        transitive = true
-//    }
-//    implementation ("com.github.vicidroiddev.amalia:amalia-recyclerview:$amaliaVersion@aar")
+    implementation ("com.github.vicidroiddev.amalia:amalia-core:$amaliaVersion@aar") {
+        transitive = true
+    }
+    implementation ("com.github.vicidroiddev.amalia:amalia-recyclerview:$amaliaVersion@aar")
 
     // AMALIA LIB INTERNAL
-    implementation project(path: ':amalia-core')
-    implementation project(path: ':amalia-recyclerview')
+//    implementation project(path: ':amalia-core')
+//    implementation project(path: ':amalia-recyclerview')
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }
