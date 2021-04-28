@@ -21,7 +21,7 @@ buildscript {
 
     ext.archDeps = [
             'archCoreTesting': "android.arch.core:core-testing:${versions.lifecycle}",
-            'commonJava8'    : "android.arch.lifecycle:common-java8:${versions.lifecycle}",
+            'commonJava8'    : "android.arch.lifecycle:common-java8:1.1.1",
             'livedata'       : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}",
             'viewmodel'      : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}",
             'savedState'     : "androidx.lifecycle:lifecycle-viewmodel-savedstate:${versions.lifecycle}",
