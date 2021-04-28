@@ -33,12 +33,12 @@ buildscript {
             'kotlinStdlib'   : "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
             'mjaarmanMockito': "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0",
             'roboelectric'   : "org.robolectric:robolectric:4.3.1",
-            'coroutines'     : "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3",
             'stickyheaders'  : "com.github.vicidroiddev:sticky-headers-recyclerview:0.4.3-EAP-02@aar",
+            'coroutines'     : "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9"
     ]
 
     ext.toolchainDeps = [
-            'gradlePlugin'      : "com.android.tools.build:gradle:4.1.0-alpha10",
+            'gradlePlugin'      : "com.android.tools.build:gradle:4.2.0-alpha16",
             'kotlinPlugin'      : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
             'jitpackMavenPlugin': "com.github.dcendents:android-maven-gradle-plugin:2.1"
     ]

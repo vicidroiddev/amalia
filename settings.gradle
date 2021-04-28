@@ -1,1 +1,1 @@
-include ':app', ':amalia-core', ':amalia-coroutine-scopes', ':amalia-recyclerview'
+include ':app', ':amalia-core', ':amalia-recyclerview'

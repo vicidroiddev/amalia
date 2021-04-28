@@ -10,13 +10,7 @@ implementation ("com.github.vicidroiddev.amalia:amalia-core:{latest_version}@aar
 }
 ```
 
-###Coroutine Scope Helper
-
-```groovy
-implementation 'com.github.vicidroiddev.amalia:amalia-coroutine-scopes:{latest_version}@aar'
-```
-
-###RecyclerView Helper (0.4.0+)
+### RecyclerView Helper (0.4.0+)
 
 ```groovy
 implementation 'com.github.vicidroiddev.amalia:amalia-recyclerview:{latest_version}@aar'
