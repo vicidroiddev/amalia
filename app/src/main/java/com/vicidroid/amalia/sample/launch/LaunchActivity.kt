@@ -6,7 +6,6 @@ import com.vicidroid.amalia.sample.BaseActivity
 import com.vicidroid.amalia.sample.R
 import com.vicidroid.amalia.sample.main.MainActivity
 import com.vicidroid.amalia.sample.utils.startActivityClazz
-import kotlinx.android.synthetic.main.activity_launch.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

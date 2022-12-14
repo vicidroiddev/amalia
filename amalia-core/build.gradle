@@ -1,17 +1,18 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-
-apply plugin: 'com.github.dcendents.android-maven'
-
-group = "com.github.vicidroiddev"
-
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
 }
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id "kotlin-parcelize"
+    id "maven-publish"
+}
+
+group = "com.github.vicidroiddev"
 
 android {
     compileSdkVersion toolchainVersions.compileSdk
@@ -20,8 +21,6 @@ android {
     defaultConfig {
         minSdkVersion toolchainVersions.minSdk
         targetSdkVersion toolchainVersions.targetSdk
-        versionCode 1
-        versionName "1.0 (alpha)"
     }
 
     buildTypes {
@@ -31,9 +30,6 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError false
-    }
 
     // Target Java 8 to use androidx.lifecycle.DefaultLifecycleObserver
     compileOptions {
@@ -44,12 +40,12 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+    lint {
+        abortOnError false
+    }
+    namespace 'com.vicidroid.amalia'
 }
 
-androidExtensions {
-    //PARCELIZE SUPPORT
-    experimental = true
-}
 
 dependencies {
     implementation deps.kotlinStdlib
@@ -72,7 +68,7 @@ dependencies {
     implementation archDeps.livedata
 
     // To support DefaultLifecycleObserver, api because presenters are exposed
-    api archDeps.commonJava8
+    implementation archDeps.commonJava8
 
     // Extensions on Activities
     implementation androidXDeps.appcompat
@@ -116,5 +112,4 @@ artifacts {
     archives sourcesJar
 }
 
-apply plugin: 'kotlin-android-extensions'
 

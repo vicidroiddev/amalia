@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.vicidroid.amalia.ui.ViewItem
 import kotlinx.android.parcel.Parceler
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import kotlinx.android.parcel.RawValue
 
 

@@ -11,7 +11,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.vicidroid.amalia.ext.presenterProvider
 import com.vicidroid.amalia.sample.R
-import kotlinx.android.synthetic.main.example_fragment1.*
+import com.vicidroid.amalia.sample.databinding.ExampleFragment1Binding
 
 class ExampleFragment1 : Fragment() {
 
@@ -24,12 +24,15 @@ class ExampleFragment1 : Fragment() {
 
     private lateinit var mothersName: TextInputEditText
 
+    private var binding: ExampleFragment1Binding? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
         val view = inflater.inflate(R.layout.example_fragment1, container, false)
+        binding = ExampleFragment1Binding.bind(view)
 
         // Simulate adding a view programmatically, ensuring its state is restored by the system.
         // This only works if the view is added in onCreateView and a consistent id is set.
@@ -55,6 +58,11 @@ class ExampleFragment1 : Fragment() {
         presenter.bind(delegate)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(mothersName.id.toString(), mothersName.onSaveInstanceState())
     }
@@ -71,7 +79,7 @@ class ExampleFragment1 : Fragment() {
         newView.hint = "Nick mame - should not restore"
         newView.id = View.generateViewId() // This doesn't matter it can also be View.NO_ID
         newView.findViewById<View>(R.id.listItemTextEntry).id = View.generateViewId()
-        exampleFragment1Root.addView(newView)
+        binding!!.exampleFragment1Root.addView(newView)
     }
 
     /**
@@ -87,8 +95,8 @@ class ExampleFragment1 : Fragment() {
         newView.id = R.id.motherRoot
         mothersName = newView.findViewById(R.id.listItemTextEntry)
         mothersName.id = R.id.mother
-        mothersName.onRestoreInstanceState(savedInstanceState?.getParcelable<Parcelable>(R.id.mother.toString()))
+        mothersName.onRestoreInstanceState(savedInstanceState?.getParcelable(R.id.mother.toString()))
 
-        exampleFragment1Root.addView(newView)
+        binding!!.exampleFragment1Root.addView(newView)
     }
 }

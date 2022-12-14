@@ -1,20 +1,18 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'
 
-apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'com.github.dcendents.android-maven'
 
 group = "com.github.vicidroiddev"
 
 android {
     compileSdkVersion toolchainVersions.compileSdk
-    toolchainVersions.buildTools
+//    toolchainVersions.buildTools
 
     defaultConfig {
         minSdkVersion toolchainVersions.minSdk
         targetSdkVersion toolchainVersions.targetSdk
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -32,6 +30,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.vicidroid.amalia.ui.recyclerview'
 
 }
 

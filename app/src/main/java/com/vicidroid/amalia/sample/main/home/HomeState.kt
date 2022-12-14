@@ -2,7 +2,7 @@ package com.vicidroid.amalia.sample.main.home
 
 import android.os.Parcelable
 import com.vicidroid.amalia.core.ViewState
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 sealed class HomeState : ViewState, Parcelable {
     @Parcelize
