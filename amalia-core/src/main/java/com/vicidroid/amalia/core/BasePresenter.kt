@@ -1,5 +1,6 @@
 package com.vicidroid.amalia.core
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
 import android.os.Parcelable
@@ -26,6 +27,7 @@ abstract class BasePresenter : ViewModel(),
 
     val TAG_INSTANCE: String = this::class.java.simpleName
 
+    @SuppressLint("StaticFieldLeak")
     lateinit var applicationContext: Context
 
     private val viewStateLiveData = MutableLiveData<ViewState>()
