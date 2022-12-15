@@ -1,9 +1,9 @@
 
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'kotlin-parcelize'
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-kapt")
+    id("kotlin-parcelize")
 }
 
 Properties devProperties = new Properties()
@@ -50,9 +50,6 @@ android {
         }
     }
 
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
     namespace 'com.vicidroid.amalia.sample'
 }
 
