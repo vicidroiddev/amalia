@@ -4,9 +4,6 @@ import android.content.Context
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LifecycleOwner
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
 import junit.framework.TestCase
@@ -17,6 +14,9 @@ import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 

@@ -1,1 +1,20 @@
-include ':app', ':amalia-core', ':amalia-recyclerview'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+rootProject.name = "Amalia"
+
+include ":app", ":amalia-core", ":amalia-recyclerview"
+

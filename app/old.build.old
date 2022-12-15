@@ -1,10 +1,10 @@
-apply plugin: 'com.android.application'
 
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
-
-apply plugin: 'kotlin-kapt'
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-kapt")
+    id("kotlin-parcelize")
+}
 
 Properties devProperties = new Properties()
 def devPropertiesFile = project.file('dev.properties')
@@ -20,6 +20,10 @@ ext.themoviedbToken = devPropertiesToken != null ? devPropertiesToken : System.g
 android {
     compileSdkVersion toolchainVersions.compileSdk
 //    buildToolsVersion toolchainVersions.buildTools
+
+    buildFeatures {
+        viewBinding = true
+    }
 
     defaultConfig {
         applicationId "com.vicidroid.amalia.sample"
@@ -46,14 +50,9 @@ android {
         }
     }
 
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
+    namespace 'com.vicidroid.amalia.sample'
 }
 
-androidExtensions {
-    experimental = true
-}
 
 kapt {
     useBuildCache = true
@@ -74,17 +73,17 @@ dependencies {
     implementation androidXDeps.recyclerview
 
     // MATERIAL
-    implementation 'com.google.android.material:material:1.2.0-beta01'
+    implementation 'com.google.android.material:material:1.8.0-beta01'
 
     // TESTS
     testImplementation deps.junit
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
-    implementation 'com.squareup.moshi:moshi:1.9.2'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.2'
+    implementation 'com.squareup.moshi:moshi:1.14.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
 
-    implementation('com.github.bumptech.glide:glide:4.11.0') {
+    implementation('com.github.bumptech.glide:glide:4.14.2') {
         exclude group: "com.android.support"
     }
 
@@ -101,16 +100,16 @@ dependencies {
     // We should explicitly ask for an aar by using @aar
     // Note: when using @aar syntax, gradle will drop transitive dependencies.
     // We must include transitive dependencies to support the android libraries amalia depends on.
-    implementation ("com.github.vicidroiddev.amalia:amalia-core:$amaliaVersion@aar") {
-        transitive = true
-    }
-    implementation ("com.github.vicidroiddev.amalia:amalia-recyclerview:$amaliaVersion@aar")
+//    implementation ("com.github.vicidroiddev.amalia:amalia-core:$amaliaVersion@aar") {
+//        transitive = true
+//    }
+//    implementation ("com.github.vicidroiddev.amalia:amalia-recyclerview:$amaliaVersion@aar")
 
     // AMALIA LIB INTERNAL
-//    implementation project(path: ':amalia-core')
-//    implementation project(path: ':amalia-recyclerview')
+    implementation project(path: ':amalia-core')
+    implementation project(path: ':amalia-recyclerview')
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 }
 
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'

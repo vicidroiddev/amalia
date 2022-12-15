@@ -1,5 +1,6 @@
 package com.vicidroid.amalia.core
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
 import android.os.Parcelable
@@ -26,6 +27,7 @@ abstract class BasePresenter : ViewModel(),
 
     val TAG_INSTANCE: String = this::class.java.simpleName
 
+    @SuppressLint("StaticFieldLeak")
     lateinit var applicationContext: Context
 
     private val viewStateLiveData = MutableLiveData<ViewState>()
@@ -368,7 +370,7 @@ abstract class BasePresenter : ViewModel(),
     /**
      * Ensures collectors no longer receive new ephemeral states.
      * Resets the ephemeral state back to null.
-     * Null values are not emmited by default.
+     * Null values are not emitted by default.
      */
     private fun resetEphemeralState() {
         // Prevent leaks, view should no longer collect from this state flow on the same scope

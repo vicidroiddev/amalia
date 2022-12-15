@@ -1,7 +1,7 @@
 package com.vicidroid.amalia.sample.main.home
 
 import com.vicidroid.amalia.core.viewdiff.BaseViewDiff
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class HomeViewDiff(
