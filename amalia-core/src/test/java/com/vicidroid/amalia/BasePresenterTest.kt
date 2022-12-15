@@ -6,9 +6,9 @@ import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryOwner
-import com.nhaarman.mockitokotlin2.*
 import com.vicidroid.amalia.core.BasePresenter
 import com.vicidroid.amalia.core.ViewEvent
 import com.vicidroid.amalia.core.ViewState
@@ -25,6 +25,7 @@ import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.*
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -87,6 +88,8 @@ class BasePresenterTest : TestCase() {
 
         whenever(activity.lifecycle).thenReturn(lifecycle)
         whenever((activity as SavedStateRegistryOwner).savedStateRegistry).thenReturn(savedStateRegistry)
+        whenever((activity as HasDefaultViewModelProviderFactory).defaultViewModelCreationExtras).thenReturn(CreationExtras.Empty)
+
         whenever(activity.application).thenReturn(application)
         whenever(activity.viewModelStore).thenReturn(viewModelStore)
         whenever(view.context).thenReturn(context)
