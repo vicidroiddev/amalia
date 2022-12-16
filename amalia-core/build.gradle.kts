@@ -1,5 +1,9 @@
-import buildSrc.*
 import buildSrc.PublishHelper.ensurePomDetails
+import buildSrc.AndroidVersion
+import buildSrc.ReleaseInfo
+import buildSrc.DepVersions
+import buildSrc.LintSettings
+import buildSrc.Deps
 import buildSrc.PublishHelper.useLocalBuildMavenRepo
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
@@ -10,7 +14,7 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.github.vicidroiddev"
+//group = "com.github.vicidroiddev"
 
 android {
     compileSdk = AndroidVersion.compileSdk
