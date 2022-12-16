@@ -8,7 +8,7 @@ plugins {
     id("kotlin-parcelize")
 }
 
-val themoviedbToken = gradleLocalProperties(rootDir).getProperty("api.themoviedb")
+val themoviedbToken = gradleLocalProperties(rootDir).getProperty("api.themoviedb") ?: "FAKE_TOKEN"
 
 android {
     compileSdk = AndroidVersion.compileSdk
