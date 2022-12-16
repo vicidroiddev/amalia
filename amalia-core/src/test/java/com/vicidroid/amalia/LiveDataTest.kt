@@ -10,6 +10,7 @@ import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
@@ -24,16 +25,11 @@ class LiveDataTest : TestCase() {
   @get:Rule
   var rule: TestRule = InstantTaskExecutorRule()
 
-  @Mock
-  lateinit var lifecycleOwner: LifecycleOwner
-
-  private lateinit var lifecycleRegistry: LifecycleRegistry
+  val lifecycleOwner = mock<LifecycleOwner>()
+  val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
   @Before
   fun init() {
-    MockitoAnnotations.initMocks(this)
-
-    lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
     whenever(lifecycleOwner.lifecycle).thenReturn(lifecycleRegistry)
 
     lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -46,9 +42,9 @@ class LiveDataTest : TestCase() {
 
     lifecycleRegistry.markState(Lifecycle.State.INITIALIZED)
 
-    val observer = spy(Observer<String> {
+    val observer = Observer<String> {
       assertEquals(newValue, it)
-    })
+    }
 
     liveData.observe(lifecycleOwner, observer)
 
