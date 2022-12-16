@@ -3,7 +3,7 @@ package buildSrc
 import org.gradle.api.JavaVersion
 
 object ReleaseInfo {
-    const val libraryGroupId = "com.vicidroid.amalia"
+    const val libraryGroupId = "com.github.vicidroiddev"
 
     const val ARTIFACT_REPO_GITHUB = "https://maven.pkg.github.com/vicidroiddev/amalia"
 

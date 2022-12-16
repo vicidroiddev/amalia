@@ -14,7 +14,7 @@ plugins {
     id("maven-publish")
 }
 
-//group = "com.github.vicidroiddev"
+group = "com.github.vicidroiddev"
 
 android {
     compileSdk = AndroidVersion.compileSdk
