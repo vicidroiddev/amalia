@@ -13,7 +13,7 @@ object ReleaseInfo {
      * - MINOR when you add functionality in a backwards-compatible manner
      * - PATCH when you make backwards-compatible bug fixes.
      */
-    const val libraryVersion: String = "0.9.1"
+    const val libraryVersion: String = "0.9.2"
 
     // Need to encapsulate in extra quotes for BuildConfig values
     fun libraryVersionStr() = "\"${libraryVersion}\""
